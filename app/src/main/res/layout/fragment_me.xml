@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
+
+    <!--&lt;!&ndash;工具条&ndash;&gt;-->
+    <!--&lt;!&ndash;<android.support.design.widget.AppBarLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content">&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<android.support.v7.widget.Toolbar&ndash;&gt;-->
+            <!--&lt;!&ndash;andrgidd:idgid@+id/toolbar"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="?attr/actionBarSize"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:background="@color/background_white"&ndash;&gt;-->
+            <!--&lt;!&ndash;nameitle="title_me"/>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;</android.support.design.widget.AppBarLayout>&ndash;&gt;-->
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="?attr/actionBarSize"-->
+        <!--android:scrollbars="vertical">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <!--&lt;!&ndash;第一张卡片：用户信息和健康数据&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/background_white"-->
+
+                <!--android:orientation="vertical"-->
+                <!--android:showDividers="middle">-->
+                <!--&lt;!&ndash;android:divider="@drawable/divider_line"&ndash;&gt;-->
+
+                <!--&lt;!&ndash;用户信息&ndash;&gt;-->
+                <!--<LinearLayout-->
+                    <!--andrgidd:idgid@+id/view_user_information"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:background="?android:attr/selectableItemBackground"-->
+                    <!--android:clickable="true"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:padding="16dp">-->
+
+                    <!--&lt;!&ndash;用户头像&ndash;&gt;-->
+                    <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                        <!--android:layout_width="70dp"-->
+                        <!--android:layout_height="70dp"-->
+                        <!--android:src="@drawable/logo_keep_fitness"/>-->
+
+                    <!--&lt;!&ndash;用户名和锻炼信息&ndash;&gt;-->
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="16dp"-->
+                        <!--android:orientation="vertical">-->
+
+                        <!--<TextView-->
+                            <!--andrgidd:idgid@+id/txt_username"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="用户名"-->
+                            <!--android:textColor="@color/black_dark"-->
+                            <!--android:textSize="20sp"/>-->
+
+                        <!--<TextView-->
+                            <!--andrgidd:idgid@+id/txt_using_day"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:textColor="@color/black_light_light"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="8dp"-->
+                            <!--android:text="已坚持锻炼0天"-->
+                            <!--android:textSize="16sp"/>-->
+                    <!--</LinearLayout>-->
+                <!--</LinearLayout>-->
+
+                <!--&lt;!&ndash;我的健康数据&ndash;&gt;-->
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical">-->
+
+                    <!--<TextView-->
+                        <!--android:visibility="gone"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="我的健康数据"-->
+                        <!--android:textSize="16sp"/>-->
+
+                    <!--&lt;!&ndash;运动历史&ndash;&gt;-->
+                    <!--<LinearLayout-->
+                        <!--andrgidd:idgid@+id/view_sport_history"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:clickable="true"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:paddingLeft="16dp"-->
+                        <!--android:paddingRight="16dp"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:background="?attr/selectableItemBackground"-->
+                        <!--android:layout_height="wrap_content">-->
+
+                        <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                            <!--&lt;!&ndash;app:srcCompat="@drawable/ic_restore_black_48dp"/>&ndash;&gt;-->
+
+                        <!--<TextView-->
+                            <!--android:layout_marginLeft="16dp"-->
+                            <!--android:layout_marginTop="16dp"-->
+                            <!--android:layout_marginBottom="16dp"-->
+                            <!--android:textColor="@color/black_dark"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:textSize="16sp"-->
+                            <!--android:text="运动历史"/>-->
+
+                    <!--</LinearLayout>-->
+
+                    <!--&lt;!&ndash;饮食记录&ndash;&gt;-->
+                    <!--<LinearLayout-->
+                        <!--andrgidd:idgid@+id/view_diet_record"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:clickable="true"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:paddingLeft="16dp"-->
+                        <!--android:paddingRight="16dp"-->
+                        <!--android:background="?attr/selectableItemBackground"-->
+                        <!--android:layout_height="wrap_content">-->
+
+                        <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                            <!--&lt;!&ndash;app:srcCompat="@drawable/ic_restaurant_black_48dp"/>&ndash;&gt;-->
+
+                        <!--<TextView-->
+                            <!--android:layout_marginLeft="16dp"-->
+                            <!--android:layout_marginTop="16dp"-->
+                            <!--android:layout_marginBottom="16dp"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:textColor="@color/black_dark"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="饮食记录"-->
+                            <!--android:textSize="16sp"/>-->
+
+                    <!--</LinearLayout>-->
+
+                    <!--&lt;!&ndash;<TableLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:visibility="gone"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:stretchColumns="*">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<TableRow>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                    <!--&lt;!&ndash;andrgidd:idgid@+id/btn_sport_history"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="?attr/buttonBarButtonStyle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:drawableTop="@drawable/ic_restore_grey600_24dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="运动历史"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textColor="@color/black_light"/>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                    <!--&lt;!&ndash;andrgidd:idgid@+id/btn_posture_data"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="?attr/buttonBarButtonStyle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:drawableTop="@drawable/ic_assignment_grey600_24dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="姿态数据"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textColor="@color/black_light"/>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                    <!--&lt;!&ndash;andrgidd:idgid@+id/btn_diet_record"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="?attr/buttonBarButtonStyle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:drawableTop="@drawable/ic_restaurant_menu_grey600_24dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="饮食记录"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textColor="@color/black_light"/>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;</TableRow>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</TableLayout>&ndash;&gt;-->
+
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+            <!--&lt;!&ndash;运动概况、每周目标&ndash;&gt;-->
+            <!--&lt;!&ndash;运动概况 放所有上过的的课程&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:background="@color/background_white"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--andrgidd:idgid@+id/view_exercise_situation"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:clickable="true"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingLeft="16dp"-->
+                    <!--android:paddingRight="16dp"-->
+                    <!--android:background="?attr/selectableItemBackground"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_assessment_black_24dp"/>&ndash;&gt;-->
+
+                    <!--<TextView-->
+                        <!--android:layout_marginLeft="16dp"-->
+                        <!--android:layout_marginTop="16dp"-->
+                        <!--android:layout_marginBottom="16dp"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:textColor="@color/black_dark"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="运动概况"-->
+                        <!--android:textSize="16sp"/>-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--andrgidd:idgid@+id/view_weekly_goals"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:clickable="true"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingLeft="16dp"-->
+                    <!--android:paddingRight="16dp"-->
+                    <!--android:background="?attr/selectableItemBackground"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_playlist_add_check_black_24dp"/>&ndash;&gt;-->
+
+                    <!--<TextView-->
+                        <!--android:layout_marginLeft="16dp"-->
+                        <!--android:layout_marginTop="16dp"-->
+                        <!--android:layout_marginBottom="16dp"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:textColor="@color/black_dark"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="每周目标"-->
+                        <!--android:textSize="16sp"/>-->
+
+                <!--</LinearLayout>-->
+
+            <!--</LinearLayout>-->
+
+            <!--&lt;!&ndash;饮食分析、饮食推荐&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:background="@color/background_white"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--andrgidd:idgid@+id/view_diet_analysis"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:clickable="true"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingLeft="16dp"-->
+                    <!--android:paddingRight="16dp"-->
+                    <!--android:background="?attr/selectableItemBackground"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_donut_small_black_24dp"/>&ndash;&gt;-->
+
+                    <!--<TextView-->
+                        <!--android:layout_marginLeft="16dp"-->
+                        <!--android:layout_marginTop="16dp"-->
+                        <!--android:layout_marginBottom="16dp"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:textColor="@color/black_dark"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="饮食分析"-->
+                        <!--android:textSize="16sp"/>-->
+
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--andrgidd:idgid@+id/view_diet_recommendation"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:clickable="true"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingLeft="16dp"-->
+                    <!--android:paddingRight="16dp"-->
+                    <!--android:background="?attr/selectableItemBackground"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="32dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:tint="@color/light_gray"&ndash;&gt;-->
+                        <!--&lt;!&ndash;app:srcCompat="@drawable/ic_whatshot_black_24dp"/>&ndash;&gt;-->
+
+                    <!--<TextView-->
+                        <!--android:layout_marginLeft="16dp"-->
+                        <!--android:layout_marginTop="16dp"-->
+                        <!--android:layout_marginBottom="16dp"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:textColor="@color/black_dark"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="饮食推荐"-->
+                        <!--android:textSize="16sp"/>-->
+
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+</android.support.design.widget.CoordinatorLayout>

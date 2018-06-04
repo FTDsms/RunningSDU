@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#42A5F5</color>
+    <color name="colorPrimaryDark">#295d97</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_300">#64B5F6</color>
+    <color name="blue_400">#42A5F5</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_600">#1E88E5</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_800">#1565C0</color>
+    <color name="blue_900">#0D47A1</color>
+
+    <color name="light_blue_100">#B3E5FC</color>
+    <color name="light_blue_200">#81D4FA</color>
+    <color name="light_blue_300">#4FC3F7</color>
+    <color name="light_blue_400">#29B6F6</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="light_blue_600">#039BE5</color>
+    <color name="light_blue_700">#0288D1</color>
+    <color name="light_blue_800">#0277BD</color>
+    <color name="light_blue_900">#01579B</color>
+
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <color name="black_overlay">#66000000</color>
+    <color name="background_white">#ffffff</color>
+    <color name="foreground_black">#000000</color>
+    <color name="light_gray">#999999</color>
+    <color name="background_gray">#f6f6f6</color>
+    <color name="divider_line">#cccccc</color>
+    <color name="divider_line_light">#eeeeee</color>
+    <color name="black_dark">#de000000</color>
+    <color name="black_light">#8a000000</color>
+    <color name="black_light_light">#59000000</color>
+    <color name="black_light_light_light">#3d000000</color>
+    <color name="white_dark">#deffffff</color>
+    <color name="white_light">#8affffff</color>
+
+</resources>

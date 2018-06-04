@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/icon_map"
+        android:title="地图"/>
+
+    <item
+        android:id="@+id/navigation_message"
+        android:icon="@drawable/icon_message"
+        android:title="消息"/>
+
+    <item
+        android:id="@+id/navigation_contact"
+        android:icon="@drawable/icon_contact"
+        android:title="联系人"/>
+
+    <item
+        android:id="@+id/navigation_find"
+        android:icon="@drawable/icon_find"
+        android:title="发现"/>
+
+</menu>

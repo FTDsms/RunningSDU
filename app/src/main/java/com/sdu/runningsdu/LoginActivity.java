@@ -81,11 +81,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private MyApplication myApplication;
 
-//    private MyDAO myDAO;
+    private MyDAO myDAO;
 
+    //初始化默认数据
     private User initData() {
-        User user = new User();
-        user.setName("邵明山");
+        User user = new User("201500301182", "邵明山", null, null);
+//        User user = new User();
+//        user.setName("邵明山");
 
         List<Group> groups = new ArrayList<>();
         Group group = new Group("创新实训");
@@ -143,10 +145,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return user;
     }
 
-//    private void initDatabase() {
-//        myDAO = new MyDAO(LoginActivity.this, myApplication.getUser().getName());
-//    }
-
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -168,12 +166,56 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //发送登录请求
+    private User sendRequest() {
+        User user = new User();
+        String sid = "201500301132";
+        String password = "000000";
+        String response;
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sid", sid);
+            jsonObject.put("password", password);
+            Log.e("test", jsonObject.toString());
+
+            response = MyHttpClient.login(myApplication.getIp(), sid, password);
+            Log.e("test", response);
+
+            JSONObject json = new JSONObject(response);
+            Log.e("test", json.getString("flag"));
+            Log.e("test", json.optString("flag"));
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    //初始化数据库
+    private void initDatabase() {
+        User user = myApplication.getUser();
+        myDAO = new MyDAO(LoginActivity.this, user.getName());
+        if (!myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
+            // if user not exits, add user
+            myDAO.addUser(user);
+        }
+//        testDatabase();
+    }
+
+    // Testing Database
+    private void testDatabase() {
+        User user = myApplication.getUser();
+        Log.d("test", user.getName());
+        user = myDAO.findUser(user.getSid());
+        myApplication.setUser(user);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //TODO: 权限申请、创建数据库、
+        //TODO: 权限申请
         //检查权限
         //存储权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -216,34 +258,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
 //                attemptLogin();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                //TODO:向服务器请求用户信息
-
-                myApplication = (MyApplication) getApplication();
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String sid = "201500301132";
-                        String password = "000000";
-                        String response = "";
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("sid", sid);
-                            jsonObject.put("password", password);
-                            Log.e("test", jsonObject.toString());
-                            response = MyHttpClient.login(myApplication.getIp()+"/login", sid, password);
-                        } catch (JSONException | IOException e) {
-                            e.printStackTrace();
-                        }
-                        Log.e("test", response);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        myApplication = (MyApplication) getApplication();
+
+                        //TODO:向服务器请求用户信息
+//                        User user = sendRequest();
+                        User user = initData();
+                        myApplication.setUser(user);
+
+                        //TODO: 创建数据库
+                        initDatabase();
+
+                        startActivity(intent);
+                        finish();
                     }
                 }).start();
 
-                User user = initData();
-                myApplication.setUser(user);
-                startActivity(intent);
-                finish();
             }
         });
 

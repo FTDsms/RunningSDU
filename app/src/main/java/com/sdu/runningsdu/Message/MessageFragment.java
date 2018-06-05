@@ -17,6 +17,7 @@ import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.MainActivity;
 import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
 import com.sdu.runningsdu.MyApplication;
 import com.sdu.runningsdu.R;
@@ -37,6 +38,7 @@ public class MessageFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private List<Message> list;
     private MyApplication myApplication;
+    private Thread refreshThread;
 
     public MessageFragment() {
 
@@ -102,18 +104,27 @@ public class MessageFragment extends Fragment {
     }
 
     private void initThread() {
-        new Thread((new Runnable() {
+        refreshThread = new Thread((new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (!Thread.interrupted()) { // 非阻塞过程中通过判断中断标志来退出
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    // Refresh the list every second
+                    getActivity().runOnUiThread(new Runnable(){
+                        public void run(){
+                            recyclerAdapter.notifyDataSetChanged();
+//                            Log.d("refresh", "refresh");
+                        }
+                    });
                 }
-                //ever second refresh list
-                recyclerAdapter.notifyDataSetChanged();
             }
-        })).start();
+        }));
+        refreshThread.start();
     }
 
     @Override @Nullable
@@ -129,4 +140,10 @@ public class MessageFragment extends Fragment {
         initThread();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //被销毁时终止线程
+        refreshThread.interrupt();
+    }
 }

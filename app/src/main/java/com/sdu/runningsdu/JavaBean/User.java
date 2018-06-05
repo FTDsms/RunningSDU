@@ -24,6 +24,13 @@ public class User {
 
     }
 
+    public User(String sid, String name, String password, String image) {
+        this.sid = sid;
+        this.name = name;
+        this.password = password;
+        this.image = image;
+    }
+
     public String getSid() {
         return sid;
     }
@@ -70,5 +77,15 @@ public class User {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "sid='" + sid + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", image='" + image + '\'' +
+                '}';
     }
 }

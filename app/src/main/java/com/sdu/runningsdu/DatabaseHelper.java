@@ -37,18 +37,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(friendSQL);
         Log.d("database", "create table friend");
 
-        String groupSQL = "create table if not exists group " +
+        String groupSQL = "create table if not exists groups " +
                 "(gid integer primary key, " +
                 "name varchar(255), " +
                 "owner varchar(255), " +
                 "image varchar(255), " +
                 "unread varchar(255))";
         sqLiteDatabase.execSQL(groupSQL);
-        Log.d("database", "create table group");
+        Log.d("database", "create table groups");
 
         String groupMemberSQL = "create table if not exists groupmember " +
-                "(gid integer primary key, " +
-                "sid varchar(20) primary key)";
+                "(gid integer, " +
+                "sid varchar(20)," +
+                "primary key(gid, sid) )";
         sqLiteDatabase.execSQL(groupMemberSQL);
         Log.d("database", "create table groupmember");
 

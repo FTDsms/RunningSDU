@@ -175,43 +175,6 @@ public class MainActivity extends AppCompatActivity {
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
 
-        //初始化
-//        FragmentTransaction transaction =
-//                getSupportFragmentManager().beginTransaction();
-//        String msg = getIntent().getStringExtra("page");
-//
-//        if (navigationButtonIndex == 2) {
-//            if (dietFragment == null) {
-//                dietFragment = new DietFragment();
-//            }
-//            transaction.replace(R.id.content, dietFragment);
-//            transaction.commit();
-//            bottomNavigationView.setSelectedItemId(R.id.navigation_diet);
-//        } else {
-//            if (msg == null || msg.equals("train")) {
-//                if (trainFragment == null) {
-//                    trainFragment = new TrainFragment();
-//                }
-//                transaction.replace(R.id.content, trainFragment);
-//                transaction.commit();
-//                bottomNavigationView.setSelectedItemId(R.id.navigation_train);
-//            } else if (msg.equals("diet")) {
-//                if (dietFragment == null) {
-//                    dietFragment = new DietFragment();
-//                }
-//                transaction.replace(R.id.content, dietFragment);
-//                transaction.commit();
-//                bottomNavigationView.setSelectedItemId(R.id.navigation_diet);
-//            } else if (msg.equals("me")) {
-//                if (meFragment == null) {
-//                    meFragment = new MeFragment();
-//                }
-//                transaction.replace(R.id.content, meFragment);
-//                transaction.commit();
-//                bottomNavigationView.setSelectedItemId(R.id.navigation_me);
-//            }
-//        }
-
     }
 
     @Override

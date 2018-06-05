@@ -14,7 +14,7 @@
         <!--android:theme="@style/AppTheme.AppBarOverlay"-->
 
         <!--<android.support.v7.widget.Toolbar-->
-            <!--andrgidd:idgid@+id/toolbar"-->
+            <!--android:id="@+id/toolbar"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:minHeight="?attr/actionBarSize"-->
@@ -24,7 +24,7 @@
             <!--app:contentInsetStart="0dp">-->
 
             <!--<TextView-->
-                <!--andrgidd:idgid@+id/txt_left_title"-->
+                <!--android:id="@+id/txt_left_title"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_marginLeft="10dp"-->
@@ -37,7 +37,7 @@
                 <!--android:visibility="visible"/>-->
 
             <!--<TextView-->
-                <!--andrgidd:idgid@+id/txt_main_title"-->
+                <!--android:id="@+id/txt_main_title"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_gravity="center"-->
@@ -48,7 +48,7 @@
                 <!--android:visibility="visible"/>-->
 
             <!--<TextView-->
-                <!--andrgidd:idgid@+id/txt_right_title"-->
+                <!--android:id="@+id/txt_right_title"-->
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_gravity="right"-->
@@ -65,7 +65,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/side_nav_bar"/>
+            android:background="@drawable/side_nav_bar" />
         <!--app:Theme="@style/AppTheme.PopupOverlay"
             android:background="?attr/colorPrimary"-->
 

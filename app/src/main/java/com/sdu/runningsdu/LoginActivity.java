@@ -145,6 +145,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return user;
     }
 
+    // 申请权限
+    private void requestForPermissions() {
+        //检查权限
+        //存储权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //进入到这里代表没有权限.
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                //已经禁止提示了
+                Toast.makeText(LoginActivity.this, "您已禁止存储权限，需要重新开启。", Toast.LENGTH_SHORT).show();
+            }else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+            }
+        } else {
+            // have permission
+        }
+        //读取联系人
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            //进入到这里代表没有权限.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+    }
+
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -216,26 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         //TODO: 权限申请
-        //检查权限
-        //存储权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            //进入到这里代表没有权限.
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                //已经禁止提示了
-                Toast.makeText(LoginActivity.this, "您已禁止存储权限，需要重新开启。", Toast.LENGTH_SHORT).show();
-            }else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
-            }
-        } else {
-            // have permission
-        }
-        //读取联系人
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            //进入到这里代表没有权限.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
+        requestForPermissions();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);

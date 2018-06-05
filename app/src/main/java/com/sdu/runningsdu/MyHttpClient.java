@@ -38,7 +38,7 @@ public class MyHttpClient {
     }
 
     // 添加好友
-    public static String addFriendRequest(String url, String receiver, String sender) throws  IOException {
+    public static String addFriendRequest(String url, String receiver, String sender) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("receiver", receiver)
@@ -52,44 +52,136 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查询发送者的请求
-    public static void findRequestBySender() {
+    // 查询收到的请求
+    public static String findReceivedRequest(String url, String receiver) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("receiver", receiver)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findRequestByReceiver")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
 
+    // 查询发送的请求
+    public static String findSentRequest(String url, String sender) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sender", sender)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findRequestBySender")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 接受好友请求
-    public static void agreeRequest() {
-
+    public static String agreeRequest(String url, String rid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("rid", rid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/agreeRequest")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 拒绝好友请求
-    public static void rejectRequest() {
-
+    public static String rejectRequest(String url, String rid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("rid", rid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/disagreeRequest")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 查找好友
-    public static void findFriend(String url, String sid) {
-
+    public static String findFriend(String url, String sid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", sid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findFriendBySid")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 查询对话
-    public static void findMessage() {
-
+    public static String findMessage(String url, String receiver, String sender) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("receiver", receiver)
+                .add("sender", sender)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findConversations")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 发送消息
-    public static void sendMessage() {
-
+    public static String sendMessage(String url, String receiver, String sender, String category, String content) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("receiver", receiver)
+                .add("sender", sender)
+                .add("category", category)
+                .add("content", content)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/addConversations")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 创建群组
-    public static void createGroup() {
-
+    public static String createGroup(String url, String name, String members, String image) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("name", name)
+                .add("members", members)
+                .add("image", image)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/createGroup")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 查找群组
-    public static void findGroup() {
-
+    public static String findGroup(String url, String gid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("gid", gid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findGroupByGid")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 发送群消息
@@ -109,6 +201,11 @@ public class MyHttpClient {
 
     // 移出群聊
     public static void moveOutOfGroup() {
+
+    }
+
+    // 解散群组
+    public static void cancelGroup() {
 
     }
 

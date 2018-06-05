@@ -170,7 +170,7 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查找群组
+    // 通过群号查找群组
     public static String findGroup(String url, String gid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -184,29 +184,79 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 发送群消息
-    public static void sendGroupMessage() {
+    // 查找自己加入的群组
+    public static String findMyGroup(String url, String sid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", sid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findGroupsBySid")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
 
+    // 发送群消息
+    public static String sendGroupMessage(String url, String gid, String sid, String category, String content) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("gid", gid)
+                .add("sid", sid)
+                .add("category", category)
+                .add("content", content)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/addGroupnote")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 邀请加群
-    public static void inviteGroup() {
-
+    public static String inviteGroup(String url, String sid, String gid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", sid)
+                .add("gid", gid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/invite")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
-    // 退群
-    public static void exitGroup() {
-
-    }
-
-    // 移出群聊
-    public static void moveOutOfGroup() {
-
+    // 退群/移出群聊
+    public static String exitGroup(String url, String sid, String gid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", sid)
+                .add("gid", gid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/exitGroup")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     // 解散群组
-    public static void cancelGroup() {
-
+    public static String cancelGroup(String url, String gid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("gid", gid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/cancelGroup")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
     }
 
     public static String post(String url, String json) throws IOException {

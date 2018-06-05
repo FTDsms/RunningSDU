@@ -198,6 +198,20 @@ public class MyHttpClient {
         return response.body().string();
     }
 
+    // 查找群消息
+    public static String findGroupMessage(String url, String gid) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("gid", gid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findGroupnotesByGidEquals")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
+
     // 发送群消息
     public static String sendGroupMessage(String url, String gid, String sid, String category, String content) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();

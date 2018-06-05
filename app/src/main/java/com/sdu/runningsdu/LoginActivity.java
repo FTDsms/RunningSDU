@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     //初始化默认数据
     private User initData() {
-        User user = new User("201500301182", "邵明山", null, null);
+        User user = new User("201500301182", "邵明山", "000000", null);
 //        User user = new User();
 //        user.setName("邵明山");
 
@@ -200,6 +200,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("sid", sid);
             jsonObject.put("password", password);
+//            jsonObject.put("password", MD5.md5(password));
             Log.e("test", jsonObject.toString());
 
             response = MyHttpClient.login(myApplication.getIp(), sid, password);
@@ -274,6 +275,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                        User user = sendRequest();
                         User user = initData();
                         myApplication.setUser(user);
+                        Log.i("md5", MD5.md5(user.getPassword(), user.getName()));
 
                         //TODO: 创建数据库
                         initDatabase();

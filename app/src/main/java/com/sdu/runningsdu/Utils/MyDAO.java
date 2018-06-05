@@ -1,4 +1,4 @@
-package com.sdu.runningsdu;
+package com.sdu.runningsdu.Utils;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -28,7 +28,7 @@ public class MyDAO {
     public MyDAO(Context context, String name) {
         this.context = context;
         this.name = name;
-        databaseHelper = new DatabaseHelper(context, name);
+        this.databaseHelper = DatabaseHelper.getInstance(context, name);
         Log.d("database", "database name: " + databaseHelper.getDatabaseName());
         findTable();
 //        findAllUser();

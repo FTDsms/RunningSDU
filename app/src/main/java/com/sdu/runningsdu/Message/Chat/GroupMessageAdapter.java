@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Message;
-import com.sdu.runningsdu.MyApplication;
+import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.R;
 
 import java.util.List;

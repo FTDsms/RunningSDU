@@ -23,6 +23,8 @@ import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Message.MessageFragment;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //设置标题布局为titlebar
 //        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
+
+        Log.w("main dao", "1");
+        myApplication = (MyApplication) getApplication();
+        MyDAO myDAO = new MyDAO(MainActivity.this, myApplication.getUser().getName());
+        Log.w("main dao", "2");
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);

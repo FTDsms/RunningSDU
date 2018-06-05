@@ -1,4 +1,4 @@
-package com.sdu.runningsdu;
+package com.sdu.runningsdu.Utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,15 +13,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static String DB_NAME = "xxx.db";
     private static final int DB_VERSION = 1;
+    private static DatabaseHelper databaseHelper;
 
     public DatabaseHelper(Context context, String name) {
         super(context, name, null, DB_VERSION);
     }
 
+    public static DatabaseHelper getInstance(Context context, String name) {
+        // 单例模式
+        if (databaseHelper == null) {
+            databaseHelper = new DatabaseHelper(context, name);
+        }
+        return databaseHelper;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String userSQL = "create table if not exists user " +
-                " (sid varchar(20) primary key, " +
+                "(sid varchar(20) primary key, " +
                 "name varchar(255), " +
                 "password varchar(255), " +
                 "image varchar(255))";

@@ -7,19 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.sdu.runningsdu.JavaBean.Friend;
-import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
-import com.sdu.runningsdu.MainActivity;
 import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
-import com.sdu.runningsdu.MyApplication;
+import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Message.Chat.ChatActivity;
 

@@ -1,4 +1,4 @@
-package com.sdu.runningsdu;
+package com.sdu.runningsdu.Utils;
 
 import android.util.Log;
 

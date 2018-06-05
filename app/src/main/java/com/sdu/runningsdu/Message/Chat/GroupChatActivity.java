@@ -3,7 +3,6 @@ package com.sdu.runningsdu.Message.Chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
-import com.sdu.runningsdu.MyApplication;
-import com.sdu.runningsdu.MyHttpClient;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 import com.sdu.runningsdu.R;
 
 import java.io.IOException;

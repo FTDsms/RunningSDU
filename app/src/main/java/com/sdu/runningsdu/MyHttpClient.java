@@ -1,5 +1,7 @@
 package com.sdu.runningsdu;
 
+import android.util.Log;
+
 import java.io.IOException;
 
 import okhttp3.FormBody;
@@ -24,11 +26,11 @@ public class MyHttpClient {
     // 登录
     public static String login(String url, String sid, String password) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
-//        RequestBody body = RequestBody.create(JSON, json);
         FormBody formBody = new FormBody.Builder()
                 .add("sid", sid)
                 .add("password", password)
                 .build();
+        Log.d("FormBody", formBody.toString());
         Request request = new Request.Builder()
                 .url(url+"/login")
                 .post(formBody)

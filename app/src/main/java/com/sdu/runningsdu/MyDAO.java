@@ -31,10 +31,10 @@ public class MyDAO {
         databaseHelper = new DatabaseHelper(context, name);
         Log.d("database", "database name: " + databaseHelper.getDatabaseName());
         findTable();
-        findAllUser();
+//        findAllUser();
     }
 
-    //查询表格
+    // 查询所有表格
     public void findTable() {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select name from sqlite_master where type='table' order by name", null);
@@ -45,7 +45,21 @@ public class MyDAO {
         db.close();
     }
 
-    //查询所有用户
+    // 查询是否有用户
+    public boolean hasUser() {
+        List<User> users = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                null, null, null, null, null, null);
+        Log.w("has user", ""+cursor.getCount());
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        db.close();
+        return false;
+    }
+
+    // 查询所有用户
     public List<User> findAllUser() {
         List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -64,7 +78,7 @@ public class MyDAO {
         return users;
     }
 
-    //查找用户信息
+    // 查找用户信息
     public User findUser(String sid) {
         User user = new User();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -79,12 +93,11 @@ public class MyDAO {
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
             user.setImage(cursor.getString(cursor.getColumnIndex("image")));
         }
-        Log.d("database", "find user:\n" + user.toString());
         db.close();
         return user;
     }
 
-    //添加用户
+    // 添加用户
     public void addUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -95,7 +108,16 @@ public class MyDAO {
         String sql = "insert into user(sid, name, password, image) values(?,?,?,?)";
         db.execSQL(sql, objects);
         db.close();
-        Log.d("database", "add user: "+user.getName());
+        Log.d("database", "add user: " + user.getName());
+    }
+
+    // 删除用户
+    public void deleteUser(String sid) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        String sql = "delete from user where sid = ?";
+        db.execSQL(sql, new Object[]{sid});
+        db.close();
+        Log.d("database", "delete user: " + sid);
     }
 
     //修改用户信息

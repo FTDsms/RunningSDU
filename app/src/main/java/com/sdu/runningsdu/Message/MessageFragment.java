@@ -48,16 +48,21 @@ public class MessageFragment extends Fragment {
         myApplication = (MyApplication) getActivity().getApplication();
         User user = myApplication.getUser();
         list = new ArrayList<>();
-        List<Group> groups = user.getGroups();
-        for (Group group : groups) {
-            List<Message> messages = group.getMessages();
-            list.add(messages.get(messages.size()-1));
-        }
-        List<Friend> friends = user.getFriends();
-        for(Friend friend : friends){
-            List<Message> messages = friend.getMessages();
-            list.add(messages.get(messages.size()-1));
-        }
+//        List<Group> groups = user.getGroups();
+//        if (groups.size() > 0) {
+//            for (Group group : groups) {
+//                List<Message> messages = group.getMessages();
+//                list.add(messages.get(messages.size()-1));
+//            }
+//        }
+//        List<Friend> friends = user.getFriends();
+//        if (friends.size() > 0) {
+//            for(Friend friend : friends){
+//                List<Message> messages = friend.getMessages();
+//                list.add(messages.get(messages.size()-1));
+//            }
+//        }
+
 //        list = new ArrayList<String>();
 //        list.add("test1");
 //        list.add("test2");

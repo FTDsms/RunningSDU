@@ -6,6 +6,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -27,11 +29,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -207,6 +211,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.e("test", response);
 
             JSONObject json = new JSONObject(response);
+            String flag = json.getString("flag");
+            if (flag.equals("true")) {
+
+            }
             Log.e("test", json.getString("flag"));
             Log.e("test", json.optString("flag"));
 
@@ -220,28 +228,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void initDatabase() {
         User user = myApplication.getUser();
         myDAO = new MyDAO(LoginActivity.this, user.getName());
-        if (!myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
-            // if user not exits, add user
+        if (!myDAO.hasUser() || !myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
+            // if user not exists, add user
             myDAO.addUser(user);
+        } else {
+            // if user exists, print user information
+            Log.i("user: ", myDAO.findUser(user.getSid()).toString());
         }
-//        testDatabase();
     }
 
-    // Testing Database
-    private void testDatabase() {
-        User user = myApplication.getUser();
-        Log.d("test", user.getName());
-        user = myDAO.findUser(user.getSid());
-        myApplication.setUser(user);
+    private void changeBackground() {
+        LinearLayout linearLayout = findViewById(R.id.login_activity);
+        Resources resources = LoginActivity.this.getResources();
+        Drawable drawable = resources.getDrawable(R.drawable.background_login);
+        linearLayout.setBackground(drawable);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 隐藏状态栏
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
         //TODO: 权限申请
         requestForPermissions();
+        myApplication = (MyApplication) getApplication();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -264,27 +277,55 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
 //                attemptLogin();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        myApplication = (MyApplication) getApplication();
 
-                        //TODO:向服务器请求用户信息
-//                        User user = sendRequest();
-                        User user = initData();
-                        myApplication.setUser(user);
-                        Log.i("md5", MD5.md5(user.getPassword(), user.getName()));
+                        //TODO: 从输入栏获取用户名和密码 MD5加密
+                        String sid = "201500301132";
+                        String password = "000000";
+                        User user = new User();
+                        try {
+                            String response = MyHttpClient.login(myApplication.getIp(), sid, password);
+                            Log.w("test", response);
+                            JSONObject json = new JSONObject(response);
 
-                        //TODO: 创建数据库
-                        initDatabase();
+                            String flag = json.optString("flag");
+                            if (!flag.equals("true")) {
+                                // failure
+                                String msg = json.optString("msg");
+                                if (msg.equals("wrong password")) {
+                                    //TODO 密码错误 请检查密码
+                                    return;
+                                }
+                                if (msg.equals("no such student")) {
+                                    //TODO 用户不存在 请先注册
+                                    return;
+                                }
+                            } else {
+                                // success
+                                JSONObject userObject = json.optJSONObject("obj");
+                                user.setSid(userObject.optString("sid"));
+                                user.setName(userObject.optString("name"));
+                                user.setPassword(userObject.optString("password"));
+                                user.setImage(userObject.optString("image"));
+//                                User user1 = sendRequest();
+//                                User user = initData();
+                                myApplication.setUser(user);
 
-                        startActivity(intent);
-                        finish();
+                                // 创建数据库
+                                initDatabase();
+
+                                startActivity(intent);
+                                finish();
+                            }
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }).start();
-
             }
         });
 

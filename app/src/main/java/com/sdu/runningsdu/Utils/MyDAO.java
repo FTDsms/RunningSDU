@@ -223,6 +223,26 @@ public class MyDAO {
 
     }
 
+    /**
+     * 查找好友最后一条消息的id
+     */
+    public int findLastFriendMessage(String sid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friendmessage",
+                new String[]{"mid"},
+                "sid = ?",
+                new String[]{sid},
+                null, null,
+                "mid");
+        int mid = -1;
+        if (cursor.moveToLast()) {
+            mid = cursor.getInt(0);
+            db.close();
+            return mid;
+        }
+        return mid;
+    }
+
     //查找好友消息
     public void findFriendMessage(String sid) {
 

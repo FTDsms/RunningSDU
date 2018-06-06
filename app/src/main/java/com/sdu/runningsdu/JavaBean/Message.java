@@ -6,7 +6,7 @@ package com.sdu.runningsdu.JavaBean;
 
 public class Message {
 
-    private String mid;
+    private int mid;
 
     private boolean isGroup;
 
@@ -20,7 +20,7 @@ public class Message {
     //消息类型
     private int type;
 
-    //接受或发送
+    //接收或发送
     public static final int TYPE_RECEIVED = 0;
     public static final int TYPE_SENT = 1;
 
@@ -49,9 +49,9 @@ public class Message {
     }
 
     // 好友消息
-    public Message(String mid, boolean isGroup, String friend, int type, String content, String time) {
+    public Message(int mid, String friend, int type, String content, String time) {
         this.mid = mid;
-        this.isGroup = isGroup;
+        this.isGroup = false;
         this.friend = friend;
         this.type = type;
         this.content = content;
@@ -59,8 +59,8 @@ public class Message {
     }
 
     // 群聊消息
-    public Message(boolean isGroup, String group, String friend, int type, String content, String time) {
-        this.isGroup = isGroup;
+    public Message(String group, String friend, int type, String content, String time) {
+        this.isGroup = true;
         this.group = group;
         this.friend = friend;
         this.type = type;
@@ -69,9 +69,9 @@ public class Message {
     }
 
     // 群聊消息
-    public Message(String mid, boolean isGroup, String group, String friend, int type, String content, String time) {
+    public Message(int mid, String group, String friend, int type, String content, String time) {
         this.mid = mid;
-        this.isGroup = isGroup;
+        this.isGroup = true;
         this.group = group;
         this.friend = friend;
         this.type = type;
@@ -79,11 +79,11 @@ public class Message {
         this.time = time;
     }
 
-    public String getMid() {
+    public int getMid() {
         return mid;
     }
 
-    public void setMid(String mid) {
+    public void setMid(int mid) {
         this.mid = mid;
     }
 

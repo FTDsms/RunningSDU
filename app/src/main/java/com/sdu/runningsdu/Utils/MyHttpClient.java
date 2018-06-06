@@ -133,12 +133,12 @@ public class MyHttpClient {
     /**
      * 查询对话
      * */
-    public static String findMessage(String url, String mid, String receiver, String sender) throws IOException {
+    public static String findMessage(String url, int mid, String myName, String friendName) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("coid", mid)
-                .add("receiver", receiver)
-                .add("sender", sender)
+                .add("coid", Integer.toString(mid))
+                .add("receiver", myName)
+                .add("sender", friendName)
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/findConversations")

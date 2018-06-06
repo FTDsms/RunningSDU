@@ -124,7 +124,8 @@ public class LoginActivity extends AppCompatActivity{
         // 获取好友消息
         List<Friend> friends = user.getFriends();
         for (Friend friend : friends) {
-            friend.setMessages(getFriendMessage(myApplication.getIp(), user.getSid(), friend.getSid()));
+            int mid = myDAO.findLastFriendMessage(friend.getSid());
+            friend.setMessages(getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid()));
         }
         user.setFriends(friends);
         // 获取群组消息
@@ -206,9 +207,9 @@ public class LoginActivity extends AppCompatActivity{
     /**
      * 获取好友消息
      * */
-    private List<Message> getFriendMessage(String ip, String mid, String receiver, String sender) throws IOException, JSONException {
+    private List<Message> getFriendMessage(String ip, int mid, String myName, String friendName) throws IOException, JSONException {
         List<Message> messages = new ArrayList<>();
-        String response = MyHttpClient.findMessage(ip, mid, receiver, sender);
+        String response = MyHttpClient.findMessage(ip, mid, myName, friendName);
         Log.w("test", response);
         JSONObject json = new JSONObject(response);
         String flag = json.optString("flag");
@@ -226,11 +227,21 @@ public class LoginActivity extends AppCompatActivity{
             // success
             JSONObject obj = json.optJSONObject("obj");
             for (int i=0; i<obj.length(); ++i) {
-                String mmid = obj.optString("mid");
-                String name = obj.optString("name");
-                String creator = obj.optString("creator");
-                String image = obj.optString("image");
-                Message message = new Message(mmid, name, creator, image);
+                int mmid = Integer.parseInt(obj.optString("coid"));
+                String sender = obj.optString("sender");
+                String receiver = obj.optString("receiver");
+                String content = obj.optString("content");
+                String time = obj.optString("time");
+                String friend;
+                int type;
+                if (sender.equals(myName)) {
+                    friend = receiver;
+                    type = Message.TYPE_SENT;
+                } else {
+                    friend = sender;
+                    type = Message.TYPE_RECEIVED;
+                }
+                Message message = new Message(mmid, friend, type, content, time);
                 messages.add(message);
             }
             return messages;
@@ -448,9 +459,9 @@ public class LoginActivity extends AppCompatActivity{
         for (int i=0; i<members.size(); ++i) {
             Message message;
             if (members.get(i).equals(user.getName())) {
-                message = new Message(true, "创新实训", members.get(i), Message.TYPE_SENT, "test", "15:00");
+                message = new Message("创新实训", members.get(i), Message.TYPE_SENT, "test", "15:00");
             } else {
-                message = new Message(true, "创新实训", members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
+                message = new Message("创新实训", members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
             }
             groupMessages.add(message);
         }
@@ -462,7 +473,7 @@ public class LoginActivity extends AppCompatActivity{
         Friend friend1 = new Friend("焦方锴");
         List<Message> messages1 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message1 = new Message(false, friend1.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message1 = new Message(friend1.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages1.add(message1);
         }
         friend1.setMessages(messages1);
@@ -471,7 +482,7 @@ public class LoginActivity extends AppCompatActivity{
         Friend friend2 = new Friend("叶蕴盈");
         List<Message> messages2 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message2 = new Message(false, friend2.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message2 = new Message(friend2.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages2.add(message2);
         }
         friend2.setMessages(messages2);
@@ -482,7 +493,7 @@ public class LoginActivity extends AppCompatActivity{
             friend = new Friend("test"+(i+1));
             List<Message> messages = new ArrayList<>();
             for(int j=0; j<10; ++j) {
-                Message message = new Message(false, friend.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+                Message message = new Message(friend.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
                 messages.add(message);
             }
             friend.setMessages(messages);

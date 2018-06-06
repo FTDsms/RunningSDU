@@ -81,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = inputText.getText().toString();
                 if(!"".equals(content)) {
-                    Message message = new Message(false, friendName, Message.TYPE_SENT, content, "22:09");
+                    Message message = new Message(friendName, Message.TYPE_SENT, content, "22:09");
                     messages.add(message);
                     currentFriend.setMessages(messages);
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示

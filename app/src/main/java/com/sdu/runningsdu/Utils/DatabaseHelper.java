@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String friendMessageSQL = "create table if not exists friendmessage " +
                 "(mid integer primary key, " +
                 "sid varchar(20), " +
-                "type integer, " +
+                "type integer, " +  /* 0接收 1发送 */
                 "content varchar(255), " +
                 "time timestamp)";
         sqLiteDatabase.execSQL(friendMessageSQL);

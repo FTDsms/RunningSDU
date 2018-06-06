@@ -248,6 +248,26 @@ public class MyDAO {
 
     }
 
+    /**
+     * 查找群聊最后一条消息的id
+     */
+    public int findLastGroupMessage(String gid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmessage",
+                new String[]{"mid"},
+                "gid = ?",
+                new String[]{gid},
+                null, null,
+                "mid");
+        int mid = -1;
+        if (cursor.moveToLast()) {
+            mid = cursor.getInt(0);
+            db.close();
+            return mid;
+        }
+        return mid;
+    }
+
     //查找群聊消息
     public void findGroupMessage(String gid) {
 

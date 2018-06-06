@@ -129,7 +129,12 @@ public class LoginActivity extends AppCompatActivity{
         }
         user.setFriends(friends);
         // 获取群组消息
-
+        List<Group> groups = user.getGroups();
+        for (Group group : groups) {
+            int mid = myDAO.findLastGroupMessage(group.getGid());
+            group.setMessages(getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid()));
+        }
+        user.setGroups(groups);
         // 获取好友申请
 
         // 获取
@@ -242,6 +247,46 @@ public class LoginActivity extends AppCompatActivity{
                     type = Message.TYPE_RECEIVED;
                 }
                 Message message = new Message(mmid, friend, type, content, time);
+                messages.add(message);
+            }
+            return messages;
+        }
+    }
+
+    /**
+     * 获取群组消息
+     * */
+    private List<Message> getGroupMessage(String ip, String gid, int mid, String myName) throws IOException, JSONException {
+        List<Message> messages = new ArrayList<>();
+        String response = MyHttpClient.findGroupMessage(ip, gid, mid);
+        Log.w("test", response);
+        JSONObject json = new JSONObject(response);
+        String flag = json.optString("flag");
+        if (!flag.equals("true")) {
+            // failure
+            String msg = json.optString("msg");
+            if (msg.equals("wrong password")) {
+
+            }
+            if (msg.equals("no such student")) {
+
+            }
+            return null;
+        } else {
+            // success
+            JSONObject obj = json.optJSONObject("obj");
+            for (int i=0; i<obj.length(); ++i) {
+                int gnid = Integer.parseInt(obj.optString("gnid"));
+                String sid = obj.optString("sid");
+                String content = obj.optString("content");
+                String time = obj.optString("time");
+                int type;
+                if (sid.equals(myName)) {
+                    type = Message.TYPE_SENT;
+                } else {
+                    type = Message.TYPE_RECEIVED;
+                }
+                Message message = new Message(gnid, gid, sid, type, content, time);
                 messages.add(message);
             }
             return messages;

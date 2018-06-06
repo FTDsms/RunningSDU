@@ -29,6 +29,12 @@ public class Friend extends SortModel{
 
     }
 
+    public Friend(String sid, String name, String image) {
+        this.sid = sid;
+        this.name = name;
+        this.image = image;
+    }
+
     public Friend(String nickname) {
         this.nickname = nickname;
     }

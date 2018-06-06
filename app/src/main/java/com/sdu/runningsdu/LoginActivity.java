@@ -31,6 +31,7 @@ import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.Utils.MD5;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
@@ -54,7 +55,9 @@ public class LoginActivity extends AppCompatActivity{
 
     private static final int REQUEST_STORAGE = 0x1;
 
-    // UI references.
+    /**
+     * UI references.
+     * */
     private EditText sidView;
     private EditText passwordView;
     private View mLoginFormView;
@@ -65,74 +68,16 @@ public class LoginActivity extends AppCompatActivity{
     private Button testButton;
     private TextView testText;
 
-
+    /**
+     * Application & Database Access Object
+     * */
     private MyApplication myApplication;
 
     private MyDAO myDAO;
 
-    //初始化默认数据
-    private User initData() {
-        User user = new User("201500301182", "邵明山", "000000", null);
-//        User user = new User();
-//        user.setName("邵明山");
-
-        List<Group> groups = new ArrayList<>();
-        Group group = new Group("创新实训");
-        List<String> members = new ArrayList<>();
-        members.add("邵明山");
-        members.add("焦方锴");
-        members.add("叶蕴盈");
-        group.setMembers(members);
-        List<Message> groupMessages = new ArrayList<>();
-        for (int i=0; i<members.size(); ++i) {
-            Message message;
-            if (members.get(i).equals(user.getName())) {
-                message = new Message(true, "创新实训", members.get(i), Message.TYPE_SENT, "test", "15:00");
-            } else {
-                message = new Message(true, "创新实训", members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
-            }
-            groupMessages.add(message);
-        }
-        group.setMessages(groupMessages);
-        groups.add(group);
-        user.setGroups(groups);
-
-        List<Friend> friends = new ArrayList<>();
-        Friend friend1 = new Friend("焦方锴");
-        List<Message> messages1 = new ArrayList<>();
-        for(int j=0; j<10; ++j) {
-            Message message1 = new Message(false, friend1.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
-            messages1.add(message1);
-        }
-        friend1.setMessages(messages1);
-        friends.add(friend1);
-
-        Friend friend2 = new Friend("叶蕴盈");
-        List<Message> messages2 = new ArrayList<>();
-        for(int j=0; j<10; ++j) {
-            Message message2 = new Message(false, friend2.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
-            messages2.add(message2);
-        }
-        friend2.setMessages(messages2);
-        friends.add(friend2);
-
-        Friend friend;
-        for(int i=0; i<10; ++i) {
-            friend = new Friend("test"+(i+1));
-            List<Message> messages = new ArrayList<>();
-            for(int j=0; j<10; ++j) {
-                Message message = new Message(false, friend.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
-                messages.add(message);
-            }
-            friend.setMessages(messages);
-            friends.add(friend);
-        }
-
-        user.setFriends(friends);
-        return user;
-    }
-
-    // 申请权限
+    /**
+     * 申请权限
+     * */
     private void requestForPermissions() {
         //检查权限
         //存储权限
@@ -156,8 +101,10 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    //初始化数据库
-    private void initDatabase() {
+    /**
+     * 初始化数据库
+     * */
+    private void initDatabase() throws IOException, JSONException {
         User user = myApplication.getUser();
         myDAO = new MyDAO(LoginActivity.this, user.getName());
 //        myDAO.deleteUser(user.getSid()); // 删除用户
@@ -167,6 +114,122 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             // if user exists, print user information
             Log.i("user: ", myDAO.findUser(user.getSid()).toString());
+        }
+        // 获取好友
+        user.setFriends(getFriends(myApplication.getIp(), user.getSid()));
+        myDAO.addFriends(user.getFriends());
+        // 获取群组
+        user.setGroups(getGroups(myApplication.getIp(), user.getSid()));
+        myDAO.addGroups(user.getGroups());
+        // 获取好友消息
+
+        // 获取群组消息
+
+        // 获取好友申请
+
+        // 获取
+
+    }
+
+    /**
+     * 获取好友
+     * */
+    private List<Friend> getFriends(String ip, String sid) throws IOException, JSONException {
+        List<Friend> friends = new ArrayList<>();
+        String response = MyHttpClient.findFriend(ip, sid);
+        Log.w("test", response);
+        JSONObject json = new JSONObject(response);
+        String flag = json.optString("flag");
+        if (!flag.equals("true")) {
+            // failure
+            String msg = json.optString("msg");
+            if (msg.equals("wrong password")) {
+
+            }
+            if (msg.equals("no such student")) {
+
+            }
+            return null;
+        } else {
+            // success
+            JSONObject obj = json.optJSONObject("obj");
+            for (int i=0; i<obj.length(); ++i) {
+                String fsid = obj.optString("sid");
+                String name = obj.optString("name");
+                String image = obj.optString("image");
+                Friend friend = new Friend(fsid, name, image);
+                friends.add(friend);
+            }
+            return friends;
+        }
+
+    }
+
+    /**
+     * 获取群组
+     * */
+    private List<Group> getGroups(String ip, String gid) throws IOException, JSONException {
+        List<Group> groups = new ArrayList<>();
+        String response = MyHttpClient.findGroup(ip, gid);
+        Log.w("test", response);
+        JSONObject json = new JSONObject(response);
+        String flag = json.optString("flag");
+        if (!flag.equals("true")) {
+            // failure
+            String msg = json.optString("msg");
+            if (msg.equals("wrong password")) {
+
+            }
+            if (msg.equals("no such student")) {
+
+            }
+            return null;
+        } else {
+            // success
+            JSONObject obj = json.optJSONObject("obj");
+            for (int i=0; i<obj.length(); ++i) {
+                String ggid = obj.optString("gid");
+                String name = obj.optString("name");
+                String creator = obj.optString("creator");
+                String image = obj.optString("image");
+                Group group = new Group(ggid, name, creator, image);
+                groups.add(group);
+            }
+            return groups;
+        }
+    }
+
+    /**
+     * 获取好友消息
+     * */
+    private List<Group> getFriendMessage(String ip, String gid) throws IOException, JSONException {
+        List<Group> groups = new ArrayList<>();
+        String response = MyHttpClient.findGroup(ip, gid);
+        Log.w("test", response);
+        JSONObject json = new JSONObject(response);
+        String flag = json.optString("flag");
+        if (!flag.equals("true")) {
+            // failure
+            String msg = json.optString("msg");
+            if (msg.equals("wrong password")) {
+
+            }
+            if (msg.equals("no such student")) {
+
+            }
+            return null;
+        } else {
+            // success
+            JSONObject obj = json.optJSONObject("obj");
+            for (int i=0; i<obj.length(); ++i) {
+                String ggid = obj.optString("sid");
+                String name = obj.optString("name");
+                String creator = obj.optString("creator");
+                String image = obj.optString("image");
+                Group group = new Group(ggid, name, creator, image);
+                groups.add(group);
+            }
+            return groups;
         }
     }
 
@@ -221,6 +284,7 @@ public class LoginActivity extends AppCompatActivity{
                         });
                         String sid = sidView.getText().toString();
                         String password = passwordView.getText().toString();
+                        password = MD5.md5(password, sid);
                         if (TextUtils.isEmpty(sid)) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -344,10 +408,85 @@ public class LoginActivity extends AppCompatActivity{
         testButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-//                User user = new User();
+                // 初始化数据
+                User user = initData();
+                myApplication.setUser(user);
+
+                // 创建数据库
+                try {
+                    initDatabase();
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
+    }
+
+    //初始化默认数据
+    private User initData() {
+        User user = new User("201500301182", "邵明山", "000000", null);
+//        User user = new User();
+//        user.setName("邵明山");
+
+        List<Group> groups = new ArrayList<>();
+        Group group = new Group("创新实训");
+        List<String> members = new ArrayList<>();
+        members.add("邵明山");
+        members.add("焦方锴");
+        members.add("叶蕴盈");
+        group.setMembers(members);
+        List<Message> groupMessages = new ArrayList<>();
+        for (int i=0; i<members.size(); ++i) {
+            Message message;
+            if (members.get(i).equals(user.getName())) {
+                message = new Message(true, "创新实训", members.get(i), Message.TYPE_SENT, "test", "15:00");
+            } else {
+                message = new Message(true, "创新实训", members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
+            }
+            groupMessages.add(message);
+        }
+        group.setMessages(groupMessages);
+        groups.add(group);
+        user.setGroups(groups);
+
+        List<Friend> friends = new ArrayList<>();
+        Friend friend1 = new Friend("焦方锴");
+        List<Message> messages1 = new ArrayList<>();
+        for(int j=0; j<10; ++j) {
+            Message message1 = new Message(false, friend1.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            messages1.add(message1);
+        }
+        friend1.setMessages(messages1);
+        friends.add(friend1);
+
+        Friend friend2 = new Friend("叶蕴盈");
+        List<Message> messages2 = new ArrayList<>();
+        for(int j=0; j<10; ++j) {
+            Message message2 = new Message(false, friend2.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            messages2.add(message2);
+        }
+        friend2.setMessages(messages2);
+        friends.add(friend2);
+
+        Friend friend;
+        for(int i=0; i<10; ++i) {
+            friend = new Friend("test"+(i+1));
+            List<Message> messages = new ArrayList<>();
+            for(int j=0; j<10; ++j) {
+                Message message = new Message(false, friend.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+                messages.add(message);
+            }
+            friend.setMessages(messages);
+            friends.add(friend);
+        }
+
+        user.setFriends(friends);
+        return user;
     }
 
     private boolean isSidValid(String sid) {

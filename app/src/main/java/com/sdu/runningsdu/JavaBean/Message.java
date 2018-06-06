@@ -6,6 +6,8 @@ package com.sdu.runningsdu.JavaBean;
 
 public class Message {
 
+    private String mid;
+
     private boolean isGroup;
 
     private String friend;
@@ -54,6 +56,14 @@ public class Message {
     private String picture;
     //文件
     private String file;
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
 
     public boolean isGroup() {
         return isGroup;

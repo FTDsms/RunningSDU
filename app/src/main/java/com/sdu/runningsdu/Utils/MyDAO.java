@@ -34,7 +34,9 @@ public class MyDAO {
 //        findAllUser();
     }
 
-    // 查询所有表格
+    /**
+     * 查询所有表格
+     * */
     public void findTable() {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select name from sqlite_master where type='table' order by name", null);
@@ -45,7 +47,9 @@ public class MyDAO {
         db.close();
     }
 
-    // 查询是否有用户
+    /**
+     * 查询是否有用户
+     * */
     public boolean hasUser() {
         List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -59,7 +63,9 @@ public class MyDAO {
         return false;
     }
 
-    // 查询所有用户
+    /**
+     * 查询所有用户
+     * */
     public List<User> findAllUser() {
         List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -78,7 +84,9 @@ public class MyDAO {
         return users;
     }
 
-    // 查找用户信息
+    /**
+     * 查找用户信息
+     * */
     public User findUser(String sid) {
         User user = new User();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -97,7 +105,9 @@ public class MyDAO {
         return user;
     }
 
-    // 添加用户
+    /**
+     * 添加用户
+     * */
     public void addUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -111,7 +121,9 @@ public class MyDAO {
         Log.d("database", "add user: " + user.getName());
     }
 
-    // 删除用户
+    /**
+     * 删除用户
+     * */
     public void deleteUser(String sid) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from user where sid = ?";
@@ -130,9 +142,36 @@ public class MyDAO {
 
     }
 
-    //添加好友
+    /**
+     * 添加好友
+     * */
     public void addFriend(Friend friend) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[3];
+        objects[0] = friend.getSid();
+        objects[1] = friend.getName();
+        objects[2] = friend.getImage();
+        String sql = "insert into friend(sid, name, image) values(?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friend: " + friend.getName());
+        db.close();
+    }
 
+    /**
+     * 批量添加好友
+     * */
+    public void addFriends(List<Friend> friends) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Friend friend : friends) {
+            Object[] objects = new Object[3];
+            objects[0] = friend.getSid();
+            objects[1] = friend.getName();
+            objects[2] = friend.getImage();
+            String sql = "insert into friend(sid, name, image) values(?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add friend: " + friend.getName());
+        }
+        db.close();
     }
 
     //删除好友
@@ -145,9 +184,38 @@ public class MyDAO {
 
     }
 
-    //添加群聊
+    /**
+     * 添加群聊
+     * */
     public void addGroup(Group group) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[4];
+        objects[0] = group.getGid();
+        objects[1] = group.getName();
+        objects[2] = group.getCreator();
+        objects[3] = group.getImage();
+        String sql = "insert into friend(gid, name, creator, image) values(?,?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friend: " + group.getName());
+        db.close();
+    }
 
+    /**
+     * 批量添加群聊
+     * */
+    public void addGroups(List<Group> groups) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Group group : groups) {
+            Object[] objects = new Object[4];
+            objects[0] = group.getGid();
+            objects[1] = group.getName();
+            objects[2] = group.getCreator();
+            objects[3] = group.getImage();
+            String sql = "insert into friend(gid, name, creator, image) values(?,?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add friend: " + group.getName());
+        }
+        db.close();
     }
 
     //退群

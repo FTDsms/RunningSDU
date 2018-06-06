@@ -12,9 +12,7 @@ public class Group {
 
     private String name;
 
-    private String owner;
-
-    private List<String> admin;
+    private String creator;
 
     private List<String> members;
 
@@ -26,6 +24,13 @@ public class Group {
 
     public Group() {
 
+    }
+
+    public Group(String gid, String name, String creator, String image) {
+        this.gid = gid;
+        this.name = name;
+        this.creator = creator;
+        this.image = image;
     }
 
     public Group(String name) {
@@ -48,20 +53,12 @@ public class Group {
         this.name = name;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public List<String> getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(List<String> admin) {
-        this.admin = admin;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public List<String> getMembers() {

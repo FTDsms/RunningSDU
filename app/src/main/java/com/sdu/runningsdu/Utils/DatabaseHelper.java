@@ -19,8 +19,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, name, null, DB_VERSION);
     }
 
+    /**
+     * 单例模式
+     * */
     public static DatabaseHelper getInstance(Context context, String name) {
-        // 单例模式
         if (databaseHelper == null) {
             databaseHelper = new DatabaseHelper(context, name);
         }
@@ -49,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String groupSQL = "create table if not exists groups " +
                 "(gid integer primary key, " +
                 "name varchar(255), " +
-                "owner varchar(255), " +
+                "creator varchar(255), " +
                 "image varchar(255), " +
                 "unread varchar(255))";
         sqLiteDatabase.execSQL(groupSQL);

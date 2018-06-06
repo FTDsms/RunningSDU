@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sdu.runningsdu.JavaBean.Friend;
+import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
@@ -42,21 +44,24 @@ public class MessageFragment extends Fragment {
     private void initData() {
         myApplication = (MyApplication) getActivity().getApplication();
         User user = myApplication.getUser();
+
+
+
         list = new ArrayList<>();
-//        List<Group> groups = user.getGroups();
-//        if (groups.size() > 0) {
-//            for (Group group : groups) {
-//                List<Message> messages = group.getMessages();
-//                list.add(messages.get(messages.size()-1));
-//            }
-//        }
-//        List<Friend> friends = user.getFriends();
-//        if (friends.size() > 0) {
-//            for(Friend friend : friends){
-//                List<Message> messages = friend.getMessages();
-//                list.add(messages.get(messages.size()-1));
-//            }
-//        }
+        List<Group> groups = user.getGroups();
+        if (groups.size() > 0) {
+            for (Group group : groups) {
+                List<Message> messages = group.getMessages();
+                list.add(messages.get(messages.size()-1));
+            }
+        }
+        List<Friend> friends = user.getFriends();
+        if (friends.size() > 0) {
+            for(Friend friend : friends){
+                List<Message> messages = friend.getMessages();
+                list.add(messages.get(messages.size()-1));
+            }
+        }
 
 //        list = new ArrayList<String>();
 //        list.add("test1");

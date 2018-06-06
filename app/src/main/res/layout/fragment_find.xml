@@ -19,10 +19,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/trend"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -38,6 +41,7 @@
                 android:text="朋友圈"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
@@ -48,10 +52,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -67,17 +74,22 @@
                 android:text="扫一扫"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@color/colorSideBarBg"/>
+
         <LinearLayout
+            android:id="@+id/shake"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -93,6 +105,7 @@
                 android:text="摇一摇"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
@@ -103,10 +116,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/look"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -122,17 +138,22 @@
                 android:text="看一看"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@color/colorSideBarBg"/>
+
         <LinearLayout
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -148,6 +169,7 @@
                 android:text="搜一搜"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
@@ -158,10 +180,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/nearby"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -177,6 +202,7 @@
                 android:text="附近的人"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
@@ -187,10 +213,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/shop"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -206,17 +235,22 @@
                 android:text="购物"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@color/colorSideBarBg"/>
+
         <LinearLayout
+            android:id="@+id/game"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -232,6 +266,7 @@
                 android:text="游戏"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
@@ -242,10 +277,13 @@
             android:paddingStart="20dp"
             android:textColor="#7f7f7f"
             android:textSize="12sp"/>
+
         <LinearLayout
+            android:id="@+id/small_program"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical">
 
             <ImageView
@@ -261,6 +299,7 @@
                 android:text="小程序"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView

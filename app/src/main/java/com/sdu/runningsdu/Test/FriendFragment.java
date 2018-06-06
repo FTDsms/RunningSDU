@@ -1,4 +1,4 @@
-package com.sdu.runningsdu.Contact;
+package com.sdu.runningsdu.Test;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.sdu.runningsdu.Contact;
+package com.sdu.runningsdu.Test;
 
 import android.support.v4.app.Fragment;
 

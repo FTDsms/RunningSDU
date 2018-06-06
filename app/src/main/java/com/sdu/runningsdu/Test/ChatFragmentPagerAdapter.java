@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.sdu.runningsdu.Contact.FriendFragment;
-import com.sdu.runningsdu.Contact.GroupFragment;
 import com.sdu.runningsdu.Message.MessageFragment;
 
 /**

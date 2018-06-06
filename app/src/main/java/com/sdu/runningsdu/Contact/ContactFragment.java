@@ -1,11 +1,13 @@
 package com.sdu.runningsdu.Contact;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +32,10 @@ public class ContactFragment extends Fragment {
     private TextView dialog;
     private FriendListViewAdapter friendListViewAdapter;
     private List<Friend> friends;
+    private LinearLayout newFriend;
+    private LinearLayout groupChat;
+    private LinearLayout label;
+    private LinearLayout subscription;
     private TextView tvFoot;
 
     public ContactFragment() {
@@ -72,14 +78,44 @@ public class ContactFragment extends Fragment {
         listView = (ListView) getView().findViewById(R.id.list_view);
         listView.setAdapter(friendListViewAdapter);
 
-        //optional
+        // header
         View header = LayoutInflater.from(getContext()).inflate(R.layout.list_item_head, null);
+        newFriend = header.findViewById(R.id.new_friend);
+        groupChat = header.findViewById(R.id.group_chat);
+        label = header.findViewById(R.id.label);
+        subscription = header.findViewById(R.id.subscription);
         listView.addHeaderView(header);
 
-        //optional
+        newFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), NewFriendActivity.class);
+                startActivity(intent);
+            }
+        });
+        groupChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        subscription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        // footer
         View footer = LayoutInflater.from(getContext()).inflate(R.layout.list_item_foot, null);
         tvFoot = (TextView) footer.findViewById(R.id.tv_foot);
-        listView.addFooterView(footer);
+        listView.addFooterView(footer, null, false);
 
         tvFoot.setText(friends.size() + "位联系人");
 

@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -193,13 +192,14 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-//    private void changeBackground() {
-//        LinearLayout linearLayout = findViewById(R.id.login_activity);
+    private void changeBackground() {
+        LinearLayout linearLayout = findViewById(R.id.login_activity);
 //        linearLayout.getBackground().setAlpha(255);
-//        Resources resources = LoginActivity.this.getResources();
-//        Drawable drawable = resources.getDrawable(R.drawable.background_login);
-//        linearLayout.setBackground(drawable);
-//    }
+        Resources resources = LoginActivity.this.getResources();
+        Drawable drawable = resources.getDrawable(R.drawable.background_login);
+//        drawable.setAlpha(200);
+        linearLayout.setBackground(drawable);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +219,9 @@ public class LoginActivity extends AppCompatActivity{
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        sidView.setError(getString(R.string.error_field_required));
+        sidView.setError(getString(R.string.error_invalid_email));
+
         Button loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -227,11 +230,25 @@ public class LoginActivity extends AppCompatActivity{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                        //TODO: 从输入栏获取用户名和密码 MD5加密
-                        String sid = "201500301132";
-                        String password = "000000";
+                        // 从输入栏获取用户名和密码 MD5加密
+                        sidView.setError(null);
+                        passwordView.setError(null);
+                        String sid = sidView.getText().toString();
+                        String password = passwordView.getText().toString();
+                        if (TextUtils.isEmpty(sid)) {
+                            sidView.setError("学号不能为空");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(password)) {
+                            passwordView.setError("密码不能为空");
+                            return;
+                        }
+                        if (!isSidValid(sid)) {
+                            sidView.setError("学号位数错误");
+                            return;
+                        }
+//                        String sid = "201500301132";
+//                        String password = "000000";
                         User user = new User();
                         try {
                             String response = MyHttpClient.login(myApplication.getIp(), sid, password);
@@ -243,15 +260,35 @@ public class LoginActivity extends AppCompatActivity{
                                 // failure
                                 String msg = json.optString("msg");
                                 if (msg.equals("wrong password")) {
-                                    //TODO 密码错误 请检查密码
+                                    // 密码错误，请检查密码
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+//                                        passwordView.setError("密码错误，请检查密码");
+                                        }
+                                    });
                                     return;
                                 }
                                 if (msg.equals("no such student")) {
-                                    //TODO 用户不存在 请先注册
+                                    // 用户不存在，请先注册
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+//                                        passwordView.setError("用户不存在，请先注册");
+                                        }
+                                    });
                                     return;
                                 }
                             } else {
                                 // success
+                                // 显示进度条
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                        showProgress(true);
+                                    }
+                                });
+
                                 JSONObject userObject = json.optJSONObject("obj");
                                 user.setSid(userObject.optString("sid"));
                                 user.setName(userObject.optString("name"));
@@ -264,6 +301,7 @@ public class LoginActivity extends AppCompatActivity{
                                 // 创建数据库
                                 initDatabase();
 
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
@@ -276,65 +314,15 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
-//        showProgress(true);
-
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        // Reset errors.
-        sidView.setError(null);
-        passwordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = sidView.getText().toString();
-        String password = passwordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordView.setError(getString(R.string.error_invalid_password));
-            focusView = passwordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            sidView.setError(getString(R.string.error_field_required));
-            focusView = sidView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            sidView.setError(getString(R.string.error_invalid_email));
-            focusView = sidView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+    private boolean isSidValid(String sid) {
+        return sid.length() == 12;
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        // TODO: check is password is valid
+        return true;
     }
 
     /**

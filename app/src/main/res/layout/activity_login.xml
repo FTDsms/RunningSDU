@@ -125,6 +125,7 @@
             android:visibility="gone"/>
 
     </LinearLayout>
+
     <!-- Login progress -->
     <ProgressBar
         android:id="@+id/login_progress"

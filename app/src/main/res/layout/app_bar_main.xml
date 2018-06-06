@@ -16,9 +16,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/head_image"
+            app:title="title"
             android:background="@drawable/title_bar" />
-        <!--app:navigationIcon="@drawable/head_image"-->
-        <!--app:title="title"-->
+
 
     </android.support.design.widget.AppBarLayout>
 

@@ -122,7 +122,11 @@ public class LoginActivity extends AppCompatActivity{
         user.setGroups(getGroups(myApplication.getIp(), user.getSid()));
         myDAO.addGroups(user.getGroups());
         // 获取好友消息
-
+        List<Friend> friends = user.getFriends();
+        for (Friend friend : friends) {
+            friend.setMessages(getFriendMessage(myApplication.getIp(), user.getSid(), friend.getSid()));
+        }
+        user.setFriends(friends);
         // 获取群组消息
 
         // 获取好友申请
@@ -202,9 +206,9 @@ public class LoginActivity extends AppCompatActivity{
     /**
      * 获取好友消息
      * */
-    private List<Group> getFriendMessage(String ip, String gid) throws IOException, JSONException {
-        List<Group> groups = new ArrayList<>();
-        String response = MyHttpClient.findGroup(ip, gid);
+    private List<Message> getFriendMessage(String ip, String mid, String receiver, String sender) throws IOException, JSONException {
+        List<Message> messages = new ArrayList<>();
+        String response = MyHttpClient.findMessage(ip, mid, receiver, sender);
         Log.w("test", response);
         JSONObject json = new JSONObject(response);
         String flag = json.optString("flag");
@@ -222,14 +226,14 @@ public class LoginActivity extends AppCompatActivity{
             // success
             JSONObject obj = json.optJSONObject("obj");
             for (int i=0; i<obj.length(); ++i) {
-                String ggid = obj.optString("sid");
+                String mmid = obj.optString("mid");
                 String name = obj.optString("name");
                 String creator = obj.optString("creator");
                 String image = obj.optString("image");
-                Group group = new Group(ggid, name, creator, image);
-                groups.add(group);
+                Message message = new Message(mmid, name, creator, image);
+                messages.add(message);
             }
-            return groups;
+            return messages;
         }
     }
 

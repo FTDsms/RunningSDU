@@ -32,7 +32,25 @@ public class Message {
 
     //文字内容
     private String content;
-    public Message(boolean isGroup, String friend, int type, String content, String time) {
+    //语音
+    private String voice;
+    //图片
+    private String picture;
+    //文件
+    private String file;
+
+    // 好友消息
+    public Message(String friend, int type, String content, String time) {
+        this.isGroup = false;
+        this.friend = friend;
+        this.type = type;
+        this.content = content;
+        this.time = time;
+    }
+
+    // 好友消息
+    public Message(String mid, boolean isGroup, String friend, int type, String content, String time) {
+        this.mid = mid;
         this.isGroup = isGroup;
         this.friend = friend;
         this.type = type;
@@ -40,7 +58,7 @@ public class Message {
         this.time = time;
     }
 
-    //群聊消息
+    // 群聊消息
     public Message(boolean isGroup, String group, String friend, int type, String content, String time) {
         this.isGroup = isGroup;
         this.group = group;
@@ -50,12 +68,16 @@ public class Message {
         this.time = time;
     }
 
-    //语音
-    private String voice;
-    //图片
-    private String picture;
-    //文件
-    private String file;
+    // 群聊消息
+    public Message(String mid, boolean isGroup, String group, String friend, int type, String content, String time) {
+        this.mid = mid;
+        this.isGroup = isGroup;
+        this.group = group;
+        this.friend = friend;
+        this.type = type;
+        this.content = content;
+        this.time = time;
+    }
 
     public String getMid() {
         return mid;

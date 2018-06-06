@@ -194,9 +194,9 @@ public class MyDAO {
         objects[1] = group.getName();
         objects[2] = group.getCreator();
         objects[3] = group.getImage();
-        String sql = "insert into friend(gid, name, creator, image) values(?,?,?,?)";
+        String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
         db.execSQL(sql, objects);
-        Log.d("database", "add friend: " + group.getName());
+        Log.d("database", "add group: " + group.getName());
         db.close();
     }
 
@@ -211,9 +211,9 @@ public class MyDAO {
             objects[1] = group.getName();
             objects[2] = group.getCreator();
             objects[3] = group.getImage();
-            String sql = "insert into friend(gid, name, creator, image) values(?,?,?,?)";
+            String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
             db.execSQL(sql, objects);
-            Log.d("database", "add friend: " + group.getName());
+            Log.d("database", "add group: " + group.getName());
         }
         db.close();
     }

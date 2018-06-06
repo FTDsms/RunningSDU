@@ -23,7 +23,9 @@ public class MyHttpClient {
 
     }
 
-    // 登录
+    /**
+     * 登录
+     * */
     public static String login(String url, String sid, String password) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -39,7 +41,9 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 添加好友
+    /**
+     * 添加好友
+     * */
     public static String addFriendRequest(String url, String receiver, String sender) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -110,7 +114,9 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查找好友
+    /**
+     * 查找好友
+     * */
     public static String findFriend(String url, String sid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -124,10 +130,13 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查询对话
-    public static String findMessage(String url, String receiver, String sender) throws IOException {
+    /**
+     * 查询对话
+     * */
+    public static String findMessage(String url, String mid, String receiver, String sender) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
+                .add("coid", mid)
                 .add("receiver", receiver)
                 .add("sender", sender)
                 .build();
@@ -172,7 +181,9 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 通过群号查找群组
+    /**
+     * 通过群号查找群组
+     * */
     public static String findGroup(String url, String gid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()

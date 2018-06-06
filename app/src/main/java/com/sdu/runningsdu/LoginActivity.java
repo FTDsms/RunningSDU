@@ -318,20 +318,26 @@ public class LoginActivity extends AppCompatActivity{
             long[] mHits = new long[clickTimes];
             @Override
             public void onClick(View view) {
-                System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
-                mHits[mHits.length-1] = SystemClock.uptimeMillis();
-                if (mHits[0] >= (SystemClock. uptimeMillis()-threshold)) {
-                    if (testButton.getVisibility() == View.GONE) {
-                        Toast.makeText(LoginActivity.this, "Open the test mode", Toast.LENGTH_LONG).show();
-                        testButton.setVisibility(View.VISIBLE);
-                        testText.setVisibility(View.VISIBLE);
-                    }
-                    if (testButton.getVisibility() == View.VISIBLE) {
-                        Toast.makeText(LoginActivity.this, "Close the test mode", Toast.LENGTH_LONG).show();
-                        testButton.setVisibility(View.GONE);
-                        testText.setVisibility(View.GONE);
-                    }
+                if (testButton.getVisibility() == View.GONE) {
+                    Toast.makeText(LoginActivity.this, "Open the test mode", Toast.LENGTH_LONG).show();
+                    testButton.setVisibility(View.VISIBLE);
+                    testText.setVisibility(View.VISIBLE);
                 }
+
+//                System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
+//                mHits[mHits.length-1] = SystemClock.uptimeMillis();
+//                if (mHits[0] >= (SystemClock. uptimeMillis()-threshold)) {
+//                    if (testButton.getVisibility() == View.GONE) {
+//                        Toast.makeText(LoginActivity.this, "Open the test mode", Toast.LENGTH_LONG).show();
+//                        testButton.setVisibility(View.VISIBLE);
+//                        testText.setVisibility(View.VISIBLE);
+//                    }
+//                    if (testButton.getVisibility() == View.VISIBLE) {
+//                        Toast.makeText(LoginActivity.this, "Close the test mode", Toast.LENGTH_LONG).show();
+//                        testButton.setVisibility(View.GONE);
+//                        testText.setVisibility(View.GONE);
+//                    }
+//                }
             }
         });
 

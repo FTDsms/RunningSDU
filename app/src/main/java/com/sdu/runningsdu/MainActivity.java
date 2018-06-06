@@ -99,11 +99,6 @@ public class MainActivity extends AppCompatActivity {
         //设置标题布局为titlebar
 //        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
 
-        Log.w("main dao", "1");
-        myApplication = (MyApplication) getApplication();
-        MyDAO myDAO = new MyDAO(MainActivity.this, myApplication.getUser().getName());
-        Log.w("main dao", "2");
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);

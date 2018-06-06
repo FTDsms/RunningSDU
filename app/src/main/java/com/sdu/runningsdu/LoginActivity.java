@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,16 +17,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdu.runningsdu.JavaBean.Friend;
@@ -45,8 +41,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -60,10 +54,10 @@ public class LoginActivity extends AppCompatActivity{
     private static final int REQUEST_STORAGE = 0x1;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
+    private EditText sidView;
+    private EditText passwordView;
     private View mLoginFormView;
+    private View mProgressView;
 
     private MyApplication myApplication;
 
@@ -189,6 +183,7 @@ public class LoginActivity extends AppCompatActivity{
     private void initDatabase() {
         User user = myApplication.getUser();
         myDAO = new MyDAO(LoginActivity.this, user.getName());
+//        myDAO.deleteUser(user.getSid()); // 删除用户
         if (!myDAO.hasUser() || !myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
             // if user not exists, add user
             myDAO.addUser(user);
@@ -198,12 +193,13 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    private void changeBackground() {
-        LinearLayout linearLayout = findViewById(R.id.login_activity);
-        Resources resources = LoginActivity.this.getResources();
-        Drawable drawable = resources.getDrawable(R.drawable.background_login);
-        linearLayout.setBackground(drawable);
-    }
+//    private void changeBackground() {
+//        LinearLayout linearLayout = findViewById(R.id.login_activity);
+//        linearLayout.getBackground().setAlpha(255);
+//        Resources resources = LoginActivity.this.getResources();
+//        Drawable drawable = resources.getDrawable(R.drawable.background_login);
+//        linearLayout.setBackground(drawable);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,22 +214,13 @@ public class LoginActivity extends AppCompatActivity{
         myApplication = (MyApplication) getApplication();
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        sidView = (EditText) findViewById(R.id.sid);
+        passwordView = (EditText) findViewById(R.id.password);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button loginButton = (Button) findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 //                attemptLogin();
@@ -289,41 +276,8 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
 //        showProgress(true);
 
-    }
-
-//    private void populateAutoComplete() {
-//        if (!mayRequestContacts()) {
-//            return;
-//        }
-//
-//        getLoaderManager().initLoader(0, null, this);
-//    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
     }
 
     /**
@@ -332,36 +286,32 @@ public class LoginActivity extends AppCompatActivity{
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-//        if (mAuthTask != null) {
-//            return;
-//        }
-
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        sidView.setError(null);
+        passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = sidView.getText().toString();
+        String password = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            passwordView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordView;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            sidView.setError(getString(R.string.error_field_required));
+            focusView = sidView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            sidView.setError(getString(R.string.error_invalid_email));
+            focusView = sidView;
             cancel = true;
         }
 

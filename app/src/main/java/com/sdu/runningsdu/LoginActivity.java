@@ -36,6 +36,7 @@ import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,24 +118,36 @@ public class LoginActivity extends AppCompatActivity{
         }
         // 获取好友
         user.setFriends(getFriends(myApplication.getIp(), user.getSid()));
-        myDAO.addFriends(user.getFriends());
+        if (user.getFriends() != null) {
+            myDAO.addFriends(user.getFriends());
+        }
         // 获取群组
         user.setGroups(getGroups(myApplication.getIp(), user.getSid()));
-        myDAO.addGroups(user.getGroups());
+        if (user.getGroups() != null) {
+            myDAO.addGroups(user.getGroups());
+        }
         // 获取好友消息
-        List<Friend> friends = user.getFriends();
-        for (Friend friend : friends) {
-            int mid = myDAO.findLastFriendMessage(friend.getSid());
-            friend.setMessages(getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid()));
+        if (user.getFriends() != null) {
+            List<Friend> friends = user.getFriends();
+            for (Friend friend : friends) {
+                int mid = myDAO.findLastFriendMessage(friend.getSid());
+                List<Message> messages = getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid());
+                friend.setMessages(messages);
+                myDAO.addFriendMessages(messages);
+            }
+            user.setFriends(friends);
         }
-        user.setFriends(friends);
         // 获取群组消息
-        List<Group> groups = user.getGroups();
-        for (Group group : groups) {
-            int mid = myDAO.findLastGroupMessage(group.getGid());
-            group.setMessages(getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid()));
+        if (user.getGroups() != null) {
+            List<Group> groups = user.getGroups();
+            for (Group group : groups) {
+                int mid = myDAO.findLastGroupMessage(group.getGid());
+                List<Message> messages = getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid());
+                group.setMessages(messages);
+                myDAO.addGroupMessages(messages);
+            }
+            user.setGroups(groups);
         }
-        user.setGroups(groups);
         // 获取好友申请
 
         // 获取
@@ -148,31 +161,16 @@ public class LoginActivity extends AppCompatActivity{
         List<Friend> friends = new ArrayList<>();
         String response = MyHttpClient.findFriend(ip, sid);
         Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
-            }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                String fsid = obj.optString("sid");
-                String name = obj.optString("name");
-                String image = obj.optString("image");
-                Friend friend = new Friend(fsid, name, image);
-                friends.add(friend);
-            }
-            return friends;
+        JSONArray json = new JSONArray(response);
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String fsid = obj.optString("sid");
+            String name = obj.optString("name");
+            String image = obj.optString("image");
+            Friend friend = new Friend(fsid, name, image);
+            friends.add(friend);
         }
-
+        return friends;
     }
 
     /**
@@ -180,33 +178,19 @@ public class LoginActivity extends AppCompatActivity{
      * */
     private List<Group> getGroups(String ip, String gid) throws IOException, JSONException {
         List<Group> groups = new ArrayList<>();
-        String response = MyHttpClient.findGroup(ip, gid);
+        String response = MyHttpClient.findMyGroup(ip, gid);
         Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
-            }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                String ggid = obj.optString("gid");
-                String name = obj.optString("name");
-                String creator = obj.optString("creator");
-                String image = obj.optString("image");
-                Group group = new Group(ggid, name, creator, image);
-                groups.add(group);
-            }
-            return groups;
+        JSONArray json = new JSONArray(response);
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String ggid = obj.optString("gid");
+            String name = obj.optString("name");
+            String creator = obj.optString("creator");
+            String image = obj.optString("image");
+            Group group = new Group(ggid, name, creator, image);
+            groups.add(group);
         }
+        return groups;
     }
 
     /**

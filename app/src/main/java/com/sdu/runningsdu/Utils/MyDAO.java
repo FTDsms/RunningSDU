@@ -243,6 +243,43 @@ public class MyDAO {
         return mid;
     }
 
+    /**
+     * 添加好友消息
+     */
+    public void addFriendMessage(Message message) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[5];
+        objects[0] = message.getMid();
+        objects[1] = message.getFriend();
+        objects[2] = message.getType();
+        objects[3] = message.getContent();
+        objects[4] = message.getTime();
+        String sql = "insert into friendmessage(mid, sid, type, content, time) values(?,?,?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friendmessage: " + message.getMid());
+        db.close();
+    }
+
+    /**
+     * 批量添加好友消息
+     */
+    public void addFriendMessages(List<Message> messages) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Message message : messages) {
+            Object[] objects = new Object[5];
+            objects[0] = message.getMid();
+            objects[1] = message.getFriend();
+            objects[2] = message.getType();
+            objects[3] = message.getContent();
+            objects[4] = message.getTime();
+            String sql = "insert into friendmessage(mid, sid, type, content, time) values(?,?,?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add friendmessage: " + message.getMid());
+        }
+        db.close();
+    }
+
+
     //查找好友消息
     public void findFriendMessage(String sid) {
 
@@ -266,6 +303,44 @@ public class MyDAO {
             return mid;
         }
         return mid;
+    }
+
+    /**
+     * 添加群聊消息
+     */
+    public void addGroupMessage(Message message) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[6];
+        objects[0] = message.getMid();
+        objects[1] = message.getGroup();
+        objects[2] = message.getFriend();
+        objects[3] = message.getType();
+        objects[4] = message.getContent();
+        objects[5] = message.getTime();
+        String sql = "insert into groupmessage(mid, gid, sid, type, content, time) values(?,?,?,?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add groupmessage: " + message.getMid());
+        db.close();
+    }
+
+    /**
+     * 批量添加群聊消息
+     */
+    public void addGroupMessages(List<Message> messages) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Message message : messages) {
+            Object[] objects = new Object[6];
+            objects[0] = message.getMid();
+            objects[1] = message.getGroup();
+            objects[2] = message.getFriend();
+            objects[3] = message.getType();
+            objects[4] = message.getContent();
+            objects[5] = message.getTime();
+            String sql = "insert into groupmessage(mid, gid, sid, type, content, time) values(?,?,?,?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add groupmessage: " + message.getMid());
+        }
+        db.close();
     }
 
     //查找群聊消息

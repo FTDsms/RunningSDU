@@ -123,7 +123,7 @@ public class MyHttpClient {
                 .add("sid", sid)
                 .build();
         Request request = new Request.Builder()
-                .url(url+"/findFriendBySid")
+                .url(url+"/getFriendsUserinfo")
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
@@ -197,7 +197,9 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查找自己加入的群组
+    /**
+     * 查找自己加入的群组
+     * */
     public static String findMyGroup(String url, String sid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()

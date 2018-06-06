@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdu.runningsdu.JavaBean.Friend;
@@ -57,6 +59,12 @@ public class LoginActivity extends AppCompatActivity{
     private EditText passwordView;
     private View mLoginFormView;
     private View mProgressView;
+    private Button loginButton;
+    private TextView forgetPassword;
+    private TextView register;
+    private Button testButton;
+    private TextView testText;
+
 
     private MyApplication myApplication;
 
@@ -148,36 +156,6 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    //发送登录请求
-    private User sendRequest() {
-        User user = new User();
-        String sid = "201500301132";
-        String password = "000000";
-        String response;
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("sid", sid);
-            jsonObject.put("password", password);
-//            jsonObject.put("password", MD5.md5(password));
-            Log.e("test", jsonObject.toString());
-
-            response = MyHttpClient.login(myApplication.getIp(), sid, password);
-            Log.e("test", response);
-
-            JSONObject json = new JSONObject(response);
-            String flag = json.getString("flag");
-            if (flag.equals("true")) {
-
-            }
-            Log.e("test", json.getString("flag"));
-            Log.e("test", json.optString("flag"));
-
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
     //初始化数据库
     private void initDatabase() {
         User user = myApplication.getUser();
@@ -218,37 +196,58 @@ public class LoginActivity extends AppCompatActivity{
         passwordView = (EditText) findViewById(R.id.password);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        forgetPassword = findViewById(R.id.forget_password);
+        register = findViewById(R.id.register);
+        register = findViewById(R.id.register);
+        testButton = findViewById(R.id.test_button);
+        testText = findViewById(R.id.test_text);
 
-        sidView.setError(getString(R.string.error_field_required));
-        sidView.setError(getString(R.string.error_invalid_email));
-
-        Button loginButton = (Button) findViewById(R.id.login_button);
+        loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-//                attemptLogin();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+//                        String sid = "201500301132";
+//                        String password = "000000";
                         // 从输入栏获取用户名和密码 MD5加密
-                        sidView.setError(null);
-                        passwordView.setError(null);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                sidView.setError(null);
+                                passwordView.setError(null);
+                            }
+                        });
                         String sid = sidView.getText().toString();
                         String password = passwordView.getText().toString();
                         if (TextUtils.isEmpty(sid)) {
-                            sidView.setError("学号不能为空");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sidView.setError("学号不能为空");
+                                }
+                            });
                             return;
                         }
                         if (TextUtils.isEmpty(password)) {
-                            passwordView.setError("密码不能为空");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    passwordView.setError("密码不能为空");
+                                }
+                            });
                             return;
                         }
                         if (!isSidValid(sid)) {
-                            sidView.setError("学号位数错误");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sidView.setError("学号位数错误");
+                                }
+                            });
                             return;
                         }
-//                        String sid = "201500301132";
-//                        String password = "000000";
                         User user = new User();
                         try {
                             String response = MyHttpClient.login(myApplication.getIp(), sid, password);
@@ -264,7 +263,7 @@ public class LoginActivity extends AppCompatActivity{
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-//                                        passwordView.setError("密码错误，请检查密码");
+                                        passwordView.setError("密码错误，请检查密码");
                                         }
                                     });
                                     return;
@@ -274,7 +273,7 @@ public class LoginActivity extends AppCompatActivity{
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-//                                        passwordView.setError("用户不存在，请先注册");
+                                        passwordView.setError("用户不存在，请先注册");
                                         }
                                     });
                                     return;
@@ -285,7 +284,7 @@ public class LoginActivity extends AppCompatActivity{
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-//                                        showProgress(true);
+                                        showProgress(true);
                                     }
                                 });
 
@@ -294,7 +293,6 @@ public class LoginActivity extends AppCompatActivity{
                                 user.setName(userObject.optString("name"));
                                 user.setPassword(userObject.optString("password"));
                                 user.setImage(userObject.optString("image"));
-//                                User user1 = sendRequest();
 //                                User user = initData();
                                 myApplication.setUser(user);
 
@@ -311,6 +309,36 @@ public class LoginActivity extends AppCompatActivity{
 
                     }
                 }).start();
+            }
+        });
+
+        forgetPassword.setOnClickListener(new OnClickListener() {
+            int clickTimes = 3; // 点击次数
+            int threshold = 500;
+            long[] mHits = new long[clickTimes];
+            @Override
+            public void onClick(View view) {
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
+                mHits[mHits.length-1] = SystemClock.uptimeMillis();
+                if (mHits[0] >= (SystemClock. uptimeMillis()-threshold)) {
+                    if (testButton.getVisibility() == View.GONE) {
+                        Toast.makeText(LoginActivity.this, "Open the test mode", Toast.LENGTH_LONG).show();
+                        testButton.setVisibility(View.VISIBLE);
+                        testText.setVisibility(View.VISIBLE);
+                    }
+                    if (testButton.getVisibility() == View.VISIBLE) {
+                        Toast.makeText(LoginActivity.this, "Close the test mode", Toast.LENGTH_LONG).show();
+                        testButton.setVisibility(View.GONE);
+                        testText.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+
+        testButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                User user = new User();
             }
         });
 

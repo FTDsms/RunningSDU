@@ -68,8 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="登录"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="normal" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -101,6 +101,29 @@
 
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/test_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="测试"
+            android:textColor="@color/colorPrimary"
+            android:textSize="19sp"
+            android:textStyle="normal"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/test_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="如果你发现了这行字，请务必与管理员联系"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"/>
+
     </LinearLayout>
     <!-- Login progress -->
     <ProgressBar
@@ -108,7 +131,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:visibility="gone" />
 
 </LinearLayout>

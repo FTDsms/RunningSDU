@@ -26,6 +26,8 @@ import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
 
     private static int navigationButtonIndex = 0;
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.head_image);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

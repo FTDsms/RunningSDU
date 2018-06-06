@@ -8,6 +8,3 @@
         android:startColor="#33bcfd"
         android:type="linear" />
 </shape>
-    <!--android:centerColor="#4CAF50"-->
-    <!--android:endColor="#2E7D32"-->
-    <!--android:startColor="#81C784"-->

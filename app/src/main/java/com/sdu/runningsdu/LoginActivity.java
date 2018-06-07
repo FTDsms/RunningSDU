@@ -31,6 +31,7 @@ import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MD5;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
@@ -105,7 +106,7 @@ public class LoginActivity extends AppCompatActivity{
     /**
      * 初始化数据库
      * */
-    private void initDatabase() throws IOException, JSONException {
+    private void initDatabase() throws IOException {
         User user = myApplication.getUser();
         myDAO = new MyDAO(LoginActivity.this, user.getName());
 //        myDAO.deleteUser(user.getSid()); // 删除用户
@@ -116,13 +117,20 @@ public class LoginActivity extends AppCompatActivity{
             // if user exists, print user information
             Log.i("user: ", myDAO.findUser(user.getSid()).toString());
         }
+    }
+
+    /**
+     * 同步数据
+     * */
+    private void syncData() throws IOException, JSONException {
+        User user = myApplication.getUser();
         // 获取好友
-        user.setFriends(getFriends(myApplication.getIp(), user.getSid()));
+        user.setFriends(DataSync.getFriends(myApplication.getIp(), user.getSid()));
         if (user.getFriends() != null) {
             myDAO.addFriends(user.getFriends());
         }
         // 获取群组
-        user.setGroups(getGroups(myApplication.getIp(), user.getSid()));
+        user.setGroups(DataSync.getGroups(myApplication.getIp(), user.getSid()));
         if (user.getGroups() != null) {
             myDAO.addGroups(user.getGroups());
         }
@@ -131,7 +139,7 @@ public class LoginActivity extends AppCompatActivity{
             List<Friend> friends = user.getFriends();
             for (Friend friend : friends) {
                 int mid = myDAO.findLastFriendMessage(friend.getSid());
-                List<Message> messages = getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid());
+                List<Message> messages = DataSync.getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid());
                 friend.setMessages(messages);
                 myDAO.addFriendMessages(messages);
             }
@@ -142,7 +150,7 @@ public class LoginActivity extends AppCompatActivity{
             List<Group> groups = user.getGroups();
             for (Group group : groups) {
                 int mid = myDAO.findLastGroupMessage(group.getGid());
-                List<Message> messages = getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid());
+                List<Message> messages = DataSync.getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid());
                 group.setMessages(messages);
                 myDAO.addGroupMessages(messages);
             }
@@ -151,130 +159,6 @@ public class LoginActivity extends AppCompatActivity{
         // 获取好友申请
 
         // 获取
-
-    }
-
-    /**
-     * 获取好友
-     * */
-    private List<Friend> getFriends(String ip, String sid) throws IOException, JSONException {
-        List<Friend> friends = new ArrayList<>();
-        String response = MyHttpClient.findFriend(ip, sid);
-        Log.w("test", response);
-        JSONArray json = new JSONArray(response);
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            String fsid = obj.optString("sid");
-            String name = obj.optString("name");
-            String image = obj.optString("image");
-            Friend friend = new Friend(fsid, name, image);
-            friends.add(friend);
-        }
-        return friends;
-    }
-
-    /**
-     * 获取群组
-     * */
-    private List<Group> getGroups(String ip, String gid) throws IOException, JSONException {
-        List<Group> groups = new ArrayList<>();
-        String response = MyHttpClient.findMyGroup(ip, gid);
-        Log.w("test", response);
-        JSONArray json = new JSONArray(response);
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            String ggid = obj.optString("gid");
-            String name = obj.optString("name");
-            String creator = obj.optString("creator");
-            String image = obj.optString("image");
-            Group group = new Group(ggid, name, creator, image);
-            groups.add(group);
-        }
-        return groups;
-    }
-
-    /**
-     * 获取好友消息
-     * */
-    private List<Message> getFriendMessage(String ip, int mid, String myName, String friendName) throws IOException, JSONException {
-        List<Message> messages = new ArrayList<>();
-        String response = MyHttpClient.findMessage(ip, mid, myName, friendName);
-        Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
-            }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                int mmid = Integer.parseInt(obj.optString("coid"));
-                String sender = obj.optString("sender");
-                String receiver = obj.optString("receiver");
-                String content = obj.optString("content");
-                String time = obj.optString("time");
-                String friend;
-                int type;
-                if (sender.equals(myName)) {
-                    friend = receiver;
-                    type = Message.TYPE_SENT;
-                } else {
-                    friend = sender;
-                    type = Message.TYPE_RECEIVED;
-                }
-                Message message = new Message(mmid, friend, type, content, time);
-                messages.add(message);
-            }
-            return messages;
-        }
-    }
-
-    /**
-     * 获取群组消息
-     * */
-    private List<Message> getGroupMessage(String ip, String gid, int mid, String myName) throws IOException, JSONException {
-        List<Message> messages = new ArrayList<>();
-        String response = MyHttpClient.findGroupMessage(ip, gid, mid);
-        Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
-            }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                int gnid = Integer.parseInt(obj.optString("gnid"));
-                String sid = obj.optString("sid");
-                String content = obj.optString("content");
-                String time = obj.optString("time");
-                int type;
-                if (sid.equals(myName)) {
-                    type = Message.TYPE_SENT;
-                } else {
-                    type = Message.TYPE_RECEIVED;
-                }
-                Message message = new Message(gnid, gid, sid, type, content, time);
-                messages.add(message);
-            }
-            return messages;
-        }
     }
 
     private void changeBackground() {
@@ -407,6 +291,9 @@ public class LoginActivity extends AppCompatActivity{
                                 // 创建数据库
                                 initDatabase();
 
+                                // 同步数据
+                                syncData();
+
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -459,7 +346,7 @@ public class LoginActivity extends AppCompatActivity{
                 // 创建数据库
                 try {
                     initDatabase();
-                } catch (IOException | JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 

@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.head_image);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -116,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // "setNavigationIcon" should after "setSupportActionBar" and "addDrawerListener"
+        toolbar.setNavigationIcon(R.drawable.head_image);
+        toolbar.setTitle("主题");
 
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override

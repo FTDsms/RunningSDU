@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -32,6 +33,7 @@ import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Message.MessageFragment;
+import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 
@@ -106,9 +108,8 @@ public class MainActivity extends AppCompatActivity {
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 //        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+
         setContentView(R.layout.activity_main);
-        //设置标题布局为titlebar
-//        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         right = findViewById(R.id.coordinator);
@@ -130,14 +133,9 @@ public class MainActivity extends AppCompatActivity {
         // "setNavigationIcon" should after "setSupportActionBar" and "addDrawerListener"
         Resources resources = MainActivity.this.getResources();
         Drawable drawable = resources.getDrawable(R.drawable.head_image);
-
-        drawable = zoomDrawable(
-                drawable,
-                dip2px(MainActivity.this, 120),
-                dip2px(MainActivity.this, 120));
-
-        toolbar.setNavigationIcon(drawable);
-//        toolbar.setNavigationIcon(R.mipmap.head_image);
+        int size = 44;
+        CircleDrawable circleDrawable = new CircleDrawable(drawable, MainActivity.this, size);
+        toolbar.setNavigationIcon(circleDrawable);
 //        toolbar.setTitle("标题");
 
         right.setOnTouchListener(new View.OnTouchListener() {
@@ -203,53 +201,6 @@ public class MainActivity extends AppCompatActivity {
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
 
-    }
-
-    /**
-     * 缩放Drawable
-     * */
-    private Drawable zoomDrawable(Drawable drawable, int w, int h) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        Bitmap oldbmp = drawableToBitmap(drawable);
-        Matrix matrix = new Matrix();
-        float scaleWidth = ((float) w / width);
-        float scaleHeight = ((float) h / height);
-        matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
-                matrix, true);
-        return new BitmapDrawable(null, newbmp);
-    }
-
-    /**
-     * Drawable转Bitmap
-     * */
-    private Bitmap drawableToBitmap(Drawable drawable) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                : Bitmap.Config.RGB_565;
-        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, width, height);
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    /**
-     * dp to px
-     * */
-//    private int dip2px(Context context, float dipValue) {
-//        Resources resources = context.getResources();
-//        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.getDisplayMetrics());
-//    }
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-    private int dp2px(Context context,float dpValue){
-        float scale=context.getResources().getDisplayMetrics().density;
-        return (int)(dpValue*scale+0.5f);
     }
 
     @Override

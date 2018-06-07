@@ -13,4 +13,19 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Toolbar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="toolbarNavigationButtonStyle">@style/toolbar_navigation_icon</item>
+    </style>
+
+    <!--navigation icon-->
+    <style name="toolbar_navigation_icon" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:width">?attr/actionBarSize</item>
+        <item name="android:height">?attr/actionBarSize</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+
 </resources>

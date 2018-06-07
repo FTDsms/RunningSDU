@@ -1,15 +1,9 @@
 package com.sdu.runningsdu;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -22,7 +16,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,9 +28,6 @@ import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
-import com.sdu.runningsdu.Utils.MyDAO;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView left;
     private boolean isDrawer=false;
 
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
+    private TextView toolbarTitle;
+
     private MyApplication myApplication;
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
@@ -69,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, mapFragment);
                     navigationButtonIndex = 1;
+                    appBarLayout.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.navigation_message:
                     if (messageFragment == null) {
@@ -76,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, messageFragment);
                     navigationButtonIndex = 2;
+                    appBarLayout.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText("消息");
                     break;
                 case R.id.navigation_contact:
                     if (contactFragment == null) {
@@ -83,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, contactFragment);
                     navigationButtonIndex = 3;
+                    appBarLayout.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText("联系人");
                     break;
                 case R.id.navigation_find:
                     if (findFragment == null) {
@@ -90,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, findFragment);
                     navigationButtonIndex = 4;
+                    appBarLayout.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText("发现");
                     break;
                 default:
                     navigationButtonIndex = 0;
@@ -115,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        appBarLayout = findViewById(R.id.app_bar_layout);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -136,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
         int size = 44;
         CircleDrawable circleDrawable = new CircleDrawable(drawable, MainActivity.this, size);
         toolbar.setNavigationIcon(circleDrawable);
-//        toolbar.setTitle("标题");
+
+        toolbarTitle = findViewById(R.id.toolbar_title);
 
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -200,6 +203,16 @@ public class MainActivity extends AppCompatActivity {
         //通过NavigationView获取headerLayout，进而获取其中组件
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
+
+        // 初始化 消息页面
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (messageFragment == null) {
+            messageFragment = new MessageFragment();
+        }
+        transaction.replace(R.id.content, messageFragment);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_message);
+        navigationButtonIndex = 2;
+        toolbarTitle.setText("消息");
 
     }
 

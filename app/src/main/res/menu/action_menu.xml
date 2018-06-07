@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_add_friend"
+        android:icon="@drawable/icon_map"
+        android:title="添加好友"/>
+
+    <item
+        android:id="@+id/item_create_group"
+        android:icon="@drawable/icon_message"
+        android:title="创建群聊"/>
+
+    <item
+        android:id="@+id/item_scan"
+        android:icon="@drawable/icon_contact"
+        android:title="扫一扫"/>
+
+    <item
+        android:id="@+id/item_help_and_feedback"
+        android:icon="@drawable/icon_find"
+        android:title="帮助与反馈"/>
+
+</menu>

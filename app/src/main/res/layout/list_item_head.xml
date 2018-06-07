@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/head_image"
+            android:src="@drawable/new_friend"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"/>
 
@@ -46,7 +46,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/head_image"
+            android:src="@drawable/group_chat"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"/>
 
@@ -77,7 +77,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/head_image"
+            android:src="@drawable/label"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"/>
 
@@ -108,7 +108,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/head_image"
+            android:src="@drawable/subscription"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"/>
 

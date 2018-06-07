@@ -1,5 +1,13 @@
 package com.sdu.runningsdu;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -113,12 +122,23 @@ public class MainActivity extends AppCompatActivity {
         left = findViewById(R.id.navigation_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        toggle.setDrawerIndicatorEnabled(false);
+//        toggle.setHomeAsUpIndicator(R.mipmap.head_image);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         // "setNavigationIcon" should after "setSupportActionBar" and "addDrawerListener"
-        toolbar.setNavigationIcon(R.drawable.head_image);
-        toolbar.setTitle("主题");
+        Resources resources = MainActivity.this.getResources();
+        Drawable drawable = resources.getDrawable(R.drawable.head_image);
+
+        drawable = zoomDrawable(
+                drawable,
+                dip2px(MainActivity.this, 120),
+                dip2px(MainActivity.this, 120));
+
+        toolbar.setNavigationIcon(drawable);
+//        toolbar.setNavigationIcon(R.mipmap.head_image);
+//        toolbar.setTitle("标题");
 
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -183,6 +203,53 @@ public class MainActivity extends AppCompatActivity {
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
 
+    }
+
+    /**
+     * 缩放Drawable
+     * */
+    private Drawable zoomDrawable(Drawable drawable, int w, int h) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap oldbmp = drawableToBitmap(drawable);
+        Matrix matrix = new Matrix();
+        float scaleWidth = ((float) w / width);
+        float scaleHeight = ((float) h / height);
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
+                matrix, true);
+        return new BitmapDrawable(null, newbmp);
+    }
+
+    /**
+     * Drawable转Bitmap
+     * */
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                : Bitmap.Config.RGB_565;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    /**
+     * dp to px
+     * */
+//    private int dip2px(Context context, float dipValue) {
+//        Resources resources = context.getResources();
+//        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, resources.getDisplayMetrics());
+//    }
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+    private int dp2px(Context context,float dpValue){
+        float scale=context.getResources().getDisplayMetrics().density;
+        return (int)(dpValue*scale+0.5f);
     }
 
     @Override

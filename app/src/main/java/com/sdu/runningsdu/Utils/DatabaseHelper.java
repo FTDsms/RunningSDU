@@ -42,7 +42,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String friendSQL = "create table if not exists friend " +
                 "(sid varchar(20) primary key, " +
                 "name varchar(255), " +
-                "nickname varchar(255), " +
                 "image varchar(255), " +
                 "unread integer)";
         sqLiteDatabase.execSQL(friendSQL);

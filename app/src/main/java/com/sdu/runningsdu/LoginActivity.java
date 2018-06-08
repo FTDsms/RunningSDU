@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
+import com.sdu.runningsdu.JavaBean.Request;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MD5;
@@ -125,14 +126,20 @@ public class LoginActivity extends AppCompatActivity{
     private void syncData() throws IOException, JSONException {
         User user = myApplication.getUser();
         // 获取好友
-        user.setFriends(DataSync.getFriends(myApplication.getIp(), user.getSid()));
-        if (user.getFriends() != null) {
-            myDAO.addFriends(user.getFriends());
+        List<Friend> f = DataSync.getFriends(myApplication.getIp(), user.getSid());
+        if ((f != null) && (f.size() > 0)) {
+            user.setFriends(f);
+            myDAO.addFriends(f);
+        } else {
+            user.setFriends(new ArrayList<Friend>());
         }
         // 获取群组
-        user.setGroups(DataSync.getGroups(myApplication.getIp(), user.getSid()));
-        if (user.getGroups() != null) {
+        List<Group> g = DataSync.getGroups(myApplication.getIp(), user.getSid());
+        if ((g != null) && g.size() > 0) {
+            user.setGroups(g);
             myDAO.addGroups(user.getGroups());
+        } else {
+            user.setGroups(new ArrayList<Group>());
         }
         // 获取好友消息
         if (user.getFriends() != null) {
@@ -140,8 +147,12 @@ public class LoginActivity extends AppCompatActivity{
             for (Friend friend : friends) {
                 int mid = myDAO.findLastFriendMessage(friend.getSid());
                 List<Message> messages = DataSync.getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid());
-                friend.setMessages(messages);
-                myDAO.addFriendMessages(messages);
+                if ((messages != null) && (messages.size() > 0)) {
+                    friend.setMessages(messages);
+                    myDAO.addFriendMessages(messages);
+                } else {
+                    friend.setMessages(new ArrayList<Message>());
+                }
             }
             user.setFriends(friends);
         }
@@ -151,13 +162,23 @@ public class LoginActivity extends AppCompatActivity{
             for (Group group : groups) {
                 int mid = myDAO.findLastGroupMessage(group.getGid());
                 List<Message> messages = DataSync.getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid());
-                group.setMessages(messages);
-                myDAO.addGroupMessages(messages);
+                if ((messages != null) && (messages.size() > 0)) {
+                    group.setMessages(messages);
+                    myDAO.addGroupMessages(messages);
+                } else {
+                    group.setMessages(new ArrayList<Message>());
+                }
             }
             user.setGroups(groups);
         }
         // 获取好友申请
-
+        List<Request> r = DataSync.getRequest(myApplication.getIp(), user.getSid());
+        if ((r != null) && (r.size() > 0)) {
+            user.setRequests(r);
+//            myDAO.addRequest(r);
+        } else {
+            user.setRequests(new ArrayList<Request>());
+        }
         // 获取
     }
 
@@ -417,6 +438,10 @@ public class LoginActivity extends AppCompatActivity{
         }
 
         user.setFriends(friends);
+
+        List<Request> requests = new ArrayList<>();
+        user.setRequests(requests);
+
         return user;
     }
 

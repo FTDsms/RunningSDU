@@ -5,6 +5,7 @@ import android.util.Log;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
+import com.sdu.runningsdu.JavaBean.Request;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -142,6 +143,15 @@ public class DataSync {
             }
             return messages;
         }
+    }
+
+    /**
+     * 获取好友申请
+     * */
+    public static List<Request> getRequest(String ip, String receiver) {
+        List<Request> requests = new ArrayList<>();
+
+        return requests;
     }
 
 }

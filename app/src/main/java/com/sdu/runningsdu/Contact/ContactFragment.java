@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.Contact.SubPage.NewFriendActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
 

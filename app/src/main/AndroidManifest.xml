@@ -42,7 +42,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Contact.NewFriendActivity"
+            android:name=".Contact.SubPage.NewFriendActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".Contact.SubPage.GroupListActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

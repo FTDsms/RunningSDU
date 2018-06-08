@@ -3,29 +3,28 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-
+            android:id="@+id/nav_wallet"
+            android:icon="@drawable/wallet"
             android:title="钱包" />
-        <!--android:icon=""-->
         <item
-            android:id="@+id/nav_gallery"
-
+            android:id="@+id/nav_collection"
+            android:icon="@drawable/collection"
             android:title="收藏" />
         <item
-            android:id="@+id/nav_slideshow"
-
+            android:id="@+id/nav_album"
+            android:icon="@drawable/album"
             android:title="相册" />
         <item
-            android:id="@+id/nav_manage"
-
+            android:id="@+id/nav_card_bag"
+            android:icon="@drawable/card_bag"
             android:title="卡包" />
         <item
-            android:id="@+id/nav_manage1"
-
+            android:id="@+id/nav_expression"
+            android:icon="@drawable/expression"
             android:title="表情" />
         <item
-            android:id="@+id/nav_manage2"
-
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/setting"
             android:title="设置" />
     </group>
 

@@ -9,6 +9,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#fdfdfe"
         android:orientation="vertical">
 
         <TextView
@@ -31,7 +32,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/trend"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -64,7 +65,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/scan"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -95,7 +96,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/shake"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -128,7 +129,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/look"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -159,7 +160,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/search"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -192,7 +193,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/nearby"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -225,7 +226,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/shop"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -256,7 +257,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/game"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 
@@ -289,7 +290,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/head_image"
+                android:src="@drawable/small_program"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"/>
 

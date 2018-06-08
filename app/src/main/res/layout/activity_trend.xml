@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/group_list_toolbar"
+        android:id="@+id/trend_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -16,26 +16,26 @@
         app:contentInsetStart="0dp">
 
         <TextView
-            android:id="@+id/group_list_toolbar_back"
+            android:id="@+id/trend_toolbar_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:drawableStart="@drawable/keyboard_arrow_left_white_36x36"
             android:gravity="center"
             android:singleLine="true"
-            android:text="群聊"
+            android:text="朋友圈"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:visibility="visible"/>
 
         <TextView
-            android:id="@+id/group_list_toolbar_button"
+            android:id="@+id/trend_toolbar_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:text="发起群聊"
+            android:drawableEnd="@drawable/photo_camera_white_36x36"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:visibility="visible"/>
@@ -43,7 +43,7 @@
     </android.support.v7.widget.Toolbar>
 
     <ListView
-        android:id="@+id/group_list_view"
+        android:id="@+id/trend_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

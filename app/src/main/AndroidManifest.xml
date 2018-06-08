@@ -50,6 +50,14 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".Contact.SubPage.LabelActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".Contact.SubPage.SubscriptionActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Find.TrendActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

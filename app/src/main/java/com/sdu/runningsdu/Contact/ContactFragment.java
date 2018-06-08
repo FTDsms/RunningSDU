@@ -11,7 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.Contact.SubPage.GroupListActivity;
+import com.sdu.runningsdu.Contact.SubPage.LabelActivity;
 import com.sdu.runningsdu.Contact.SubPage.NewFriendActivity;
+import com.sdu.runningsdu.Contact.SubPage.SubscriptionActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
 
@@ -97,19 +100,22 @@ public class ContactFragment extends Fragment {
         groupChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), GroupListActivity.class);
+                startActivity(intent);
             }
         });
         label.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), LabelActivity.class);
+                startActivity(intent);
             }
         });
         subscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), SubscriptionActivity.class);
+                startActivity(intent);
             }
         });
 

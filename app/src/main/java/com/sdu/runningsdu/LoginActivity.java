@@ -389,7 +389,7 @@ public class LoginActivity extends AppCompatActivity{
         Friend friend1 = new Friend("焦方锴");
         List<Message> messages1 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message1 = new Message(friend1.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message1 = new Message(friend1.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages1.add(message1);
         }
         friend1.setMessages(messages1);
@@ -398,7 +398,7 @@ public class LoginActivity extends AppCompatActivity{
         Friend friend2 = new Friend("叶蕴盈");
         List<Message> messages2 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message2 = new Message(friend2.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message2 = new Message(friend2.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages2.add(message2);
         }
         friend2.setMessages(messages2);
@@ -409,7 +409,7 @@ public class LoginActivity extends AppCompatActivity{
             friend = new Friend("test"+(i+1));
             List<Message> messages = new ArrayList<>();
             for(int j=0; j<10; ++j) {
-                Message message = new Message(friend.getNickname(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+                Message message = new Message(friend.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
                 messages.add(message);
             }
             friend.setMessages(messages);

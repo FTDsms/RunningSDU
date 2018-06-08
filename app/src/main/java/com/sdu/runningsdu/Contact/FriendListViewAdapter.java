@@ -9,6 +9,7 @@ import com.sdu.runningsdu.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.zhouzhuo.zzletterssidebar.adapter.BaseSortListViewAdapter;
 import me.zhouzhuo.zzletterssidebar.viewholder.BaseViewHolder;
 
@@ -30,16 +31,20 @@ public class FriendListViewAdapter extends BaseSortListViewAdapter<Friend, Frien
     @Override
     public ViewHolder getViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.tvName = (TextView) view.findViewById(R.id.list_item_tv_name);
+        viewHolder.image = view.findViewById(R.id.list_item_head_image);
+        viewHolder.tvName = view.findViewById(R.id.list_item_tv_name);
         return viewHolder;
     }
 
     @Override
     public void bindValues(ViewHolder viewHolder, int position) {
-        viewHolder.tvName.setText(mDatas.get(position).getNickname());
+        //TODO viewHolder.image.setImageBitmap();
+        viewHolder.image.setImageResource(R.drawable.head_image);
+        viewHolder.tvName.setText(mDatas.get(position).getName());
     }
 
     class ViewHolder extends BaseViewHolder {
+        protected CircleImageView image;
         protected TextView tvName;
     }
 

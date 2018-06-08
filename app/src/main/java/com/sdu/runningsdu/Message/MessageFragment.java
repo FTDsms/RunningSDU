@@ -31,10 +31,15 @@ public class MessageFragment extends Fragment {
 
 //    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+
     private RecyclerAdapter recyclerAdapter;
+
     private RecyclerView.LayoutManager layoutManager;
+
     private List<Message> list;
+
     private MyApplication myApplication;
+
     private Thread refreshThread;
 
     public MessageFragment() {
@@ -44,7 +49,6 @@ public class MessageFragment extends Fragment {
     private void initData() {
         myApplication = (MyApplication) getActivity().getApplication();
         User user = myApplication.getUser();
-
 
 
         list = new ArrayList<>();
@@ -78,8 +82,10 @@ public class MessageFragment extends Fragment {
     private void initView() {
         recyclerView = getView().findViewById(R.id.recycle_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(this.getActivity(), DividerItemDecoration.VERTICAL));
+
         layoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
         recyclerAdapter = new RecyclerAdapter(list, getContext());
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {

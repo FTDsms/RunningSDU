@@ -12,9 +12,11 @@ public class Request {
 
     private String sender;
 
+    private String message;
+
     private String time;
 
-    private String state;
+    private int state;
 
     public static final int WAIT_FOR_REPLY = 0;
 
@@ -22,8 +24,23 @@ public class Request {
 
     public static final int REFUSED = -1;
 
-    public Request() {
+    // 接收
+    public Request(String rid, String receiver, String sender, String message, String time, int state) {
+        this.rid = rid;
+        this.receiver = receiver;
+        this.sender = sender;
+        this.message = message;
+        this.time = time;
+        this.state = state;
+    }
 
+    // 发送
+    public Request(String receiver, String sender, String message, String time, String state) {
+        this.receiver = receiver;
+        this.sender = sender;
+        this.message = message;
+        this.time = time;
+        this.state = Request.WAIT_FOR_REPLY;
     }
 
     public String getRid() {
@@ -50,6 +67,14 @@ public class Request {
         this.sender = sender;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getTime() {
         return time;
     }
@@ -58,11 +83,11 @@ public class Request {
         this.time = time;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 }

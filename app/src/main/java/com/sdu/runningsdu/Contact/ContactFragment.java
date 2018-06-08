@@ -11,12 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sdu.runningsdu.Contact.SubPage.GroupListActivity;
+import com.sdu.runningsdu.Contact.GroupList.GroupListActivity;
 import com.sdu.runningsdu.Contact.SubPage.LabelActivity;
-import com.sdu.runningsdu.Contact.SubPage.NewFriendActivity;
+import com.sdu.runningsdu.Contact.NewFriend.NewFriendActivity;
 import com.sdu.runningsdu.Contact.SubPage.SubscriptionActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +35,18 @@ public class ContactFragment extends Fragment {
     private ListView listView;
     private ZzLetterSideBar sideBar;
     private TextView dialog;
+
     private FriendListViewAdapter friendListViewAdapter;
+
     private List<Friend> friends;
+
     private LinearLayout newFriend;
     private LinearLayout groupChat;
     private LinearLayout label;
     private LinearLayout subscription;
     private TextView tvFoot;
+
+    private MyApplication myApplication;
 
     public ContactFragment() {
 

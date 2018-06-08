@@ -20,6 +20,8 @@ public class User {
 
     private List<Group> groups;
 
+    private List<Request> requests;
+
     public User() {
 
     }
@@ -77,6 +79,14 @@ public class User {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Friend extends SortModel{
 
     private String sid;
 
-    //仿微信联系人字幕导航
+    //仿微信联系人字母导航
     @Letter(isSortField = true)
     private String nickname;
 
@@ -35,8 +35,8 @@ public class Friend extends SortModel{
         this.image = image;
     }
 
-    public Friend(String nickname) {
-        this.nickname = nickname;
+    public Friend(String name) {
+        this.name = name;
     }
 
     public String getSid() {

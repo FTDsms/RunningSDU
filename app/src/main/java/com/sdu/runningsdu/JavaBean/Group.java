@@ -2,14 +2,19 @@ package com.sdu.runningsdu.JavaBean;
 
 import java.util.List;
 
+import me.zhouzhuo.zzletterssidebar.anotation.Letter;
+import me.zhouzhuo.zzletterssidebar.entity.SortModel;
+
 /**
  * Created by FTDsm on 2018/5/14.
  */
 
-public class Group {
+public class Group extends SortModel {
 
     private String gid;
 
+    // 按群名排序
+    @Letter(isSortField = true)
     private String name;
 
     private String creator;

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/new_friend_toolbar"
+        android:id="@+id/add_friend_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -16,26 +16,25 @@
         app:contentInsetStart="0dp">
 
         <TextView
-            android:id="@+id/new_friend_toolbar_back"
+            android:id="@+id/add_friend_toolbar_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:drawableStart="@drawable/keyboard_arrow_left_white_36x36"
             android:gravity="center"
             android:singleLine="true"
-            android:text="新的朋友"
+            android:text="添加朋友"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:visibility="visible"/>
 
         <TextView
-            android:id="@+id/new_friend_toolbar_button"
+            android:id="@+id/add_friend_toolbar_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:text="添加朋友"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:visibility="visible"/>
@@ -48,15 +47,23 @@
         android:background="#e9e9e9"
         android:gravity="center_vertical"
         android:paddingStart="20dp"
-        android:text="新的朋友"
         android:textColor="#7f7f7f"
         android:textSize="12sp"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/new_friend_recycler_view"
+    <android.support.v7.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.SearchView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#e9e9e9"
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:text="我的学号："
+        android:textColor="#7f7f7f"
+        android:textSize="12sp"/>
 
 </LinearLayout>

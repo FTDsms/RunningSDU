@@ -1,15 +1,18 @@
-package com.sdu.runningsdu.Contact.SubPage;
+package com.sdu.runningsdu.Contact.NewFriend;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Request;
+import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.Message.RecyclerAdapter;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
 
@@ -25,9 +28,11 @@ public class NewFriendActivity extends AppCompatActivity {
     private TextView toolbarBack;
     private TextView toolbarButton;
 
-    private ListView requestListView;
+    private RecyclerView requestRecyclerView;
 
-    // adapter
+    private NewFriendListAdapter newFriendListAdapter;
+
+    private RecyclerView.LayoutManager layoutManager;
 
     private List<Request> requests = new ArrayList<>();
 
@@ -38,6 +43,28 @@ public class NewFriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_new_friend);
+
+        initData();
+
+        requestRecyclerView = findViewById(R.id.new_friend_recycler_view);
+        requestRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        layoutManager = new LinearLayoutManager(this);
+        requestRecyclerView.setLayoutManager(layoutManager);
+
+        newFriendListAdapter = new NewFriendListAdapter(requests, this);
+        requestRecyclerView.setAdapter(newFriendListAdapter);
+        newFriendListAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
 
         toolbarBack = findViewById(R.id.new_friend_toolbar_back);
         toolbarButton = findViewById(R.id.new_friend_toolbar_button);
@@ -57,6 +84,11 @@ public class NewFriendActivity extends AppCompatActivity {
         });
 
 
-
     }
+
+    private void initData() {
+        myApplication = (MyApplication) getApplication();
+        requests = myApplication.getUser().getRequests();
+    }
+
 }

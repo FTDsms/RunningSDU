@@ -108,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
         myApplication = (MyApplication) getApplication();
         List<Friend> friends = myApplication.getUser().getFriends();
         for (Friend friend : friends) {
-            if (friend.getNickname().equals(friendName)) {
+            if (friend.getName().equals(friendName)) {
                 currentFriend = friend;
                 messages = friend.getMessages();
             }

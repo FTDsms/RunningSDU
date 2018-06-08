@@ -17,4 +17,7 @@
 
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
+
+    <!--修改NavigationView中Item的Icon大小-->
+    <!--<dimen name="navigation_icon_size">48dp</dimen>-->
 </resources>

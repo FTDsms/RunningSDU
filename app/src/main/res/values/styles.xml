@@ -17,7 +17,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="toolbarNavigationButtonStyle">@style/toolbar_navigation_icon</item>
-        <!--<item name="android:actionOverflowMenuStyle">@style/toolbar_action_menu_overflow</item>-->
+        <item name="actionOverflowButtonStyle">@style/toolbar_action_menu_buttom</item>
+        <item name="actionOverflowMenuStyle">@style/toolbar_action_menu_overflow</item>
     </style>
 
     <!--navigation icon-->
@@ -29,12 +30,20 @@
         <item name="android:paddingBottom">6dp</item>
     </style>
 
+    <style name="toolbar_action_menu_buttom" parent="Widget.AppCompat.ActionButton.Overflow">
+    </style>
+
     <style name="toolbar_action_menu_overflow" parent="Widget.AppCompat.PopupMenu.Overflow">
         <!--是否覆盖锚点-->
         <item name="overlapAnchor">false</item>
         <!--弹出层水平方向上的偏移，负值为距离右边的空隙-->
         <item name="android:dropDownHorizontalOffset">-10dp</item>
-        <item name="android:popupBackground">@color/colorPrimary</item>
+        <!-- 弹出层垂直方向上的偏移，负则会盖住Toolbar -->
+        <item name="android:dropDownVerticalOffset">5dp</item>
+        <item name="android:divider">@color/colorPrimaryDark</item>
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:popupBackground">#48bbfd</item>
     </style>
 
 </resources>

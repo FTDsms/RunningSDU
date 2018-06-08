@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +29,8 @@ import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
+
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,7 +142,33 @@ public class MainActivity extends AppCompatActivity {
         CircleDrawable circleDrawable = new CircleDrawable(drawable, MainActivity.this, size);
         toolbar.setNavigationIcon(circleDrawable);
 
+        // 标题
         toolbarTitle = findViewById(R.id.toolbar_title);
+
+        // 选项菜单
+//        toolbar.inflateMenu(R.menu.action_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.item_create_group:
+                        break;
+                    case R.id.item_add_friend:
+                        break;
+                    case R.id.item_scan:
+                        break;
+                    case R.id.item_help_and_feedback:
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // 溢出菜单icon，显示、隐藏溢出菜单弹出的窗口
+        toolbar.setOverflowIcon(resources.getDrawable(R.drawable.add_white_36x36));
+        toolbar.showOverflowMenu();
+        toolbar.dismissPopupMenus();
 
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -174,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -193,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_setting:
                         break;
                 }
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
+//                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
@@ -204,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
         //通过NavigationView获取headerLayout，进而获取其中组件
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
+        TextView userSid = navigationView.getHeaderView(0).findViewById(R.id.user_sid);
+        userSid.setText(user.getSid());
 
         // 初始化 消息页面
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -215,6 +247,31 @@ public class MainActivity extends AppCompatActivity {
         navigationButtonIndex = 2;
         toolbarTitle.setText("消息");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * 解决Toolbar中Menu无法同时显示图标和文字的问题
+     * */
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     @Override

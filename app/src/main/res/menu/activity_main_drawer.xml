@@ -6,6 +6,9 @@
             android:id="@+id/nav_wallet"
             android:icon="@drawable/wallet"
             android:title="钱包" />
+    </group>
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_collection"
             android:icon="@drawable/collection"
@@ -22,6 +25,9 @@
             android:id="@+id/nav_expression"
             android:icon="@drawable/expression"
             android:title="表情" />
+    </group>
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/setting"

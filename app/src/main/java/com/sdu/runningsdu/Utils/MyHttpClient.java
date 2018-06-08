@@ -88,7 +88,7 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 接受好友请求
+    // 同意好友请求
     public static String agreeRequest(String url, String rid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()

@@ -69,40 +69,26 @@ public class DataSync {
         String response = MyHttpClient.findMessage(ip, mid, myName, friendName);
         Log.w("test", response);
         JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
+        JSONObject obj = json.optJSONObject("obj");
+        for (int i=0; i<obj.length(); ++i) {
+            int mmid = Integer.parseInt(obj.optString("coid"));
+            String sender = obj.optString("sender");
+            String receiver = obj.optString("receiver");
+            String content = obj.optString("content");
+            String time = obj.optString("time");
+            String friend;
+            int type;
+            if (sender.equals(myName)) {
+                friend = receiver;
+                type = Message.TYPE_SENT;
+            } else {
+                friend = sender;
+                type = Message.TYPE_RECEIVED;
             }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                int mmid = Integer.parseInt(obj.optString("coid"));
-                String sender = obj.optString("sender");
-                String receiver = obj.optString("receiver");
-                String content = obj.optString("content");
-                String time = obj.optString("time");
-                String friend;
-                int type;
-                if (sender.equals(myName)) {
-                    friend = receiver;
-                    type = Message.TYPE_SENT;
-                } else {
-                    friend = sender;
-                    type = Message.TYPE_RECEIVED;
-                }
-                Message message = new Message(mmid, friend, type, content, time);
-                messages.add(message);
-            }
-            return messages;
+            Message message = new Message(mmid, friend, type, content, time);
+            messages.add(message);
         }
+        return messages;
     }
 
     /**
@@ -113,36 +99,22 @@ public class DataSync {
         String response = MyHttpClient.findGroupMessage(ip, gid, mid);
         Log.w("test", response);
         JSONObject json = new JSONObject(response);
-        String flag = json.optString("flag");
-        if (!flag.equals("true")) {
-            // failure
-            String msg = json.optString("msg");
-            if (msg.equals("wrong password")) {
-
+        JSONObject obj = json.optJSONObject("obj");
+        for (int i=0; i<obj.length(); ++i) {
+            int gnid = Integer.parseInt(obj.optString("gnid"));
+            String sid = obj.optString("sid");
+            String content = obj.optString("content");
+            String time = obj.optString("time");
+            int type;
+            if (sid.equals(myName)) {
+                type = Message.TYPE_SENT;
+            } else {
+                type = Message.TYPE_RECEIVED;
             }
-            if (msg.equals("no such student")) {
-
-            }
-            return null;
-        } else {
-            // success
-            JSONObject obj = json.optJSONObject("obj");
-            for (int i=0; i<obj.length(); ++i) {
-                int gnid = Integer.parseInt(obj.optString("gnid"));
-                String sid = obj.optString("sid");
-                String content = obj.optString("content");
-                String time = obj.optString("time");
-                int type;
-                if (sid.equals(myName)) {
-                    type = Message.TYPE_SENT;
-                } else {
-                    type = Message.TYPE_RECEIVED;
-                }
-                Message message = new Message(gnid, gid, sid, type, content, time);
-                messages.add(message);
-            }
-            return messages;
+            Message message = new Message(gnid, gid, sid, type, content, time);
+            messages.add(message);
         }
+        return messages;
     }
 
     /**

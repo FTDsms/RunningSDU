@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity{
         List<Request> r = DataSync.getRequest(myApplication.getIp(), user.getSid());
         if ((r != null) && (r.size() > 0)) {
             user.setRequests(r);
-//            myDAO.addRequest(r);
+            myDAO.addRequests(r);
         } else {
             user.setRequests(new ArrayList<Request>());
         }

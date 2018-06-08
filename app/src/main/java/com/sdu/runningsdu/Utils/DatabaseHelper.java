@@ -81,6 +81,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "time timestamp)";
         sqLiteDatabase.execSQL(groupMessageSQL);
         Log.d("database", "create table groupmessage");
+
+        String requestSQL = "create table if not exists request " +
+                "(rid integer primary key, " +
+                "receiver varchar(20), " +
+                "sender varchar(20), " +
+                "message varchar(255), " +
+                "time timestamp, " +
+                "state integer)";
+        sqLiteDatabase.execSQL(requestSQL);
+        Log.d("database", "create table request");
     }
 
     @Override
@@ -97,6 +107,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(friendMessageSQL);
         String groupMessageSQL = "drop table if exists groupmessage";
         sqLiteDatabase.execSQL(groupMessageSQL);
+        String requestSQL = "drop table if exists request";
+        sqLiteDatabase.execSQL(requestSQL);
         onCreate(sqLiteDatabase);
     }
 }

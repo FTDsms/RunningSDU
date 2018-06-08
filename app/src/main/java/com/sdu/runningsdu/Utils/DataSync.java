@@ -148,9 +148,21 @@ public class DataSync {
     /**
      * 获取好友申请
      * */
-    public static List<Request> getRequest(String ip, String receiver) {
+    public static List<Request> getRequest(String ip, String receiver) throws IOException, JSONException {
         List<Request> requests = new ArrayList<>();
-
+        String response = MyHttpClient.findReceivedRequest(ip, receiver);
+        Log.w("test", response);
+        JSONArray json = new JSONArray(response);
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String rid = obj.optString("rid");
+            String sender = obj.optString("sender");
+            String message = obj.optString("message");
+            String time = obj.optString("time");
+            int state = Integer.parseInt(obj.optString("state"));
+            Request request = new Request(rid, receiver, sender, message, time, state);
+            requests.add(request);
+        }
         return requests;
     }
 

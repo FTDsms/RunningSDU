@@ -58,7 +58,9 @@ public class MyHttpClient {
         return response.body().string();
     }
 
-    // 查询收到的请求
+    /**
+     * 查询收到的请求
+     * */
     public static String findReceivedRequest(String url, String receiver) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()

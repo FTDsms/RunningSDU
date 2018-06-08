@@ -8,6 +8,7 @@ import android.util.Log;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
+import com.sdu.runningsdu.JavaBean.Request;
 import com.sdu.runningsdu.JavaBean.User;
 
 import java.util.ArrayList;
@@ -356,6 +357,44 @@ public class MyDAO {
     //删除消息
     public void deleteMessage(String mid) {
 
+    }
+
+    /**
+     * 添加好友申请
+     * */
+    public void addRequest(Request request) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[6];
+        objects[0] = request.getRid();
+        objects[1] = request.getReceiver();
+        objects[2] = request.getSender();
+        objects[3] = request.getMessage();
+        objects[4] = request.getTime();
+        objects[5] = request.getState();
+        String sql = "insert into request(rid, receiver, sender, message, time, state) values(?,?,?,?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add request: " + request.getRid());
+        db.close();
+    }
+
+    /**
+     * 批量添加好友申请
+     */
+    public void addRequests(List<Request> requests) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Request request : requests) {
+            Object[] objects = new Object[6];
+            objects[0] = request.getRid();
+            objects[1] = request.getReceiver();
+            objects[2] = request.getSender();
+            objects[3] = request.getMessage();
+            objects[4] = request.getTime();
+            objects[5] = request.getState();
+            String sql = "insert into request(rid, receiver, sender, message, time, state) values(?,?,?,?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add request: " + request.getRid());
+        }
+        db.close();
     }
 
 }

@@ -35,7 +35,12 @@ public class MyHttpClient {
 
     /**
      * 登录
-     * */
+     * @param url
+     * @param sid
+     * @param password
+     * @return
+     * @throws IOException
+     */
     public static String login(String url, String sid, String password) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -53,7 +58,13 @@ public class MyHttpClient {
 
     /**
      * 更新经纬度
-     * */
+     * @param url
+     * @param sid
+     * @param longitude
+     * @param latitude
+     * @return
+     * @throws IOException
+     */
     public static String updateLocation(String url, String sid, String longitude, String latitude) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -72,7 +83,12 @@ public class MyHttpClient {
 
     /**
      * 通过学号查找用户
-     * */
+     * @param url
+     * @param sid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static Friend findUserBySid(String url, String sid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -99,7 +115,12 @@ public class MyHttpClient {
 
     /**
      * 查询收到的请求
-     * */
+     * @param url
+     * @param receiver
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<com.sdu.runningsdu.JavaBean.Request> findReceivedRequest(String url, String receiver) throws IOException, JSONException {
         List<com.sdu.runningsdu.JavaBean.Request> requests = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -127,7 +148,12 @@ public class MyHttpClient {
 
     /**
      * 查询发送的请求
-     * */
+     * @param url
+     * @param sender
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<com.sdu.runningsdu.JavaBean.Request> findSentRequest(String url, String sender) throws IOException, JSONException {
         List<com.sdu.runningsdu.JavaBean.Request> requests = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -155,7 +181,13 @@ public class MyHttpClient {
 
     /**
      * 添加好友
-     * */
+     * @param url
+     * @param receiver
+     * @param sender
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean addFriendRequest(String url, String receiver, String sender) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -178,7 +210,12 @@ public class MyHttpClient {
 
     /**
      * 同意好友请求
-     * */
+     * @param url
+     * @param rid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean agreeRequest(String url, String rid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -198,9 +235,14 @@ public class MyHttpClient {
         }
     }
 
-    /**
+    /**.
      * 拒绝好友请求
-     * */
+     * @param url
+     * @param rid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean rejectRequest(String url, String rid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -222,7 +264,12 @@ public class MyHttpClient {
 
     /**
      * 查找我的好友
-     * */
+     * @param url
+     * @param sid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<Friend> findMyFriend(String url, String sid) throws IOException, JSONException {
         List<Friend> friends = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -248,7 +295,14 @@ public class MyHttpClient {
 
     /**
      * 查询好友对话
-     * */
+     * @param url
+     * @param mid
+     * @param myName
+     * @param friendName
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<Message> findFriendMessage(String url, int mid, String myName, String friendName) throws IOException, JSONException {
         List<Message> messages = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -287,7 +341,15 @@ public class MyHttpClient {
 
     /**
      * 发送好友消息
-     * */
+     * @param url
+     * @param receiver
+     * @param sender
+     * @param category
+     * @param content
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean sendFriendMessage(String url, String receiver, String sender, String category, String content) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -312,7 +374,14 @@ public class MyHttpClient {
 
     /**
      * 创建群组
-     * */
+     * @param url
+     * @param name
+     * @param members
+     * @param image
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static Group createGroup(String url, String name, String[] members, String image) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         JSONArray jsonArray = new JSONArray();
@@ -336,7 +405,12 @@ public class MyHttpClient {
 
     /**
      * 通过群号查找群组
-     * */
+     * @param url
+     * @param gid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static Group findGroupByGid(String url, int gid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -370,7 +444,12 @@ public class MyHttpClient {
 
     /**
      * 查找自己加入的群组
-     * */
+     * @param url
+     * @param sid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<Group> findMyGroup(String url, String sid) throws IOException, JSONException {
         List<Group> groups = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -403,7 +482,14 @@ public class MyHttpClient {
 
     /**
      * 查找群消息
-     * */
+     * @param url
+     * @param gid
+     * @param mid
+     * @param myName
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static List<Message> findGroupMessage(String url, int gid, int mid, String myName) throws IOException, JSONException {
         List<Message> messages = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -437,7 +523,15 @@ public class MyHttpClient {
 
     /**
      * 发送群消息
-     * */
+     * @param url
+     * @param gid
+     * @param sid
+     * @param category
+     * @param content
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean sendGroupMessage(String url, String gid, String sid, String category, String content) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -462,7 +556,13 @@ public class MyHttpClient {
 
     /**
      * 邀请加群
-     * */
+     * @param url
+     * @param sid
+     * @param gid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean inviteGroup(String url, String sid, int gid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -485,6 +585,12 @@ public class MyHttpClient {
 
     /**
      * 退群 & 移出群聊
+     * @param url
+     * @param sid
+     * @param gid
+     * @return
+     * @throws IOException
+     * @throws JSONException
      */
     public static boolean exitGroup(String url, String sid, int gid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -508,7 +614,12 @@ public class MyHttpClient {
 
     /**
      * 解散群组
-     * */
+     * @param url
+     * @param gid
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static boolean cancelGroup(String url, int gid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()

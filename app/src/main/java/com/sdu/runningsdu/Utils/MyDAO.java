@@ -37,7 +37,7 @@ public class MyDAO {
 
     /**
      * 查询所有表格
-     * */
+     */
     public void findTable() {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select name from sqlite_master where type='table' order by name", null);
@@ -50,7 +50,8 @@ public class MyDAO {
 
     /**
      * 添加用户
-     * */
+     * @param user User对象
+     */
     public void addUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -66,7 +67,8 @@ public class MyDAO {
 
     /**
      * 删除用户
-     * */
+     * @param sid 用户id
+     */
     public void deleteUser(String sid) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from user where sid = ?";
@@ -77,7 +79,8 @@ public class MyDAO {
 
     /**
      * 更新用户信息
-     * */
+     * @param user User对象
+     */
     public void updateUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -93,7 +96,8 @@ public class MyDAO {
 
     /**
      * 查询是否有用户
-     * */
+     * @return 当前是否存在用户
+     */
     public boolean hasUser() {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("user",
@@ -108,7 +112,9 @@ public class MyDAO {
 
     /**
      * 查找用户信息
-     * */
+     * @param sid 用户id
+     * @return User对象
+     */
     public User findUser(String sid) {
         User user = new User();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -130,7 +136,8 @@ public class MyDAO {
 
     /**
      * 查询所有用户
-     * */
+     * @return User列表
+     */
     public List<User> findAllUser() {
         List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -152,7 +159,8 @@ public class MyDAO {
 
     /**
      * 添加好友
-     * */
+     * @param friend Friend对象
+     */
     public void addFriend(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[3];
@@ -167,7 +175,8 @@ public class MyDAO {
 
     /**
      * 批量添加好友
-     * */
+     * @param friends Friend列表
+     */
     public void addFriends(List<Friend> friends) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         for (Friend friend : friends) {
@@ -184,7 +193,8 @@ public class MyDAO {
 
     /**
      * 删除好友
-     * */
+     * @param sid 好友学号
+     */
     public void deleteFriend(String sid) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from friend where sid = ?";
@@ -195,7 +205,8 @@ public class MyDAO {
 
     /**
      * 更新好友信息
-     * */
+     * @param friend Friend对象
+     */
     public void updateFriend(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[3];
@@ -210,7 +221,8 @@ public class MyDAO {
 
     /**
      * 更新好友未读消息数
-     * */
+     * @param friend Friend对象
+     */
     public void updateFriendUnread(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[2];
@@ -224,7 +236,9 @@ public class MyDAO {
 
     /**
      * 查询是否有该好友
-     * */
+     * @param sid 好友学号
+     * @return 是否有学号为sid的好友
+     */
     public boolean hasFriend(String sid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
@@ -242,6 +256,8 @@ public class MyDAO {
 
     /**
      * 查询好友信息
+     * @param sid 好友学号
+     * @return Friend对象
      */
     public Friend findFriend(String sid) {
         Friend friend = new Friend();
@@ -263,7 +279,8 @@ public class MyDAO {
 
     /**
      * 查找所有好友
-     * */
+     * @return Friend列表
+     */
     public List<Friend> findAllFriend() {
         List<Friend> friends = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -284,7 +301,8 @@ public class MyDAO {
 
     /**
      * 添加群聊
-     * */
+     * @param group Group对象
+     */
     public void addGroup(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -300,7 +318,8 @@ public class MyDAO {
 
     /**
      * 批量添加群聊
-     * */
+     * @param groups Group列表
+     */
     public void addGroups(List<Group> groups) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         for (Group group : groups) {
@@ -318,7 +337,8 @@ public class MyDAO {
 
     /**
      * 删除群聊
-     * */
+     * @param gid 群id
+     */
     public void deleteGroup(int gid) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from groups where gid = ?";
@@ -329,7 +349,8 @@ public class MyDAO {
 
     /**
      * 更新群组信息
-     * */
+     * @param group Group对象
+     */
     public void updateGroup(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
@@ -345,7 +366,8 @@ public class MyDAO {
 
     /**
      * 更新群组未读消息数
-     * */
+     * @param group Group对象
+     */
     public void updateGroupUnread(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[2];
@@ -359,7 +381,9 @@ public class MyDAO {
 
     /**
      * 查询是否有该群组
-     * */
+     * @param gid 群id
+     * @return 是否有id为gid的群组
+     */
     public boolean hasGroup(int gid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groups",
@@ -377,7 +401,9 @@ public class MyDAO {
 
     /**
      * 查询群聊信息
-     * */
+     * @param gid 群id
+     * @return Group对象
+     */
     public Group findGroup(int gid) {
         Group group = new Group();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -397,7 +423,8 @@ public class MyDAO {
 
     /**
      * 查找所有群聊
-     * */
+     * @return Group对象
+     */
     public List<Group> findAllGroup() {
         List<Group> groups = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -419,7 +446,8 @@ public class MyDAO {
 
     /**
      * 添加群组成员
-     * */
+     * @param group Group对象
+     */
     public void addGroupMember(Group group) {
         int gid = group.getGid();
         List<String> members = group.getMembers();
@@ -437,7 +465,9 @@ public class MyDAO {
 
     /**
      * 删除群组成员
-     * */
+     * @param gid 群id
+     * @param sid 学号
+     */
     public void deleteGroupMember(int gid, String sid) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from groupmember where gid=?, sid=?";
@@ -448,7 +478,8 @@ public class MyDAO {
 
     /**
      * 更新群组成员
-     * */
+     * @param group Group对象
+     */
     public void updateGroupMember(Group group) {
         int gid = group.getGid();
         List<String> members = group.getMembers();
@@ -466,7 +497,9 @@ public class MyDAO {
 
     /**
      * 查询群组成员
-     * */
+     * @param gid 群id
+     * @return 群号为gid的所有成员
+     */
     public List<String> findGroupMember(int gid) {
         List<String> members = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -482,6 +515,7 @@ public class MyDAO {
 
     /**
      * 添加好友消息
+     * @param message Message对象
      */
     public void addFriendMessage(Message message) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -499,6 +533,7 @@ public class MyDAO {
 
     /**
      * 批量添加好友消息
+     * @param messages Message对象
      */
     public void addFriendMessages(List<Message> messages) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -518,6 +553,8 @@ public class MyDAO {
 
     /**
      * 查找好友最后一条消息的id
+     * @param sid 好友学号
+     * @return 好友学号为sid的最后一条消息
      */
     public int findLastFriendMessage(String sid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -538,7 +575,9 @@ public class MyDAO {
 
     /**
      * 查找好友消息
-     * */
+     * @param sid 好友学号
+     * @return 和好友学号为sid的所有消息
+     */
     public List<Message> findFriendMessage(String sid) {
         List<Message> messages = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -558,6 +597,7 @@ public class MyDAO {
 
     /**
      * 添加群聊消息
+     * @param message Message对象
      */
     public void addGroupMessage(Message message) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -576,6 +616,7 @@ public class MyDAO {
 
     /**
      * 批量添加群聊消息
+     * @param messages Message列表
      */
     public void addGroupMessages(List<Message> messages) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -596,6 +637,8 @@ public class MyDAO {
 
     /**
      * 查找群聊最后一条消息的id
+     * @param gid 群id
+     * @return 群号为id的最后一条消息的id
      */
     public int findLastGroupMessage(int gid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -616,7 +659,9 @@ public class MyDAO {
 
     /**
      * 查找群聊消息
-     * */
+     * @param gid 群id
+     * @return 群聊消息
+     */
     public List<Message> findGroupMessage(int gid) {
         List<Message> messages = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
@@ -637,7 +682,8 @@ public class MyDAO {
 
     /**
      * 添加好友申请
-     * */
+     * @param request Request对象
+     */
     public void addRequest(Request request) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[6];
@@ -655,6 +701,7 @@ public class MyDAO {
 
     /**
      * 批量添加好友申请
+     * @param requests Request列表
      */
     public void addRequests(List<Request> requests) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
@@ -675,7 +722,8 @@ public class MyDAO {
 
     /**
      * 更新好友申请
-     * */
+     * @param request Request对象
+     */
     public void updateRequest(Request request) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[6];
@@ -692,8 +740,10 @@ public class MyDAO {
     }
 
     /**
-     * 查询是否有该好友申请
-     * */
+     * 查询是否有申请
+     * @param rid 申请id
+     * @return 是否该id的申请
+     */
     public boolean hasRequest(int rid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("request",

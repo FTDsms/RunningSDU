@@ -112,7 +112,7 @@ public class MyHttpClient {
         JSONArray json = new JSONArray(response.body().string());
         for (int i=0; i<json.length(); ++i) {
             JSONObject obj = json.optJSONObject(i);
-            String rid = obj.optString("rid");
+            int rid = Integer.parseInt(obj.optString("rid"));
             String sender = obj.optString("sender");
             String message = obj.optString("message");
             String time = obj.optString("time");

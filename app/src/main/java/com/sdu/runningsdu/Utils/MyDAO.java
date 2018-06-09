@@ -517,10 +517,35 @@ public class MyDAO {
     }
 
     /**
+     * 删除好友申请
+     * */
+    public void deleteRequest(int rid) {
+
+    }
+
+    /**
      * 更新好友申请
      * */
-    public void updateRequest(int rid) {
+    public void updateRequest(Request request) {
 
+    }
+
+    /**
+     * 查询是否有该好友申请
+     * */
+    public boolean hasRequest(int rid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("request",
+                null,
+                "rid = ?",
+                new String[]{Integer.toString(rid)},
+                null, null, null);
+        if (cursor.getCount() > 0) {
+            Log.w("has Request", ""+cursor.getCount());
+            return true;
+        }
+        db.close();
+        return false;
     }
 
 }

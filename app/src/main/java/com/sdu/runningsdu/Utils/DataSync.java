@@ -166,33 +166,33 @@ public class DataSync {
     /**
      * 获取好友申请
      * */
-//    public static void syncRequest(MyApplication myApplication, MyDAO myDAO) {
-//        User user = myApplication.getUser();
-//        String ip = myApplication.getIp();
-//        String sid = user.getSid();
-//        try {
-//            List<Request> requests = MyHttpClient.findReceivedRequest(ip, sid);
-//            if ((requests != null) && (requests.size() > 0)) {
-//                for (Request request : requests) {
-//                    if (!myDAO.hasFriend(friend.getSid())) {
-//                        // if friend not exists, add friend
-//                        myDAO.addFriends(friends);
-//                    } else {
-//                        // if friend exists, update friend
-//                        myDAO.updateFriend(friend);
-//                    }
-//                }
-//                // set friends to user
-//                user.setFriends(friends);
-//            } else {
-//                // if list == null or size <= 0
-//                user.setFriends(new ArrayList<Friend>());
-//            }
-//            // set user to MyApplication
-//            myApplication.setUser(user);
-//        } catch (IOException | JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public static void syncRequest(MyApplication myApplication, MyDAO myDAO) {
+        User user = myApplication.getUser();
+        String ip = myApplication.getIp();
+        String sid = user.getSid();
+        try {
+            List<Request> requests = MyHttpClient.findReceivedRequest(ip, sid);
+            if ((requests != null) && (requests.size() > 0)) {
+                for (Request request : requests) {
+                    if (!myDAO.hasRequest(request.getRid())) {
+                        // if friend not exists, add friend
+                        myDAO.addRequest(request);
+                    } else {
+                        // if friend exists, update friend
+                        myDAO.updateRequest(request);
+                    }
+                }
+                // set friends to user
+                user.setRequests(requests);
+            } else {
+                // if list == null or size <= 0
+                user.setRequests(new ArrayList<Request>());
+            }
+            // set user to MyApplication
+            myApplication.setUser(user);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

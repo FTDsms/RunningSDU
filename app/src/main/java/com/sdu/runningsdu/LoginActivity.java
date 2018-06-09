@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity{
      * */
     private void syncData() throws IOException, JSONException {
         DataSync.syncFriend(myApplication, myDAO);
+        DataSync.syncRequest(myApplication, myDAO);
 
         User user = myApplication.getUser();
 
@@ -171,15 +172,7 @@ public class LoginActivity extends AppCompatActivity{
             }
             user.setGroups(groups);
         }
-        // 获取好友申请
-//        List<Request> r = DataSync.getRequest(myApplication.getIp(), user.getSid());
-//        if ((r != null) && (r.size() > 0)) {
-//            user.setRequests(r);
-//            myDAO.addRequests(r);
-//        } else {
-//            user.setRequests(new ArrayList<Request>());
-//        }
-//        myApplication.setUser(user);
+
     }
 
     private void changeBackground() {

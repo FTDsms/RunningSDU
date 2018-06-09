@@ -38,23 +38,23 @@
         android:text="任务"
         android:layout_alignParentRight="true"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/missionButton"
-        android:id="@+id/unityButton"
-        android:text="unity"
-        android:layout_alignParentRight="true"/>
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_below="@id/missionButton"-->
+        <!--android:id="@+id/unityButton"-->
+        <!--android:text="unity"-->
+        <!--android:layout_alignParentRight="true"/>-->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/unityButton"
-        android:id="@+id/gestureButton"
-        android:text="gesture"
-        android:layout_alignParentRight="true"/>
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_below="@id/unityButton"-->
+        <!--android:id="@+id/gestureButton"-->
+        <!--android:text="gesture"-->
+        <!--android:layout_alignParentRight="true"/>-->
 
     <Button
         android:layout_width="match_parent"

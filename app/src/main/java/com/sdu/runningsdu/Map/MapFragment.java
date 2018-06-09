@@ -85,7 +85,7 @@ public class MapFragment extends Fragment {
     double degree = 0;
     // UI相关
     RadioGroup.OnCheckedChangeListener radioButtonListener;
-    Button requestLocButton,startguiji,missionButton,unityButton,gestureButton;
+    Button requestLocButton,startguiji,missionButton;
     ToggleButton togglebtn = null;
     boolean isFirstLoc = true;// 是否首次定位
 
@@ -189,13 +189,15 @@ public class MapFragment extends Fragment {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     jieshourenwu = true;
+                                    new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                                }
+                                            })
+                                            .show();
                                 }
                             })
-//                        .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int whichButton) {
-//
-//                            }
-//                        })
                             .show();
                 }
                 if(jieshourenwu) {
@@ -205,35 +207,30 @@ public class MapFragment extends Fragment {
 
                                 }
                             })
-//                        .setNegativeButton("继续编辑", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int whichButton) {
-//
-//                            }
-//                        })
                             .show();
                 }
 
             }
         });
 
-        unityButton = getActivity().findViewById(R.id.unityButton);
-        unityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), unityactivity.class);
-                startActivityForResult(intent,1);
-                //startActivity(intent);
-            }
-        });
-
-        gestureButton = getActivity().findViewById(R.id.gestureButton);
-        gestureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent2 = new Intent(getActivity(),HandgestureActivity.class);
-                startActivityForResult(intent2, 4);
-            }
-        });
+//        unityButton = getActivity().findViewById(R.id.unityButton);
+//        unityButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(), unityactivity.class);
+//                startActivityForResult(intent,1);
+//                //startActivity(intent);
+//            }
+//        });
+//
+//        gestureButton = getActivity().findViewById(R.id.gestureButton);
+//        gestureButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent2 = new Intent(getActivity(),HandgestureActivity.class);
+//                startActivityForResult(intent2, 4);
+//            }
+//        });
 
 
         // 地图初始化
@@ -306,6 +303,28 @@ public class MapFragment extends Fragment {
         });
         startBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_me_history_startpoint);
         finishBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_me_history_finishpoint);
+
+        //开始任务
+        AlertDialog.Builder kaishirenwuDialogBuilder = new AlertDialog.Builder(getActivity()).setTitle("是否开始任务？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        double mi = Math.random() * 3;
+                        int missiond = (int) mi;//3个任务
+                        switch (missiond){
+                            case 0:
+                                startActivityForResult(new Intent(getActivity(),unityactivity.class),1);
+                                break;
+                            case 1:
+                                startActivityForResult(new Intent(getActivity(),HandgestureActivity.class), 4);
+
+                                break;
+                            case 2:
+
+                                break;
+                        }
+                    }
+                });
+        kaishirenwuDialog = kaishirenwuDialogBuilder.create();
 
     }
 
@@ -470,30 +489,14 @@ public class MapFragment extends Fragment {
                         //                        //Toast.makeText(LocationDemo.this, "longtitude:  "+location.getLongitude()+"latitude:  "+location.getLatitude(), Toast.LENGTH_LONG).show();
                         //
                         //                }
-                        Toast.makeText(getActivity(), "你在"+missionLocation[i],Toast.LENGTH_SHORT).show();
-                        new AlertDialog.Builder(getActivity()).setTitle("是否开始任务？")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        int mission = (int) (Math.random() * 3);//3个任务
-                                        switch (mission){
-                                            case 0:
-                                                startActivityForResult(new Intent(getActivity(),unityactivity.class),1);
-                                                break;
-                                            case 1:
-                                                Intent intent2 = new Intent(getActivity(),HandgestureActivity.class);
-                                                startActivityForResult(intent2, 4);
+                        if((!kaishirenwuDialog.isShowing())&&i==didian){
+                            Toast.makeText(getActivity(), "你已到达"+missionLocation[i],Toast.LENGTH_SHORT).show();
+                            kaishirenwuDialog.show();
+                        }
 
-                                                break;
-                                            case 2:
-
-                                                break;
-                                        }
-                                    }
-                                })
-                                .show();
                         break;
                     } else{
-                        Toast.makeText(getActivity(), location.getLongitude()+"  ,  "+location.getLatitude(),Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LocationDemo.this, location.getLongitude()+"  ,  "+location.getLatitude(),Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -122,7 +122,7 @@ public class DataSync {
     /**
      * 同步好友消息
      * */
-    public static void syncFriendMessage(MyApplication myApplication, MyDAO myDAO) throws IOException, JSONException {
+    public static void syncFriendMessage(MyApplication myApplication, MyDAO myDAO) {
         User user = myApplication.getUser();
         String ip = myApplication.getIp();
         String sid = user.getSid();
@@ -154,7 +154,7 @@ public class DataSync {
     /**
      * 同步群组消息
      * */
-    public static void syncGroupMessage(MyApplication myApplication, MyDAO myDAO) throws IOException, JSONException {
+    public static void syncGroupMessage(MyApplication myApplication, MyDAO myDAO) {
         User user = myApplication.getUser();
         String ip = myApplication.getIp();
         String sid = user.getSid();

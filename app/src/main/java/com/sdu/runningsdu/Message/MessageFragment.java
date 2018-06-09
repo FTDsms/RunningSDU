@@ -16,9 +16,11 @@ import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Message.Chat.ChatActivity;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,11 @@ public class MessageFragment extends Fragment {
 
     private MyApplication myApplication;
 
+    private MyDAO myDAO;
+
     private Thread refreshThread;
+
+    private Thread syncThread;
 
     public MessageFragment() {
 
@@ -138,6 +144,28 @@ public class MessageFragment extends Fragment {
         refreshThread.start();
     }
 
+    private void syncData() {
+        syncThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) { // 非阻塞过程中通过判断中断标志来退出
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    DataSync.syncFriend(myApplication, myDAO);
+                    DataSync.syncGroup(myApplication, myDAO);
+                    DataSync.syncRequest(myApplication, myDAO);
+                    DataSync.syncFriendMessage(myApplication, myDAO);
+                    DataSync.syncGroupMessage(myApplication, myDAO);
+                }
+            }
+        });
+        syncThread.start();
+    }
+
     @Override @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_message,container,false);
@@ -156,5 +184,6 @@ public class MessageFragment extends Fragment {
         super.onDestroy();
         //被销毁时终止线程
         refreshThread.interrupt();
+        syncThread.interrupt();;
     }
 }

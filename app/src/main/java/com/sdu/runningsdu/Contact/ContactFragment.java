@@ -146,11 +146,16 @@ public class ContactFragment extends Fragment {
 
     }
 
+    private void intiThread() {
+
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();
         initView();
+        intiThread();
     }
 
 }

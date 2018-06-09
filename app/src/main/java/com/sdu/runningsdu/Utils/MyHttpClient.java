@@ -2,7 +2,15 @@ package com.sdu.runningsdu.Utils;
 
 import android.util.Log;
 
+import com.sdu.runningsdu.JavaBean.Friend;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -42,16 +50,18 @@ public class MyHttpClient {
     }
 
     /**
-     * 添加好友
+     * 更新经纬度
      * */
-    public static String addFriendRequest(String url, String receiver, String sender) throws IOException {
+    public static String updateLocation(String url, String sid, String longitude, String latitude) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("receiver", receiver)
-                .add("sender", sender)
+                .add("sid", sid)
+                .add("longitude", longitude)
+                .add("latitude", latitude)
                 .build();
+        Log.d("FormBody", formBody.toString());
         Request request = new Request.Builder()
-                .url(url+"/saveRequest")
+                .url(url+"/updateLocation")
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
@@ -59,9 +69,37 @@ public class MyHttpClient {
     }
 
     /**
+     * 通过学号查找用户
+     * */
+    public static Friend findUserBySid(String url, String sid) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", sid)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findUserBySid")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        JSONObject jsonObject = new JSONObject(response.body().string());
+        String flag = jsonObject.optString("flag");
+        if (!flag.equals("true")) {
+            return null;
+        } else {
+            Friend friend = new Friend();
+            JSONObject obj = jsonObject.getJSONObject("obj");
+            friend.setSid(obj.optString("sid"));
+            friend.setName(obj.optString("name"));
+            friend.setImage(obj.optString("image"));
+            return friend;
+        }
+    }
+
+    /**
      * 查询收到的请求
      * */
-    public static String findReceivedRequest(String url, String receiver) throws IOException {
+    public static List<com.sdu.runningsdu.JavaBean.Request> findReceivedRequest(String url, String receiver) throws IOException, JSONException {
+        List<com.sdu.runningsdu.JavaBean.Request> requests = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("receiver", receiver)
@@ -71,7 +109,18 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        return response.body().string();
+        JSONArray json = new JSONArray(response.body().string());
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String rid = obj.optString("rid");
+            String sender = obj.optString("sender");
+            String message = obj.optString("message");
+            String time = obj.optString("time");
+            int state = Integer.parseInt(obj.optString("state"));
+            com.sdu.runningsdu.JavaBean.Request r = new com.sdu.runningsdu.JavaBean.Request(rid, receiver, sender, message, time, state);
+            requests.add(r);
+        }
+        return requests;
     }
 
     // 查询发送的请求
@@ -82,6 +131,23 @@ public class MyHttpClient {
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/findRequestBySender")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
+
+    /**
+     * 添加好友
+     * */
+    public static String addFriendRequest(String url, String receiver, String sender) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("receiver", receiver)
+                .add("sender", sender)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/saveRequest")
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
@@ -117,9 +183,10 @@ public class MyHttpClient {
     }
 
     /**
-     * 查找好友
+     * 查找我的好友
      * */
-    public static String findFriend(String url, String sid) throws IOException {
+    public static List<Friend> findMyFriend(String url, String sid) throws IOException, JSONException {
+        List<Friend> friends = new ArrayList<>();
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("sid", sid)
@@ -129,11 +196,20 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        return response.body().string();
+        JSONArray json = new JSONArray(response.body().string());
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String fsid = obj.optString("sid");
+            String name = obj.optString("name");
+            String image = obj.optString("image");
+            Friend friend = new Friend(fsid, name, image);
+            friends.add(friend);
+        }
+        return friends;
     }
 
     /**
-     * 查询对话
+     * 查询好友对话
      * */
     public static String findMessage(String url, int mid, String myName, String friendName) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -186,7 +262,7 @@ public class MyHttpClient {
     /**
      * 通过群号查找群组
      * */
-    public static String findGroup(String url, String gid) throws IOException {
+    public static String findGroupByGid(String url, String gid) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("gid", gid)

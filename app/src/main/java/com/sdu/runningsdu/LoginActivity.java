@@ -119,9 +119,7 @@ public class LoginActivity extends AppCompatActivity{
             myDAO.addUser(user);
         } else {
             // if user exists, update user info
-
-            // print user information
-            Log.i("user: ", myDAO.findUser(user.getSid()).toString());
+            myDAO.updateUser(user);
         }
     }
 
@@ -129,15 +127,10 @@ public class LoginActivity extends AppCompatActivity{
      * 同步数据
      * */
     private void syncData() throws IOException, JSONException {
+        DataSync.syncFriend(myApplication, myDAO);
+
         User user = myApplication.getUser();
-        // 获取好友
-        List<Friend> f = DataSync.getFriends(myApplication.getIp(), user.getSid());
-        if ((f != null) && (f.size() > 0)) {
-            user.setFriends(f);
-            myDAO.addFriends(f);
-        } else {
-            user.setFriends(new ArrayList<Friend>());
-        }
+
         // 获取群组
         List<Group> g = DataSync.getGroups(myApplication.getIp(), user.getSid());
         if ((g != null) && g.size() > 0) {
@@ -179,13 +172,14 @@ public class LoginActivity extends AppCompatActivity{
             user.setGroups(groups);
         }
         // 获取好友申请
-        List<Request> r = DataSync.getRequest(myApplication.getIp(), user.getSid());
-        if ((r != null) && (r.size() > 0)) {
-            user.setRequests(r);
-            myDAO.addRequests(r);
-        } else {
-            user.setRequests(new ArrayList<Request>());
-        }
+//        List<Request> r = DataSync.getRequest(myApplication.getIp(), user.getSid());
+//        if ((r != null) && (r.size() > 0)) {
+//            user.setRequests(r);
+//            myDAO.addRequests(r);
+//        } else {
+//            user.setRequests(new ArrayList<Request>());
+//        }
+//        myApplication.setUser(user);
     }
 
     private void changeBackground() {
@@ -344,6 +338,10 @@ public class LoginActivity extends AppCompatActivity{
                     Toast.makeText(LoginActivity.this, "Open the test mode", Toast.LENGTH_LONG).show();
                     testButton.setVisibility(View.VISIBLE);
                     testText.setVisibility(View.VISIBLE);
+                } else if (testButton.getVisibility() == View.VISIBLE) {
+                    Toast.makeText(LoginActivity.this, "Close the test mode", Toast.LENGTH_LONG).show();
+                    testButton.setVisibility(View.GONE);
+                    testText.setVisibility(View.GONE);
                 }
 
 //                System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);

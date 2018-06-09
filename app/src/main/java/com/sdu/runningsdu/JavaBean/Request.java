@@ -6,7 +6,7 @@ package com.sdu.runningsdu.JavaBean;
 
 public class Request {
 
-    private String rid;
+    private int rid;
 
     private String receiver;
 
@@ -25,7 +25,7 @@ public class Request {
     public static final int REFUSED = -1;
 
     // 接收
-    public Request(String rid, String receiver, String sender, String message, String time, int state) {
+    public Request(int rid, String receiver, String sender, String message, String time, int state) {
         this.rid = rid;
         this.receiver = receiver;
         this.sender = sender;
@@ -43,11 +43,11 @@ public class Request {
         this.state = Request.WAIT_FOR_REPLY;
     }
 
-    public String getRid() {
+    public int getRid() {
         return rid;
     }
 
-    public void setRid(String rid) {
+    public void setRid(int rid) {
         this.rid = rid;
     }
 

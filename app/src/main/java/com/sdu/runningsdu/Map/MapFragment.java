@@ -105,6 +105,7 @@ public class MapFragment extends Fragment {
     int didian;//任务地点
     String missionLocation[];
     HashMap<Integer, double[]> hashMap = new HashMap<>();
+    AlertDialog kaishirenwuDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,11 +173,13 @@ public class MapFragment extends Fragment {
         });
 
 
-        hashMap.put(0, new double[]{117.146809,36.674020});//三区
-        hashMap.put(1, new double[]{117.146809,36.674020});//一号食堂
-        hashMap.put(2, new double[]{117.147593,36.67297});//二号宿舍楼
-        missionLocation = new String[]{"三区","一号食堂","二号宿舍楼"};
-        didian = (int) (Math.random() * 3);
+        hashMap.put(0, new double[]{117.146500,36.674000});//三区
+        hashMap.put(1, new double[]{117.147067,36.672689});//一号食堂
+        hashMap.put(2, new double[]{117.144200,36.674773});//图书馆
+        missionLocation = new String[]{"三区","一号食堂","图书馆"};
+        double mi = Math.random() * 3;
+        didian = (int)mi;
+        didian = 0;
         missionButton = (Button) getView().findViewById(R.id.missionButton);
         missionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +318,7 @@ public class MapFragment extends Fragment {
             new AlertDialog.Builder(getActivity()).setTitle("任务完成")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            jieshourenwu = true;
+                            jieshourenwu = false;
                         }
                     })
                     .show();
@@ -324,7 +327,7 @@ public class MapFragment extends Fragment {
             new AlertDialog.Builder(getActivity()).setTitle("任务完成")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            jieshourenwu = true;
+                            jieshourenwu = false;
                         }
                     })
                     .show();
@@ -447,6 +450,53 @@ public class MapFragment extends Fragment {
             //fandizhibianma(new LatLng(location.getLatitude(),location.getLongitude()));
             //获取定位位置描述信息  http://lbsyun.baidu.com/index.php?title=android-locsdk/guide/get-location/describe
 //            Toast.makeText(getActivity(), location.getLocationDescribe(),Toast.LENGTH_SHORT).show();
+
+            if(jieshourenwu) {
+                for(int i = 0;i<missionLocation.length;i++){
+                    //                double longtitude = hashMap.get(i)[0];
+                    //                double latitude = hashMap.get(i)[1];
+                    if(Math.abs(location.getLongitude()-hashMap.get(i)[0])<=0.0003 && Math.abs(location.getLatitude()-hashMap.get(i)[1])<=0.0003) {
+                        //                switch (didian){
+                        //                    case 0:
+                        //                        //Toast.makeText(LocationDemo.this, "你在三区", Toast.LENGTH_LONG).show();
+                        //                        break;
+                        //                    case 1:
+                        //                        //Toast.makeText(LocationDemo.this, "你在一号食堂", Toast.LENGTH_LONG).show();
+                        //                        break;
+                        //                    case 2:
+                        //                        //Toast.makeText(LocationDemo.this, "你在二号宿舍楼", Toast.LENGTH_LONG).show();
+                        //                        break;
+                        //                    default:
+                        //                        //Toast.makeText(LocationDemo.this, "longtitude:  "+location.getLongitude()+"latitude:  "+location.getLatitude(), Toast.LENGTH_LONG).show();
+                        //
+                        //                }
+                        Toast.makeText(getActivity(), "你在"+missionLocation[i],Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getActivity()).setTitle("是否开始任务？")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        int mission = (int) (Math.random() * 3);//3个任务
+                                        switch (mission){
+                                            case 0:
+                                                startActivityForResult(new Intent(getActivity(),unityactivity.class),1);
+                                                break;
+                                            case 1:
+                                                Intent intent2 = new Intent(getActivity(),HandgestureActivity.class);
+                                                startActivityForResult(intent2, 4);
+
+                                                break;
+                                            case 2:
+
+                                                break;
+                                        }
+                                    }
+                                })
+                                .show();
+                        break;
+                    } else{
+                        Toast.makeText(getActivity(), location.getLongitude()+"  ,  "+location.getLatitude(),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 
 
             i++;

@@ -6,6 +6,7 @@ import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.Request;
+import com.sdu.runningsdu.JavaBean.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,22 +24,67 @@ import java.util.List;
 public class DataSync {
 
     /**
-     * 获取好友
+     * 同步好友
      * */
-    public static List<Friend> getFriends(String ip, String sid) throws IOException, JSONException {
-        List<Friend> friends = new ArrayList<>();
-        String response = MyHttpClient.findFriend(ip, sid);
-        Log.w("test", response);
-        JSONArray json = new JSONArray(response);
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            String fsid = obj.optString("sid");
-            String name = obj.optString("name");
-            String image = obj.optString("image");
-            Friend friend = new Friend(fsid, name, image);
-            friends.add(friend);
+    public static void syncFriend(MyApplication myApplication, MyDAO myDAO) {
+        User user = myApplication.getUser();
+        String ip = myApplication.getIp();
+        String sid = user.getSid();
+        try {
+            List<Friend> friends = MyHttpClient.findMyFriend(ip, sid);
+            if ((friends != null) && (friends.size() > 0)) {
+                for (Friend friend : friends) {
+                    if (!myDAO.hasFriend(friend.getSid())) {
+                        // if friend not exists, add friend
+                        myDAO.addFriends(friends);
+                    } else {
+                        // if friend exists, update friend
+                        myDAO.updateFriend(friend);
+                    }
+                }
+                // set friends to user
+                user.setFriends(friends);
+            } else {
+                // if list == null or size <= 0
+                user.setFriends(new ArrayList<Friend>());
+            }
+            // set user to MyApplication
+            myApplication.setUser(user);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
         }
-        return friends;
+    }
+
+    /**
+     * 同步群组
+     * */
+    public static void syncGroup(MyApplication myApplication, MyDAO myDAO) {
+        User user = myApplication.getUser();
+        String ip = myApplication.getIp();
+        String sid = user.getSid();
+        try {
+            List<Friend> friends = MyHttpClient.findMyFriend(ip, sid);
+            if ((friends != null) && (friends.size() > 0)) {
+                for (Friend friend : friends) {
+                    if (!myDAO.hasFriend(friend.getSid())) {
+                        // if friend not exists, add friend
+                        myDAO.addFriends(friends);
+                    } else {
+                        // if friend exists, update friend
+                        myDAO.updateFriend(friend);
+                    }
+                }
+                // set friends to user
+                user.setFriends(friends);
+            } else {
+                // if list == null or size <= 0
+                user.setFriends(new ArrayList<Friend>());
+            }
+            // set user to MyApplication
+            myApplication.setUser(user);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -120,22 +166,33 @@ public class DataSync {
     /**
      * 获取好友申请
      * */
-    public static List<Request> getRequest(String ip, String receiver) throws IOException, JSONException {
-        List<Request> requests = new ArrayList<>();
-        String response = MyHttpClient.findReceivedRequest(ip, receiver);
-        Log.w("test", response);
-        JSONArray json = new JSONArray(response);
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            String rid = obj.optString("rid");
-            String sender = obj.optString("sender");
-            String message = obj.optString("message");
-            String time = obj.optString("time");
-            int state = Integer.parseInt(obj.optString("state"));
-            Request request = new Request(rid, receiver, sender, message, time, state);
-            requests.add(request);
-        }
-        return requests;
-    }
+//    public static void syncRequest(MyApplication myApplication, MyDAO myDAO) {
+//        User user = myApplication.getUser();
+//        String ip = myApplication.getIp();
+//        String sid = user.getSid();
+//        try {
+//            List<Request> requests = MyHttpClient.findReceivedRequest(ip, sid);
+//            if ((requests != null) && (requests.size() > 0)) {
+//                for (Request request : requests) {
+//                    if (!myDAO.hasFriend(friend.getSid())) {
+//                        // if friend not exists, add friend
+//                        myDAO.addFriends(friends);
+//                    } else {
+//                        // if friend exists, update friend
+//                        myDAO.updateFriend(friend);
+//                    }
+//                }
+//                // set friends to user
+//                user.setFriends(friends);
+//            } else {
+//                // if list == null or size <= 0
+//                user.setFriends(new ArrayList<Friend>());
+//            }
+//            // set user to MyApplication
+//            myApplication.setUser(user);
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }

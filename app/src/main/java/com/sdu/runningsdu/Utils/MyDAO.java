@@ -49,64 +49,6 @@ public class MyDAO {
     }
 
     /**
-     * 查询是否有用户
-     * */
-    public boolean hasUser() {
-        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("user",
-                null, null, null, null, null, null);
-        Log.w("has user", ""+cursor.getCount());
-        if (cursor.getCount() > 0) {
-            return true;
-        }
-        db.close();
-        return false;
-    }
-
-    /**
-     * 查询所有用户
-     * */
-    public List<User> findAllUser() {
-        List<User> users = new ArrayList<>();
-        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("user",
-                new String[]{"sid", "name", "password", "image"},
-                null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            User user = new User();
-            user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
-            user.setName(cursor.getString(cursor.getColumnIndex("name")));
-            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
-            Log.d("database", "find user: " + user.toString());
-            users.add(user);
-        }
-        db.close();
-        return users;
-    }
-
-    /**
-     * 查找用户信息
-     * */
-    public User findUser(String sid) {
-        User user = new User();
-        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("user",
-                new String[]{"sid", "name", "password", "image"},
-                "sid = ?",
-                new String[]{sid},
-                null, null, null);
-        while (cursor.moveToNext()) {
-            user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
-            user.setName(cursor.getString(cursor.getColumnIndex("name")));
-            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
-        }
-        db.close();
-        return user;
-    }
-
-    /**
      * 添加用户
      * */
     public void addUser(User user) {
@@ -138,18 +80,160 @@ public class MyDAO {
      * */
     public void updateUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[4];
+        objects[0] = user.getSid();
+        objects[1] = user.getName();
+        objects[2] = user.getPassword();
+        objects[3] = user.getImage();
+        String sql = "update user set sid=?, name=?, password=?, image=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update user: " + user.getName());
+    }
 
+    /**
+     * 查询是否有用户
+     * */
+    public boolean hasUser() {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                null, null, null, null, null, null);
+        Log.w("has user", ""+cursor.getCount());
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        db.close();
+        return false;
+    }
+
+    /**
+     * 查找用户信息
+     * */
+    public User findUser(String sid) {
+        User user = new User();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                new String[]{"sid", "name", "password", "image"},
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
+        if (cursor.moveToNext()) {
+            user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
+            user.setName(cursor.getString(cursor.getColumnIndex("name")));
+            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
+        }
+        Log.d("database", "find user: " + user.toString());
+        db.close();
+        return user;
+    }
+
+    /**
+     * 查询所有用户
+     * */
+    public List<User> findAllUser() {
+        List<User> users = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                new String[]{"sid", "name", "password", "image"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            User user = new User();
+            user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
+            user.setName(cursor.getString(cursor.getColumnIndex("name")));
+            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            Log.d("database", "find user: " + user.toString());
+            users.add(user);
+        }
+        db.close();
+        return users;
+    }
+
+    /**
+     * 添加好友
+     * */
+    public void addFriend(Friend friend) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[3];
+        objects[0] = friend.getSid();
+        objects[1] = friend.getName();
+        objects[2] = friend.getImage();
+        String sql = "insert into friend(sid, name, image) values(?,?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friend: " + friend.getName());
+        db.close();
+    }
+
+    /**
+     * 批量添加好友
+     * */
+    public void addFriends(List<Friend> friends) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (Friend friend : friends) {
+            Object[] objects = new Object[3];
+            objects[0] = friend.getSid();
+            objects[1] = friend.getName();
+            objects[2] = friend.getImage();
+            String sql = "insert into friend(sid, name, image) values(?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add friend: " + friend.getName());
+        }
+        db.close();
+    }
+
+    /**
+     * 删除好友
+     * */
+    public void deleteFriend(String sid) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        String sql = "delete from friend where sid = ?";
+        db.execSQL(sql, new Object[]{sid});
+        db.close();
+        Log.d("database", "delete friend: " + sid);
+    }
+
+    /**
+     * 更新好友信息
+     * */
+    public void updateFriend(Friend friend) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[3];
+        objects[0] = friend.getSid();
+        objects[1] = friend.getName();
+        objects[2] = friend.getImage();
+        String sql = "update friend set sid=?, name=?, image=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update friend: " + friend.getName());
+    }
+
+    /**
+     * 更新好友未读消息数
+     * */
+    public void updateFriendUnread(Friend friend) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = friend.getSid();
+        objects[1] = friend.getUnread();
+        String sql = "update friend set sid=?, unread=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update friend unread: " + friend.getName() + " " + friend.getUnread());
     }
 
     /**
      * 查询是否有该好友
      * */
-    public boolean hasFriend() {
+    public boolean hasFriend(String sid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
-                null, null, null, null, null, null);
-        Log.w("has friend", ""+cursor.getCount());
+                null,
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
         if (cursor.getCount() > 0) {
+            Log.w("has friend", ""+cursor.getCount());
             return true;
         }
         db.close();
@@ -198,42 +282,7 @@ public class MyDAO {
         return friends;
     }
 
-    /**
-     * 添加好友
-     * */
-    public void addFriend(Friend friend) {
-        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
-        Object[] objects = new Object[3];
-        objects[0] = friend.getSid();
-        objects[1] = friend.getName();
-        objects[2] = friend.getImage();
-        String sql = "insert into friend(sid, name, image) values(?,?,?)";
-        db.execSQL(sql, objects);
-        Log.d("database", "add friend: " + friend.getName());
-        db.close();
-    }
 
-    /**
-     * 批量添加好友
-     * */
-    public void addFriends(List<Friend> friends) {
-        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
-        for (Friend friend : friends) {
-            Object[] objects = new Object[3];
-            objects[0] = friend.getSid();
-            objects[1] = friend.getName();
-            objects[2] = friend.getImage();
-            String sql = "insert into friend(sid, name, image) values(?,?,?)";
-            db.execSQL(sql, objects);
-            Log.d("database", "add friend: " + friend.getName());
-        }
-        db.close();
-    }
-
-    //删除好友
-    public void deleteFriend(String sid) {
-
-    }
 
     /**
      * 查询是否有该群组
@@ -465,6 +514,13 @@ public class MyDAO {
             Log.d("database", "add request: " + request.getRid());
         }
         db.close();
+    }
+
+    /**
+     * 更新好友申请
+     * */
+    public void updateRequest(int rid) {
+
     }
 
 }

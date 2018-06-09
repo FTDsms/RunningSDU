@@ -11,7 +11,7 @@ import me.zhouzhuo.zzletterssidebar.entity.SortModel;
 
 public class Group extends SortModel {
 
-    private String gid;
+    private int gid;
 
     // 按群名排序
     @Letter(isSortField = true)
@@ -31,7 +31,7 @@ public class Group extends SortModel {
 
     }
 
-    public Group(String gid, String name, String creator, String image) {
+    public Group(int gid, String name, String creator, String image) {
         this.gid = gid;
         this.name = name;
         this.creator = creator;
@@ -42,11 +42,11 @@ public class Group extends SortModel {
         this.name = name;
     }
 
-    public String getGid() {
+    public int getGid() {
         return gid;
     }
 
-    public void setGid(String id) {
+    public void setGid(int id) {
         this.gid = id;
     }
 

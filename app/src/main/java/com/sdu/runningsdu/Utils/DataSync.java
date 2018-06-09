@@ -8,9 +8,7 @@ import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.JavaBean.Request;
 import com.sdu.runningsdu.JavaBean.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class DataSync {
                 for (Friend friend : friends) {
                     if (!myDAO.hasFriend(friend.getSid())) {
                         // if friend not exists, add friend
-                        myDAO.addFriends(friends);
+                        myDAO.addFriend(friend);
                     } else {
                         // if friend exists, update friend
                         myDAO.updateFriend(friend);
@@ -63,19 +61,19 @@ public class DataSync {
         String ip = myApplication.getIp();
         String sid = user.getSid();
         try {
-            List<Friend> friends = MyHttpClient.findMyFriend(ip, sid);
-            if ((friends != null) && (friends.size() > 0)) {
-                for (Friend friend : friends) {
-                    if (!myDAO.hasFriend(friend.getSid())) {
+            List<Group> groups = MyHttpClient.findMyGroup(ip, sid);
+            if ((groups != null) && (groups.size() > 0)) {
+                for (Group group : groups) {
+                    if (!myDAO.hasGroup(group.getGid())) {
                         // if friend not exists, add friend
-                        myDAO.addFriends(friends);
+                        myDAO.addGroup(group);
                     } else {
                         // if friend exists, update friend
-                        myDAO.updateFriend(friend);
+                        myDAO.updateGroup(group);
                     }
                 }
                 // set friends to user
-                user.setFriends(friends);
+                user.setGroups(groups);
             } else {
                 // if list == null or size <= 0
                 user.setFriends(new ArrayList<Friend>());
@@ -88,83 +86,7 @@ public class DataSync {
     }
 
     /**
-     * 获取群组
-     * */
-    public static List<Group> getGroups(String ip, String gid) throws IOException, JSONException {
-        List<Group> groups = new ArrayList<>();
-        String response = MyHttpClient.findMyGroup(ip, gid);
-        Log.w("test", response);
-        JSONArray json = new JSONArray(response);
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            String ggid = obj.optString("gid");
-            String name = obj.optString("name");
-            String creator = obj.optString("creator");
-            String image = obj.optString("image");
-            Group group = new Group(ggid, name, creator, image);
-            groups.add(group);
-        }
-        return groups;
-    }
-
-    /**
-     * 获取好友消息
-     * */
-    public static List<Message> getFriendMessage(String ip, int mid, String myName, String friendName) throws IOException, JSONException {
-        List<Message> messages = new ArrayList<>();
-        String response = MyHttpClient.findMessage(ip, mid, myName, friendName);
-        Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        JSONObject obj = json.optJSONObject("obj");
-        for (int i=0; i<obj.length(); ++i) {
-            int mmid = Integer.parseInt(obj.optString("coid"));
-            String sender = obj.optString("sender");
-            String receiver = obj.optString("receiver");
-            String content = obj.optString("content");
-            String time = obj.optString("time");
-            String friend;
-            int type;
-            if (sender.equals(myName)) {
-                friend = receiver;
-                type = Message.TYPE_SENT;
-            } else {
-                friend = sender;
-                type = Message.TYPE_RECEIVED;
-            }
-            Message message = new Message(mmid, friend, type, content, time);
-            messages.add(message);
-        }
-        return messages;
-    }
-
-    /**
-     * 获取群组消息
-     * */
-    public static List<Message> getGroupMessage(String ip, String gid, int mid, String myName) throws IOException, JSONException {
-        List<Message> messages = new ArrayList<>();
-        String response = MyHttpClient.findGroupMessage(ip, gid, mid);
-        Log.w("test", response);
-        JSONObject json = new JSONObject(response);
-        JSONObject obj = json.optJSONObject("obj");
-        for (int i=0; i<obj.length(); ++i) {
-            int gnid = Integer.parseInt(obj.optString("gnid"));
-            String sid = obj.optString("sid");
-            String content = obj.optString("content");
-            String time = obj.optString("time");
-            int type;
-            if (sid.equals(myName)) {
-                type = Message.TYPE_SENT;
-            } else {
-                type = Message.TYPE_RECEIVED;
-            }
-            Message message = new Message(gnid, gid, sid, type, content, time);
-            messages.add(message);
-        }
-        return messages;
-    }
-
-    /**
-     * 获取好友申请
+     * 同步好友申请
      * */
     public static void syncRequest(MyApplication myApplication, MyDAO myDAO) {
         User user = myApplication.getUser();
@@ -194,5 +116,70 @@ public class DataSync {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 同步好友消息
+     * */
+    public static void syncFriendMessage(MyApplication myApplication, MyDAO myDAO) throws IOException, JSONException {
+        User user = myApplication.getUser();
+        String ip = myApplication.getIp();
+        String sid = user.getSid();
+        List<Friend> friends = user.getFriends();
+        try {
+            for (Friend friend : friends) {
+                int mid = myDAO.findLastFriendMessage(friend.getSid());
+                List<Message> messages = MyHttpClient.findFriendMessage(ip, mid, sid, friend.getSid());
+                if ((messages != null) && (messages.size() > 0)) {
+                    // set messages to friend
+                    friend.setMessages(messages);
+                    myDAO.addFriendMessages(messages);
+                    friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
+                    myDAO.updateFriendUnread(friend);
+                } else {
+                    // if list == null or size <= 0
+                    user.setFriends(new ArrayList<Friend>());
+                }
+            }
+            // set friends to user
+            user.setFriends(friends);
+            // set user to MyApplication
+            myApplication.setUser(user);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 同步群组消息
+     * */
+    public static void syncGroupMessage(MyApplication myApplication, MyDAO myDAO) throws IOException, JSONException {
+        User user = myApplication.getUser();
+        String ip = myApplication.getIp();
+        String sid = user.getSid();
+        List<Group> groups = user.getGroups();
+        try {
+            for (Group group : groups) {
+                int mid = myDAO.findLastGroupMessage(group.getGid());
+                List<Message> messages = MyHttpClient.findGroupMessage(ip, group.getGid(), mid, sid);
+                if ((messages != null) && (messages.size() > 0)) {
+                    // set messages to group
+                    group.setMessages(messages);
+                    myDAO.addFriendMessages(messages);
+                    group.setUnread(group.getUnread()+messages.size()); //设置未读消息
+                    myDAO.updateGroupUnread(group);
+                } else {
+                    // if list == null or size <= 0
+                    user.setFriends(new ArrayList<Friend>());
+                }
+            }
+            // set groups to user
+            user.setGroups(groups);
+            // set user to MyApplication
+            myApplication.setUser(user);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -282,28 +282,6 @@ public class MyDAO {
         return friends;
     }
 
-
-
-    /**
-     * 查询是否有该群组
-     * */
-    public boolean hasGroup() {
-        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("group",
-                null, null, null, null, null, null);
-        Log.w("has group", ""+cursor.getCount());
-        if (cursor.getCount() > 0) {
-            return true;
-        }
-        db.close();
-        return false;
-    }
-
-    //查找所有群聊
-    public void findAllGroup() {
-
-    }
-
     /**
      * 添加群聊
      * */
@@ -340,6 +318,50 @@ public class MyDAO {
 
     //退群
     public void deleteGroup(String gid) {
+
+    }
+
+    /**
+     * 更新群组信息
+     * */
+    public void updateGroup(Group group) {
+
+    }
+
+    /**
+     * 更新群组未读消息数
+     * */
+    public void updateGroupUnread(Group group) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = group.getGid();
+        objects[1] = group.getUnread();
+        String sql = "update groups set gid=?, unread=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update group unread: " + group.getName() + " " + group.getUnread());
+    }
+
+    /**
+     * 查询是否有该群组
+     * */
+    public boolean hasGroup(int gid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groups",
+                null,
+                "gid = ?",
+                new String[]{Integer.toString(gid)},
+                null, null, null);
+        Log.w("has group", ""+cursor.getCount());
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        db.close();
+        return false;
+    }
+
+    //查找所有群聊
+    public void findAllGroup() {
 
     }
 
@@ -408,12 +430,12 @@ public class MyDAO {
     /**
      * 查找群聊最后一条消息的id
      */
-    public int findLastGroupMessage(String gid) {
+    public int findLastGroupMessage(int gid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groupmessage",
                 new String[]{"mid"},
                 "gid = ?",
-                new String[]{gid},
+                new String[]{Integer.toString(gid)},
                 null, null,
                 "mid");
         int mid = -1;

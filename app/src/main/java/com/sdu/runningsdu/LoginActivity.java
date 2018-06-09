@@ -128,51 +128,10 @@ public class LoginActivity extends AppCompatActivity{
      * */
     private void syncData() throws IOException, JSONException {
         DataSync.syncFriend(myApplication, myDAO);
+        DataSync.syncGroup(myApplication, myDAO);
         DataSync.syncRequest(myApplication, myDAO);
-
-        User user = myApplication.getUser();
-
-        // 获取群组
-        List<Group> g = DataSync.getGroups(myApplication.getIp(), user.getSid());
-        if ((g != null) && g.size() > 0) {
-            user.setGroups(g);
-            myDAO.addGroups(user.getGroups());
-        } else {
-            user.setGroups(new ArrayList<Group>());
-        }
-        // 获取好友消息
-        if (user.getFriends() != null) {
-            List<Friend> friends = user.getFriends();
-            for (Friend friend : friends) {
-                int mid = myDAO.findLastFriendMessage(friend.getSid());
-                List<Message> messages = DataSync.getFriendMessage(myApplication.getIp(), mid, user.getSid(), friend.getSid());
-                if ((messages != null) && (messages.size() > 0)) {
-                    friend.setMessages(messages);
-                    myDAO.addFriendMessages(messages);
-                    friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
-                } else {
-                    friend.setMessages(new ArrayList<Message>());
-                }
-            }
-            user.setFriends(friends);
-        }
-        // 获取群组消息
-        if (user.getGroups() != null) {
-            List<Group> groups = user.getGroups();
-            for (Group group : groups) {
-                int mid = myDAO.findLastGroupMessage(group.getGid());
-                List<Message> messages = DataSync.getGroupMessage(myApplication.getIp(), group.getGid(), mid, user.getSid());
-                if ((messages != null) && (messages.size() > 0)) {
-                    group.setMessages(messages);
-                    myDAO.addGroupMessages(messages);
-                    group.setUnread(group.getUnread()+messages.size()); //设置未读消息
-                } else {
-                    group.setMessages(new ArrayList<Message>());
-                }
-            }
-            user.setGroups(groups);
-        }
-
+        DataSync.syncFriendMessage(myApplication, myDAO);
+        DataSync.syncGroupMessage(myApplication, myDAO);
     }
 
     private void changeBackground() {

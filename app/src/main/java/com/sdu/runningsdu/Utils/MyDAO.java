@@ -79,6 +79,7 @@ public class MyDAO {
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
             user.setImage(cursor.getString(cursor.getColumnIndex("image")));
             Log.d("database", "find user: " + user.toString());
+            users.add(user);
         }
         db.close();
         return users;
@@ -144,7 +145,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
                 null, null, null, null, null, null);
-        Log.w("has user", ""+cursor.getCount());
+        Log.w("has friend", ""+cursor.getCount());
         if (cursor.getCount() > 0) {
             return true;
         }
@@ -152,9 +153,46 @@ public class MyDAO {
         return false;
     }
 
-    //查找所有好友
-    public void findAllFriend() {
+    /**
+     * 查询好友信息
+     */
+    public Friend findFriend(String sid) {
+        Friend friend = new Friend();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friend",
+                new String[]{"sid", "name", "image", "unread"},
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
+        if (cursor.moveToNext()) {
+            friend.setSid(cursor.getString(cursor.getColumnIndex("sid")));
+            friend.setName(cursor.getString(cursor.getColumnIndex("name")));
+            friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
+        }
+        db.close();
+        return friend;
+    }
 
+    /**
+     * 查找所有好友
+     * */
+    public List<Friend> findAllFriend() {
+        List<Friend> friends = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friend",
+                new String[]{"sid", "name", "image", "unread"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            Friend friend = new Friend();
+            friend.setSid(cursor.getString(cursor.getColumnIndex("sid")));
+            friend.setName(cursor.getString(cursor.getColumnIndex("name")));
+            friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
+            friends.add(friend);
+        }
+        db.close();
+        return friends;
     }
 
     /**
@@ -192,6 +230,21 @@ public class MyDAO {
     //删除好友
     public void deleteFriend(String sid) {
 
+    }
+
+    /**
+     * 查询是否有该群组
+     * */
+    public boolean hasGroup() {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("group",
+                null, null, null, null, null, null);
+        Log.w("has group", ""+cursor.getCount());
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        db.close();
+        return false;
     }
 
     //查找所有群聊

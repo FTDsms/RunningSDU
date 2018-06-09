@@ -133,8 +133,11 @@ public class MyDAO {
         Log.d("database", "delete user: " + sid);
     }
 
-    //修改用户信息
+    /**
+     * 更新用户信息
+     * */
     public void updateUser(User user) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
 
     }
 

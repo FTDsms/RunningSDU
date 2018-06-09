@@ -103,7 +103,7 @@ public class MapFragment extends Fragment {
 
     boolean jieshourenwu = false;
     int didian;//任务地点
-    String missionLocation[] = new String[]{"三区","一号食堂","二号宿舍楼"};
+    String missionLocation[];
     HashMap<Integer, double[]> hashMap = new HashMap<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,7 +121,6 @@ public class MapFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        judgePermission();
         requestLocButton = (Button) getView().findViewById(R.id.button1);
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         requestLocButton.setText("普通");
@@ -313,13 +312,26 @@ public class MapFragment extends Fragment {
         if(resultCode== Activity.RESULT_OK) //从handgesture返回的回调
         {
             //连接服务器
+            new AlertDialog.Builder(getActivity()).setTitle("任务完成")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            jieshourenwu = true;
+                        }
+                    })
+                    .show();
         }
         if (requestCode == 1 && resultCode == 4) { //从unityactivity返回的回调
-            Log.d("dddddddddd","lalala");
-            //textview.setText(s);
+            new AlertDialog.Builder(getActivity()).setTitle("任务完成")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            jieshourenwu = true;
+                        }
+                    })
+                    .show();
         }
 
     }
+
 
 
     //指南针 获取degree值
@@ -434,7 +446,7 @@ public class MapFragment extends Fragment {
 
             //fandizhibianma(new LatLng(location.getLatitude(),location.getLongitude()));
             //获取定位位置描述信息  http://lbsyun.baidu.com/index.php?title=android-locsdk/guide/get-location/describe
-            Toast.makeText(getActivity(), location.getLocationDescribe(),Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), location.getLocationDescribe(),Toast.LENGTH_SHORT).show();
 
 
             i++;
@@ -663,12 +675,12 @@ public class MapFragment extends Fragment {
                 if (result == null
                         || result.error != SearchResult.ERRORNO.NO_ERROR) {
                     // 没有检测到结果
-                    Toast.makeText(getActivity(), "抱歉，未能找到结果",
-                            Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "抱歉，未能找到结果",
+//                            Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(getActivity(),
-                        "位置：" + result.getAddress(), Toast.LENGTH_LONG)
-                        .show();
+//                Toast.makeText(getActivity(),
+//                        "位置：" + result.getAddress(), Toast.LENGTH_LONG)
+//                        .show();
             }
 
             // 地理编码查询结果回调函数
@@ -688,58 +700,6 @@ public class MapFragment extends Fragment {
         // geoCoder.destroy();
     }
 
-    //6.0之后要动态获取权限，重要！！！
-    protected void judgePermission() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // 检查该权限是否已经获取
-            // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
-
-            // sd卡权限
-            String[] SdCardPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            if (ContextCompat.checkSelfPermission(getActivity(), SdCardPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), SdCardPermission, 100);
-            }
-
-            //手机状态权限
-            String[] readPhoneStatePermission = {Manifest.permission.READ_PHONE_STATE};
-            if (ContextCompat.checkSelfPermission(getActivity(), readPhoneStatePermission[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), readPhoneStatePermission, 200);
-            }
-
-            //定位权限
-            String[] locationPermission = {Manifest.permission.ACCESS_FINE_LOCATION};
-            if (ContextCompat.checkSelfPermission(getActivity(), locationPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), locationPermission, 300);
-            }
-
-            String[] ACCESS_COARSE_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION};
-            if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_COARSE_LOCATION[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), ACCESS_COARSE_LOCATION, 400);
-            }
-
-
-            String[] READ_EXTERNAL_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE};
-            if (ContextCompat.checkSelfPermission(getActivity(), READ_EXTERNAL_STORAGE[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), READ_EXTERNAL_STORAGE, 500);
-            }
-
-            String[] WRITE_EXTERNAL_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            if (ContextCompat.checkSelfPermission(getActivity(), WRITE_EXTERNAL_STORAGE[0]) != PackageManager.PERMISSION_GRANTED) {
-                // 如果没有授予该权限，就去提示用户请求
-                ActivityCompat.requestPermissions(getActivity(), WRITE_EXTERNAL_STORAGE, 600);
-            }
-
-        }else{
-            //doSdCardResult();
-        }
-        //LocationClient.reStart();
-    }
 //
 //    public class MyLocationListener implements BDAbstractLocationListener {
 //        @Override

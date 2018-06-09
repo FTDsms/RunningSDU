@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, mapFragment);
                     navigationButtonIndex = 1;
-                    appBarLayout.setVisibility(View.VISIBLE);
+//                    appBarLayout.setVisibility(View.VISIBLE);
                     toolbarTitle.setText("地图");
                     break;
                 case R.id.navigation_message:
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, messageFragment);
                     navigationButtonIndex = 2;
-                    appBarLayout.setVisibility(View.VISIBLE);
+//                    appBarLayout.setVisibility(View.VISIBLE);
                     toolbarTitle.setText("消息");
                     break;
                 case R.id.navigation_contact:
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, contactFragment);
                     navigationButtonIndex = 3;
-                    appBarLayout.setVisibility(View.VISIBLE);
+//                    appBarLayout.setVisibility(View.VISIBLE);
                     toolbarTitle.setText("联系人");
                     break;
                 case R.id.navigation_find:
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, findFragment);
                     navigationButtonIndex = 4;
-                    appBarLayout.setVisibility(View.VISIBLE);
+//                    appBarLayout.setVisibility(View.VISIBLE);
                     toolbarTitle.setText("发现");
                     break;
                 default:

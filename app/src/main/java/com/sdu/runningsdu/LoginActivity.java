@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -38,7 +37,6 @@ import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,9 +52,19 @@ public class LoginActivity extends AppCompatActivity{
     /**
      * Id to identity permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0x0;
+    private static final int[] REQUEST_CODE = new int[]{0x1, 0x2, 0x3, 0x4, 0x5};
 
-    private static final int REQUEST_STORAGE = 0x1;
+    /**
+     * Permission List
+     * */
+    private static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, //存储权限
+            Manifest.permission.READ_CONTACTS, //读取联系人
+            Manifest.permission.READ_PHONE_STATE, //读取手机状态
+            Manifest.permission.ACCESS_FINE_LOCATION, //定位权限
+            Manifest.permission.ACCESS_COARSE_LOCATION, //定位权限
+            Manifest.permission.CAMERA}; //相机权限
+    private List<String> permissionList;
 
     /**
      * UI references.
@@ -82,26 +90,21 @@ public class LoginActivity extends AppCompatActivity{
      * 申请权限
      * */
     private void requestForPermissions() {
-        //检查权限
-        //存储权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            //进入到这里代表没有权限.
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-                //已经禁止提示了
-                Toast.makeText(LoginActivity.this, "您已禁止存储权限，需要重新开启。", Toast.LENGTH_SHORT).show();
-            }else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE);
+        permissionList = new ArrayList<>();
+        // 判断哪些权限未授予
+        // 检查权限 GRANTED---授权  DINIED---拒绝
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(permission);
             }
-        } else {
-            // have permission
         }
-        //读取联系人
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            //进入到这里代表没有权限.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        // 请求未授予权限
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(this, permissions, 1);
         }
+
     }
 
     /**
@@ -115,7 +118,9 @@ public class LoginActivity extends AppCompatActivity{
             // if user not exists, add user
             myDAO.addUser(user);
         } else {
-            // if user exists, print user information
+            // if user exists, update user info
+
+            // print user information
             Log.i("user: ", myDAO.findUser(user.getSid()).toString());
         }
     }
@@ -492,21 +497,23 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     /**
-     * Callback received when a permissions request has been completed.
+     * Callback received when a PERMISSIONS request has been completed.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case REQUEST_STORAGE:
-                if(grantResults.length >0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    //用户同意授权
-                }else{
-                    //用户拒绝授权
-                }
-                break;
-            case REQUEST_READ_CONTACTS:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+            case 1:
+                for (int i=0; i<grantResults.length; ++i) {
+                    if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                        // 用户拒绝授权
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
+                            // 用户已经禁止提示，提示开启
+                            Toast.makeText(this, "您已禁止权限，需要重新开启。", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 重新申请权限
+                            requestForPermissions();
+                        }
+                    }
                 }
                 break;
         }

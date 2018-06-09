@@ -1,5 +1,6 @@
 package com.sdu.runningsdu;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -20,12 +21,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.sdu.runningsdu.Contact.ContactFragment;
 import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
+import com.sdu.runningsdu.Map.unityactivity;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
@@ -66,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     transaction.replace(R.id.content, mapFragment);
                     navigationButtonIndex = 1;
-                    appBarLayout.setVisibility(View.INVISIBLE);
+                    appBarLayout.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText("地图");
                     break;
                 case R.id.navigation_message:
                     if (messageFragment == null) {
@@ -112,8 +117,18 @@ public class MainActivity extends AppCompatActivity {
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 //        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-
+        SDKInitializer.initialize(this.getApplicationContext());
         setContentView(R.layout.activity_main);
+
+//        Button unityButton = findViewById(R.id.unitybutton);
+//        unityButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, unityactivity.class);
+//                //startActivityForResult(intent,1);
+//                startActivity(intent);
+//            }
+//        });
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);

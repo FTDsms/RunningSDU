@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<com.example.yyy.myapplication2.AutoFitTextureView-->
+        <!--android:id="@+id/texture"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center" />-->
+
+    <com.sdu.runningsdu.Map.AutoFitTextureView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/texture"
+        android:orientation="vertical"/>
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/capture"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="end|bottom"-->
+        <!--android:src="@drawable/capture" />-->
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="end|top"
+        android:id="@+id/imageview"/>
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/changecamera"
+        android:background="@drawable/changecamera"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"/>
+</FrameLayout>

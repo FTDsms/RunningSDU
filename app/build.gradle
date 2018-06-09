@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
 }
 
 dependencies {
@@ -37,4 +42,11 @@ dependencies {
     compile 'com.squareup.okio:okio:1.14.0'
     //SwipeBackLayout
     compile 'me.imid.swipebacklayout.lib:library:1.1.0'
+    implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
+    implementation files('libs/bos-android-sdk-1.0.3.jar')
+    implementation files('libs/json-lib-2.4-jdk15.jar')
+    implementation files('libs/unity-classes.jar')
+    implementation files('libs/Vuforia.jar')
+    implementation files('libs/VuforiaUnityPlayer.jar')
 }

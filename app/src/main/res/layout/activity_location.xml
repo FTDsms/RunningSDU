@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true" />
+
+
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="11dp" />
+
+    <ToggleButton
+        android:id="@+id/togglebutton"
+        android:layout_below="@id/button1"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="卫星地图"
+        android:textOff="3D立方图"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/togglebutton"
+        android:id="@+id/missionButton"
+        android:text="任务"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/missionButton"
+        android:id="@+id/unityButton"
+        android:text="unity"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/unityButton"
+        android:id="@+id/gestureButton"
+        android:text="gesture"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginLeft="130dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/startguiji"
+        android:text="开始记录轨迹"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:background="#7f111111"
+        />
+
+
+
+</RelativeLayout>

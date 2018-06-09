@@ -528,24 +528,6 @@ public class MyHttpClient {
         }
     }
 
-    /**
-     * 清除所有聊天记录缓存
-     * */
-    public static boolean cleanNotes(String url) throws IOException, JSONException {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url+"/cleanNotes")
-                .build();
-        Response response = okHttpClient.newCall(request).execute();
-        JSONObject jsonObject = new JSONObject(response.body().string());
-        String flag = jsonObject.optString("flag");
-        if (!flag.equals("true")) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public static String post(String url, String json) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, json);

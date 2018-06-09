@@ -67,9 +67,11 @@ public class DataSync {
                     if (!myDAO.hasGroup(group.getGid())) {
                         // if friend not exists, add friend
                         myDAO.addGroup(group);
+                        myDAO.addGroupMember(group);
                     } else {
                         // if friend exists, update friend
                         myDAO.updateGroup(group);
+                        myDAO.updateGroupMember(group);
                     }
                 }
                 // set friends to user

@@ -316,16 +316,31 @@ public class MyDAO {
         db.close();
     }
 
-    //退群
-    public void deleteGroup(String gid) {
-
+    /**
+     * 删除群聊
+     * */
+    public void deleteGroup(int gid) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        String sql = "delete from groups where gid = ?";
+        db.execSQL(sql, new Object[]{Integer.toString(gid)});
+        db.close();
+        Log.d("database", "delete group: " + gid);
     }
 
     /**
      * 更新群组信息
      * */
     public void updateGroup(Group group) {
-
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[4];
+        objects[0] = group.getGid();
+        objects[1] = group.getName();
+        objects[2] = group.getCreator();
+        objects[2] = group.getImage();
+        String sql = "update groups set gid=?, name=?, creator, image=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update group: " + group.getName());
     }
 
     /**
@@ -360,29 +375,109 @@ public class MyDAO {
         return false;
     }
 
-    //查找所有群聊
-    public void findAllGroup() {
-
+    /**
+     * 查询群聊信息
+     * */
+    public Group findGroup(int gid) {
+        Group group = new Group();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groups",
+                new String[]{"gid", "name", "creator", "image", "unread"},
+                null, null, null, null, null);
+        if (cursor.moveToNext()) {
+            group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
+            group.setName(cursor.getString(cursor.getColumnIndex("name")));
+            group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
+            group.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
+        }
+        db.close();
+        return group;
     }
 
     /**
-     * 查找好友最后一条消息的id
-     */
-    public int findLastFriendMessage(String sid) {
+     * 查找所有群聊
+     * */
+    public List<Group> findAllGroup() {
+        List<Group> groups = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("friendmessage",
-                new String[]{"mid"},
-                "sid = ?",
-                new String[]{sid},
-                null, null,
-                "mid");
-        int mid = -1;
-        if (cursor.moveToLast()) {
-            mid = cursor.getInt(0);
-            db.close();
-            return mid;
+        Cursor cursor = db.query("groups",
+                new String[]{"gid", "name", "creator", "image", "unread"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            Group group = new Group();
+            group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
+            group.setName(cursor.getString(cursor.getColumnIndex("name")));
+            group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
+            group.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
+            groups.add(group);
         }
-        return mid;
+        db.close();
+        return groups;
+    }
+
+    /**
+     * 添加群组成员
+     * */
+    public void addGroupMember(Group group) {
+        int gid = group.getGid();
+        List<String> members = group.getMembers();
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (String member : members) {
+            Object[] objects = new Object[5];
+            objects[0] = gid;
+            objects[1] = member;
+            String sql = "insert into groupmember(mid, sid, type, content, time) values(?,?,?,?,?)";
+            db.execSQL(sql, objects);
+            Log.d("database", "add group member: " + gid + " " + member);
+        }
+        db.close();
+    }
+
+    /**
+     * 删除群组成员
+     * */
+    public void deleteGroupMember(int gid, String sid) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        String sql = "delete from groupmember where gid=?, sid=?";
+        db.execSQL(sql, new Object[]{Integer.toString(gid), sid});
+        db.close();
+        Log.d("database", "delete group member: " + gid);
+    }
+
+    /**
+     * 更新群组成员
+     * */
+    public void updateGroupMember(Group group) {
+        int gid = group.getGid();
+        List<String> members = group.getMembers();
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        for (String member : members) {
+            Object[] objects = new Object[2];
+            objects[0] = gid;
+            objects[1] = member;
+            String sql = "update groupmember set gid=?, sid=?";
+            db.execSQL(sql, objects);
+            Log.d("database", "update group member: " + gid + " " + member);
+        }
+        db.close();
+    }
+
+    /**
+     * 查询群组成员
+     * */
+    public List<String> findGroupMember(int gid) {
+        List<String> members = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmember",
+                new String[]{"sid"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            members.add(cursor.getString(cursor.getColumnIndex("sid")));
+        }
+        db.close();
+        return members;
     }
 
     /**
@@ -421,21 +516,15 @@ public class MyDAO {
         db.close();
     }
 
-
-    //查找好友消息
-    public void findFriendMessage(String sid) {
-
-    }
-
     /**
-     * 查找群聊最后一条消息的id
+     * 查找好友最后一条消息的id
      */
-    public int findLastGroupMessage(int gid) {
+    public int findLastFriendMessage(String sid) {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
-        Cursor cursor = db.query("groupmessage",
+        Cursor cursor = db.query("friendmessage",
                 new String[]{"mid"},
-                "gid = ?",
-                new String[]{Integer.toString(gid)},
+                "sid = ?",
+                new String[]{sid},
                 null, null,
                 "mid");
         int mid = -1;
@@ -445,6 +534,26 @@ public class MyDAO {
             return mid;
         }
         return mid;
+    }
+
+    /**
+     * 查找好友消息
+     * */
+    public List<Message> findFriendMessage(String sid) {
+        List<Message> messages = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friendmessage",
+                new String[]{"mid", "sid", "type", "content", "time"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            int mid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("mid")));
+            int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("type")));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            messages.add(new Message(mid, sid, type, content, time));
+        }
+        db.close();
+        return messages;
     }
 
     /**
@@ -485,19 +594,45 @@ public class MyDAO {
         db.close();
     }
 
-    //查找群聊消息
-    public void findGroupMessage(String gid) {
-
+    /**
+     * 查找群聊最后一条消息的id
+     */
+    public int findLastGroupMessage(int gid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmessage",
+                new String[]{"mid"},
+                "gid = ?",
+                new String[]{Integer.toString(gid)},
+                null, null,
+                "mid");
+        int mid = -1;
+        if (cursor.moveToLast()) {
+            mid = cursor.getInt(0);
+            db.close();
+            return mid;
+        }
+        return mid;
     }
 
-    //添加消息
-    public void addMessage(Message message) {
-
-    }
-
-    //删除消息
-    public void deleteMessage(String mid) {
-
+    /**
+     * 查找群聊消息
+     * */
+    public List<Message> findGroupMessage(int gid) {
+        List<Message> messages = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmessage",
+                new String[]{"mid", "gid", "sid", "type", "content", "time"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            int mid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("mid")));
+            String sid = cursor.getString(cursor.getColumnIndex("sid"));
+            int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("sid")));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            messages.add(new Message(mid, Integer.toString(gid), sid, type, content, time));
+        }
+        db.close();
+        return messages;
     }
 
     /**
@@ -539,17 +674,21 @@ public class MyDAO {
     }
 
     /**
-     * 删除好友申请
-     * */
-    public void deleteRequest(int rid) {
-
-    }
-
-    /**
      * 更新好友申请
      * */
     public void updateRequest(Request request) {
-
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[6];
+        objects[0] = request.getRid();
+        objects[1] = request.getReceiver();
+        objects[2] = request.getSender();
+        objects[3] = request.getMessage();
+        objects[4] = request.getTime();
+        objects[5] = request.getState();
+        String sql = "update request set rid=?, receiver=?, sender=?, message=?, time=?, state=?";
+        db.execSQL(sql, objects);
+        db.close();
+        Log.d("database", "update request: " + request.getRid());
     }
 
     /**

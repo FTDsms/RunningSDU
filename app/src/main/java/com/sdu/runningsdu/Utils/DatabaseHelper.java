@@ -21,7 +21,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * 单例模式
-     * */
+     * @param context
+     * @param name
+     * @return DatabaseHelper
+     */
     public static DatabaseHelper getInstance(Context context, String name) {
         if (databaseHelper == null) {
             databaseHelper = new DatabaseHelper(context, name);

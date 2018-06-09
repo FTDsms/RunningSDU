@@ -150,6 +150,7 @@ public class LoginActivity extends AppCompatActivity{
                 if ((messages != null) && (messages.size() > 0)) {
                     friend.setMessages(messages);
                     myDAO.addFriendMessages(messages);
+                    friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
                 } else {
                     friend.setMessages(new ArrayList<Message>());
                 }
@@ -165,6 +166,7 @@ public class LoginActivity extends AppCompatActivity{
                 if ((messages != null) && (messages.size() > 0)) {
                     group.setMessages(messages);
                     myDAO.addGroupMessages(messages);
+                    group.setUnread(group.getUnread()+messages.size()); //设置未读消息
                 } else {
                     group.setMessages(new ArrayList<Message>());
                 }
@@ -179,7 +181,6 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             user.setRequests(new ArrayList<Request>());
         }
-        // 获取
     }
 
     private void changeBackground() {

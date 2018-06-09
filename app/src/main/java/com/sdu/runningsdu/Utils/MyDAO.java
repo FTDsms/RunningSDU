@@ -52,7 +52,6 @@ public class MyDAO {
      * 查询是否有用户
      * */
     public boolean hasUser() {
-        List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("user",
                 null, null, null, null, null, null);
@@ -136,6 +135,21 @@ public class MyDAO {
     //修改用户信息
     public void updateUser(User user) {
 
+    }
+
+    /**
+     * 查询是否有该好友
+     * */
+    public boolean hasFriend() {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friend",
+                null, null, null, null, null, null);
+        Log.w("has user", ""+cursor.getCount());
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        db.close();
+        return false;
     }
 
     //查找所有好友

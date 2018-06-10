@@ -1,5 +1,6 @@
 package com.sdu.runningsdu.Contact.NewFriend;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -79,7 +80,8 @@ public class NewFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 打开添加好友Activity
-//                Intent intent = new Intent(NewFriendActivity.this, xxx.class);
+                Intent intent = new Intent(NewFriendActivity.this, AddFriendActivity.class);
+                startActivity(intent);
             }
         });
 

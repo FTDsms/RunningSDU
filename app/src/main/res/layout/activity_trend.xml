@@ -35,7 +35,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:drawableEnd="@drawable/photo_camera_white_36x36"
+            android:drawableEnd="@drawable/photo_camera_white_27x27"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:visibility="visible"/>

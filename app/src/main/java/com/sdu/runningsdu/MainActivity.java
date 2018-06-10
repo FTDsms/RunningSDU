@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -30,6 +31,7 @@ import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Map.unityactivity;
+import com.sdu.runningsdu.Me.UserInfoActivity;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
@@ -215,6 +217,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerStateChanged(int newState) {}
+        });
+
+        LinearLayout userInfo = findViewById(R.id.user_info);
+        userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 打开个人信息界面
+                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            }
         });
 
         NavigationView navigationView = findViewById(R.id.navigation_view);

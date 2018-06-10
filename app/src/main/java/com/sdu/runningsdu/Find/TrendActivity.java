@@ -36,8 +36,9 @@ public class TrendActivity extends AppCompatActivity {
         toolbarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // 点击发朋友圈
             }
+            // 长按发文字朋友圈
         });
     }
 

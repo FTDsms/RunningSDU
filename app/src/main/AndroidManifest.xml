@@ -137,6 +137,11 @@
             android:process=":UnityKillsMe">
         </activity>
         <activity android:name=".Map.HandgestureActivity"/>
+        <activity
+            android:name=".Me.UserInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>

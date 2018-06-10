@@ -14,6 +14,8 @@ import com.sdu.runningsdu.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by FTDsm on 2018/6/10.
  */
@@ -71,15 +73,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView icon;
+        private CircleImageView icon;
         private TextView name;
         private TextView sid;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.item_image);
-            name = itemView.findViewById(R.id.item_name);
-            sid = itemView.findViewById(R.id.item_message);
+            icon = itemView.findViewById(R.id.result_image);
+            name = itemView.findViewById(R.id.result_name);
+            sid = itemView.findViewById(R.id.result_sid);
         }
     }
 

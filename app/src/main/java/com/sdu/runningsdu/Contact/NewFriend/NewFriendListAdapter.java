@@ -15,6 +15,8 @@ import com.sdu.runningsdu.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by FTDsm on 2018/6/8.
  */
@@ -73,7 +75,7 @@ public class NewFriendListAdapter extends RecyclerView.Adapter<NewFriendListAdap
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView icon;
+        private CircleImageView icon;
         private TextView name;
         private TextView message;
         private TextView state;

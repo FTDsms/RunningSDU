@@ -5,13 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
@@ -25,6 +22,8 @@ public class AddFriendActivity extends AppCompatActivity {
     private TextView toolbarBack;
 
     private RelativeLayout search;
+
+    private SearchView searchView;
 
     private TextView mySid;
 
@@ -48,6 +47,7 @@ public class AddFriendActivity extends AppCompatActivity {
             }
         });
 
+        searchView = findViewById(R.id.search_view);
         search = findViewById(R.id.search);
         mySid = findViewById(R.id.my_sid);
 
@@ -61,7 +61,20 @@ public class AddFriendActivity extends AppCompatActivity {
             }
         });
 
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(AddFriendActivity.this, SearchResultActivity.class);
+                startActivity(intent);
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
     }
 

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -94,18 +95,31 @@ public class SearchResultActivity extends AppCompatActivity {
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(final String query) {
                 if (TextUtils.isEmpty(query)) {
                     Toast.makeText(SearchResultActivity.this, "请输入查找内容!", Toast.LENGTH_SHORT).show();
                 } else {
-                    try {
-                        friends.clear();
-                        friends = MyHttpClient.findUserByName(myApplication.getIp(), query);
-                        friends.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
-                        searchResultAdapter.notifyDataSetChanged();
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                friends.clear();
+                                friends.addAll(MyHttpClient.findUserByName(myApplication.getIp(), query));
+                                friends.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
+                                for (Friend friend : friends) {
+                                    Log.i("test search", friend.toString());
+                                }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchResultAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
                 return true;
             }

@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.sdu.runningsdu.Contact.ContactFragment;
+import com.sdu.runningsdu.Contact.NewFriend.AddFriendActivity;
 import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.item_create_group:
                         break;
                     case R.id.item_add_friend:
+                        Intent intent = new Intent(MainActivity.this, AddFriendActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.item_scan:
                         break;

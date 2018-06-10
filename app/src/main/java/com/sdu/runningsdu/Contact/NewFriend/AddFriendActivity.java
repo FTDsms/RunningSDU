@@ -5,9 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
 
 /**
  * Created by FTDsm on 2018/6/8.
@@ -17,13 +20,22 @@ public class AddFriendActivity extends AppCompatActivity {
 
     private TextView toolbarBack;
 
+    private SearchView searchView;
+
+    private TextView mySid;
+
+    private MyApplication myApplication;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_friend);
 
-        toolbarBack = findViewById(R.id.group_list_toolbar_back);
+        myApplication = (MyApplication) getApplication();
+        User user = myApplication.getUser();
+
+        toolbarBack = findViewById(R.id.add_friend_toolbar_back);
         toolbarBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,6 +43,12 @@ public class AddFriendActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+//        searchView = findViewById(R.id.search_view);
+        mySid = findViewById(R.id.my_sid);
+
+        mySid.setText("我的学号："+user.getSid());
+
 
     }
 

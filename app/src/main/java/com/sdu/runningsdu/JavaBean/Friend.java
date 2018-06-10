@@ -76,4 +76,14 @@ public class Friend extends SortModel{
     public void setUnread(int unread) {
         this.unread = unread;
     }
+
+    @Override
+    public String toString() {
+        return "Friend{" +
+                "sid='" + sid + '\'' +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", unread=" + unread +
+                '}';
+    }
 }

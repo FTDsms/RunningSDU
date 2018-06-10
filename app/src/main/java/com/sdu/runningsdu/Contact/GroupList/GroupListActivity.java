@@ -60,6 +60,8 @@ public class GroupListActivity extends AppCompatActivity {
             }
         });
 
+        groupListView = findViewById(R.id.group_list_view);
+
         View footer = LayoutInflater.from(this).inflate(R.layout.list_item_foot, null);
         foot = footer.findViewById(R.id.tv_foot);
         groupListView.addFooterView(footer, null, false);

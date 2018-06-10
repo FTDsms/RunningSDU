@@ -50,20 +50,33 @@
         android:textColor="#7f7f7f"
         android:textSize="12sp"/>
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/search_view"
+    <RelativeLayout
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.SearchView>
+        <android.support.v7.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.SearchView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="50dp"
+            android:text="学号/姓名" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/my_sid"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:background="#e9e9e9"
         android:gravity="center_horizontal"
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
         android:text="我的学号："
         android:textColor="#7f7f7f"
         android:textSize="12sp"/>

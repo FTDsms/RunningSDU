@@ -141,6 +141,10 @@
             android:name=".Me.UserInfoActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".Contact.NewFriend.SearchResultActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
     </application>
 

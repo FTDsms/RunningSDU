@@ -759,4 +759,28 @@ public class MyDAO {
         return false;
     }
 
+    /**
+     * 查询所有好友请求
+     * @return
+     */
+    public List<Request> findAllRequest() {
+        List<Request> requests = new ArrayList<>();
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("request",
+                new String[]{"rid", "receiver", "sender", "message", "time", "state"},
+                null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            int rid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("rid")));
+            String receiver = cursor.getString(cursor.getColumnIndex("receiver"));
+            String sender = cursor.getString(cursor.getColumnIndex("sender"));
+            String message = cursor.getString(cursor.getColumnIndex("message"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            int state = Integer.parseInt(cursor.getString(cursor.getColumnIndex("state")));
+            Request request = new Request(rid, receiver, sender, message, time, state);
+            requests.add(request);
+        }
+        db.close();
+        return requests;
+    }
+
 }

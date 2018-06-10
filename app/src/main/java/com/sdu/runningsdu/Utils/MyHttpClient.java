@@ -284,10 +284,9 @@ public class MyHttpClient {
         JSONArray json = new JSONArray(response.body().string());
         for (int i=0; i<json.length(); ++i) {
             JSONObject obj = json.optJSONObject(i);
-            String fsid = obj.optString("sid");
             String name = obj.optString("name");
             String image = obj.optString("image");
-            Friend friend = new Friend(fsid, name, image);
+            Friend friend = new Friend(sid, name, image);
             friends.add(friend);
         }
         return friends;
@@ -638,6 +637,39 @@ public class MyHttpClient {
             return true;
         }
     }
+
+    /**
+     * 通过姓名查找用户
+     * @param url
+     * @param name
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
+    public static List<Friend> findUserByName(String url, String name) throws IOException, JSONException {
+        List<Friend> friends = new ArrayList<>();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("name", name)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/findUsersByName")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        JSONArray json = new JSONArray(response.body().string());
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
+            String sid = obj.optString("sid");
+            String image = obj.optString("image");
+            Friend friend = new Friend(sid, name, image);
+            friends.add(friend);
+        }
+        return friends;
+    }
+
+//    public static boolean uploadImage(String url,String sid,)
+//    public static boolean downloadImage(String url,String sid,)
 
     public static String post(String url, String json) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();

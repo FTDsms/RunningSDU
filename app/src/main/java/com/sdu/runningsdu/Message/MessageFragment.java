@@ -46,7 +46,9 @@ public class MessageFragment extends Fragment {
 
     private Thread refreshThread;
 
-    private Thread syncThread;
+    private Thread syncThread1;
+
+    private Thread syncThread5;
 
     public MessageFragment() {
 
@@ -120,7 +122,7 @@ public class MessageFragment extends Fragment {
         });
     }
 
-    private void initThread() {
+    private void refreshList() {
         refreshThread = new Thread((new Runnable() {
             @Override
             public void run() {
@@ -145,7 +147,7 @@ public class MessageFragment extends Fragment {
     }
 
     private void syncData() {
-        syncThread = new Thread(new Runnable() {
+        syncThread1 = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (!Thread.interrupted()) { // 非阻塞过程中通过判断中断标志来退出
@@ -155,15 +157,29 @@ public class MessageFragment extends Fragment {
                         e.printStackTrace();
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
-                    DataSync.syncFriend(myApplication, myDAO);
-                    DataSync.syncGroup(myApplication, myDAO);
-                    DataSync.syncRequest(myApplication, myDAO);
                     DataSync.syncFriendMessage(myApplication, myDAO);
                     DataSync.syncGroupMessage(myApplication, myDAO);
                 }
             }
         });
-        syncThread.start();
+        syncThread1.start();
+        syncThread5 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) { // 非阻塞过程中通过判断中断标志来退出
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    DataSync.syncFriend(myApplication, myDAO);
+                    DataSync.syncGroup(myApplication, myDAO);
+                    DataSync.syncRequest(myApplication, myDAO);
+                }
+            }
+        });
+        syncThread5.start();
     }
 
     @Override @Nullable
@@ -176,7 +192,7 @@ public class MessageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initData();
         initView();
-        initThread();
+        refreshList();
         syncData();
     }
 
@@ -185,6 +201,7 @@ public class MessageFragment extends Fragment {
         super.onDestroy();
         //被销毁时终止线程
         refreshThread.interrupt();
-        syncThread.interrupt();
+        syncThread1.interrupt();
+        syncThread5.interrupt();
     }
 }

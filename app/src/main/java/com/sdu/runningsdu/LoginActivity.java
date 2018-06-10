@@ -124,6 +124,28 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     /**
+     * 从数据库中读取数据
+     * */
+    private void readFromDatabase() {
+        User user = myApplication.getUser();
+        user.setFriends(myDAO.findAllFriend());
+        user.setGroups(myDAO.findAllGroup());
+        user.setRequests(myDAO.findAllRequest());
+        List<Friend> friends = user.getFriends();
+        for (Friend friend : friends) {
+            friend.setMessages(myDAO.findFriendMessage(friend.getSid()));
+        }
+        user.setFriends(friends);
+        List<Group> groups = user.getGroups();
+        for (Group group : groups) {
+            group.setMembers(myDAO.findGroupMember(group.getGid()));
+            group.setMessages(myDAO.findGroupMessage(group.getGid()));
+        }
+        user.setGroups(groups);
+        myApplication.setUser(user);
+    }
+
+    /**
      * 同步数据
      * */
     private void syncData() throws IOException, JSONException {
@@ -264,6 +286,9 @@ public class LoginActivity extends AppCompatActivity{
                                 // 创建数据库
                                 initDatabase();
 
+                                // 从数据库中读取数据
+                                readFromDatabase();
+
                                 // 同步数据
                                 syncData();
 
@@ -363,7 +388,7 @@ public class LoginActivity extends AppCompatActivity{
         user.setGroups(groups);
 
         List<Friend> friends = new ArrayList<>();
-        Friend friend1 = new Friend("焦方锴");
+        Friend friend1 = new Friend("201500301132", "焦方锴", null);
         List<Message> messages1 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
             Message message1 = new Message(friend1.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
@@ -372,7 +397,7 @@ public class LoginActivity extends AppCompatActivity{
         friend1.setMessages(messages1);
         friends.add(friend1);
 
-        Friend friend2 = new Friend("叶蕴盈");
+        Friend friend2 = new Friend("201500302002","叶蕴盈", null);
         List<Message> messages2 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
             Message message2 = new Message(friend2.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");

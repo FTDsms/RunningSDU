@@ -97,4 +97,15 @@ public class Group extends SortModel {
     public void setUnread(int unread) {
         this.unread = unread;
     }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "gid=" + gid +
+                ", name='" + name + '\'' +
+                ", creator='" + creator + '\'' +
+                ", image='" + image + '\'' +
+                ", unread=" + unread +
+                '}';
+    }
 }

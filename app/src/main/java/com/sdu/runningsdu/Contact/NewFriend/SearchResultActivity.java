@@ -4,21 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.sdu.runningsdu.Information.DetailedInfoActivity;
+import com.sdu.runningsdu.Information.NonFriendDetailedInfoActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
+import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.Message.RecyclerAdapter;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +37,17 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private SearchView searchView;
 
-    private ListView listView;
+    private RecyclerView recyclerView;
 
-    private List<Friend> resultList;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private SearchResultAdapter searchResultAdapter;
+
+    private List<Friend> friends;
 
     private MyApplication myApplication;
+
+    private MyDAO myDAO;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,9 +56,40 @@ public class SearchResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result);
 
         myApplication = (MyApplication) getApplication();
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
+        friends = new ArrayList<>();
 
         searchView = findViewById(R.id.search_view);
-        listView = findViewById(R.id.result_list);
+        recyclerView = findViewById(R.id.result_list);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        searchResultAdapter = new SearchResultAdapter(friends, this);
+        recyclerView.setAdapter(searchResultAdapter);
+        searchResultAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // 打开详细信息页面
+                if (myDAO.hasFriend(friends.get(position).getSid())) {
+                    // 已是好友
+                    Intent intent = new Intent(SearchResultActivity.this, DetailedInfoActivity.class);
+                    intent.putExtra("sid", friends.get(position).getSid());
+                    startActivity(intent);
+                } else {
+                    // 还不是好友
+                    Intent intent = new Intent(SearchResultActivity.this, NonFriendDetailedInfoActivity.class);
+                    intent.putExtra("sid", friends.get(position).getSid());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
 
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -54,9 +99,10 @@ public class SearchResultActivity extends AppCompatActivity {
                     Toast.makeText(SearchResultActivity.this, "请输入查找内容!", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
-                        resultList.clear();
-                        resultList = MyHttpClient.findUserByName(myApplication.getIp(), query);
-                        resultList.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
+                        friends.clear();
+                        friends = MyHttpClient.findUserByName(myApplication.getIp(), query);
+                        friends.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
+                        searchResultAdapter.notifyDataSetChanged();
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }

@@ -46,13 +46,13 @@ public class UserInfoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_new_friend);
+        setContentView(R.layout.activity_user_info);
 
         myApplication = (MyApplication) getApplication();
         User user = myApplication.getUser();
 
-        toolbarBack = findViewById(R.id.new_friend_toolbar_back);
-        toolbarButton = findViewById(R.id.new_friend_toolbar_button);
+        toolbarBack = findViewById(R.id.user_info_toolbar_back);
+        toolbarButton = findViewById(R.id.user_info_toolbar_button);
         toolbarBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +80,7 @@ public class UserInfoActivity extends AppCompatActivity {
         head_image.setImageResource(R.drawable.head_image);
         name.setText(user.getName());
         sid.setText(user.getSid());
-        
+
     }
 
 }

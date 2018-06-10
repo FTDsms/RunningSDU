@@ -219,16 +219,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerStateChanged(int newState) {}
         });
 
-        LinearLayout userInfo = findViewById(R.id.user_info);
-        userInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 打开个人信息界面
-                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
-                startActivity(intent);
-            }
-        });
-
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -253,6 +243,18 @@ public class MainActivity extends AppCompatActivity {
 //                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //                drawer.closeDrawer(GravityCompat.START);
                 return true;
+            }
+        });
+
+        // 获取NavigationView的HeaderLayout
+        View navigationHeader = navigationView.getHeaderView(0);
+        LinearLayout userInfo = navigationHeader.findViewById(R.id.user_info);
+        userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 打开个人信息界面
+                Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -55,7 +55,7 @@ public class MessageFragment extends Fragment {
     private void initData() {
         myApplication = (MyApplication) getActivity().getApplication();
         User user = myApplication.getUser();
-
+        myDAO = new MyDAO(getContext(), user.getName());
 
         list = new ArrayList<>();
         List<Group> groups = user.getGroups();
@@ -177,6 +177,7 @@ public class MessageFragment extends Fragment {
         initData();
         initView();
         initThread();
+        syncData();
     }
 
     @Override
@@ -184,6 +185,6 @@ public class MessageFragment extends Fragment {
         super.onDestroy();
         //被销毁时终止线程
         refreshThread.interrupt();
-        syncThread.interrupt();;
+        syncThread.interrupt();
     }
 }

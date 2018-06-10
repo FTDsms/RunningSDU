@@ -337,7 +337,7 @@ public class LoginActivity extends AppCompatActivity{
 
     //初始化默认数据
     private User initData() {
-        User user = new User("201500301182", "邵明山", "000000", null);
+        User user = new User("201500301182", "邵明山", MD5.md5("000000", "201500301182"), null);
 //        User user = new User();
 //        user.setName("邵明山");
 

@@ -104,11 +104,10 @@ public class MyHttpClient {
         if (!flag.equals("true")) {
             return null;
         } else {
-            Friend friend = new Friend();
             JSONObject obj = jsonObject.getJSONObject("obj");
-            friend.setSid(obj.optString("sid"));
-            friend.setName(obj.optString("name"));
-            friend.setImage(obj.optString("image"));
+            String name = obj.optString("name");
+            String image = obj.optString("image");
+            Friend friend = new Friend(sid, name, image);
             return friend;
         }
     }
@@ -431,11 +430,10 @@ public class MyHttpClient {
             for (int i=0; i<jsonArray.length(); ++i) {
                 members.add(jsonArray.getString(i));
             }
-            Group group = new Group();
-            group.setGid(Integer.parseInt(obj.optString("sid")));
-            group.setName(obj.optString("name"));
-            group.setCreator(obj.optString("creator"));
-            group.setImage(obj.optString("image"));
+            String name = obj.optString("name");
+            String creator = obj.optString("creator");
+            String image = obj.optString("image");
+            Group group = new Group(gid, name, creator, image);
             group.setMembers(members);
             return group;
         }

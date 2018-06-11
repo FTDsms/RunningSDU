@@ -21,8 +21,6 @@ public class Group extends SortModel {
 
     private List<String> members;
 
-    private List<Message> messages;
-
     private String image;
 
     private int unread;
@@ -68,14 +66,6 @@ public class Group extends SortModel {
 
     public void setMembers(List<String> members) {
         this.members = members;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
     }
 
     public String getImage() {

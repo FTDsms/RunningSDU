@@ -268,7 +268,7 @@ public class MyDAO {
                 new String[]{sid},
                 null, null, null);
         if (cursor.moveToNext()) {
-            friend.setSid(cursor.getString(cursor.getColumnIndex("sid")));
+            friend.setSid(sid);
             friend.setName(cursor.getString(cursor.getColumnIndex("name")));
             friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));

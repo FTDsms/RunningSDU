@@ -19,8 +19,6 @@ public class Friend extends SortModel{
 
     private String image; //TODO: head_image
 
-    private List<Message> messages;
-
     private int unread;
 
     public Friend() {
@@ -59,14 +57,6 @@ public class Friend extends SortModel{
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
     }
 
     public int getUnread() {

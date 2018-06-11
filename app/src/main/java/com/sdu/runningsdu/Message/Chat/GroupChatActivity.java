@@ -91,7 +91,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 if(!"".equals(content)) {
                     Message message = new Message(-1, groupGid, null,  Message.TYPE_SENT, content, "22:09");
                     messages.add(message);
-                    currentGroup.setMessages(messages);
+//                    currentGroup.setMessages(messages); TODO: sync message
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
                     //TODO: send message
@@ -118,7 +118,7 @@ public class GroupChatActivity extends AppCompatActivity {
         myApplication = (MyApplication) getApplication();
         myDAO = new MyDAO(this, myApplication.getUser().getName());
         currentGroup = myDAO.findGroup(groupGid);
-        messages = currentGroup.getMessages();
+        messages = myDAO.findGroupMessage(currentGroup.getGid());
     }
 
     private void refreshList() {

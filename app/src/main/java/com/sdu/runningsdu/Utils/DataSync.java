@@ -120,9 +120,11 @@ public class DataSync {
                 int mid = myDAO.findLastFriendMessage(friend.getSid());
                 List<Message> messages = MyHttpClient.findFriendMessage(ip, mid, sid, friend.getSid());
                 if ((messages != null) && (messages.size() > 0)) {
-                    // set messages to friend
-                    friend.setMessages(messages);
-                    myDAO.addFriendMessages(messages);
+                    for (Message message : messages) {
+                        if (!myDAO.hasFriendMessage(message)) {
+                            myDAO.addFriendMessage(message);
+                        }
+                    }
                     friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
                     myDAO.updateFriendUnread(friend);
                 } else {
@@ -146,9 +148,11 @@ public class DataSync {
                 int mid = myDAO.findLastGroupMessage(group.getGid());
                 List<Message> messages = MyHttpClient.findGroupMessage(ip, group.getGid(), mid, sid);
                 if ((messages != null) && (messages.size() > 0)) {
-                    // set messages to group
-                    group.setMessages(messages);
-                    myDAO.addGroupMessages(messages);
+                    for (Message message : messages) {
+                        if (!myDAO.hasGroupMessage(message)) {
+                            myDAO.addGroupMessages(messages);
+                        }
+                    }
                     group.setUnread(group.getUnread()+messages.size()); //设置未读消息
                     myDAO.updateGroupUnread(group);
                 } else {

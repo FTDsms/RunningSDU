@@ -117,7 +117,7 @@ public class ChatActivity extends AppCompatActivity {
         myApplication = (MyApplication) getApplication();
         myDAO = new MyDAO(this, myApplication.getUser().getName());
         currentFriend = myDAO.findFriend(friendSid);
-        messages = currentFriend.getMessages();
+        messages = myDAO.findFriendMessage(currentFriend.getSid());
     }
 
     private void refreshList() {

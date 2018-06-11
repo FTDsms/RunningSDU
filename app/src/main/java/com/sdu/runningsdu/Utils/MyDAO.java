@@ -729,7 +729,7 @@ public class MyDAO {
         while (cursor.moveToNext()) {
             int mid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("mid")));
             String sid = cursor.getString(cursor.getColumnIndex("sid"));
-            int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("sid")));
+            int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("type")));
             String content = cursor.getString(cursor.getColumnIndex("content"));
             String time = cursor.getString(cursor.getColumnIndex("time"));
             messages.add(new Message(mid, gid, sid, type, content, time));

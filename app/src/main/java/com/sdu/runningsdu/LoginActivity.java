@@ -396,7 +396,6 @@ public class LoginActivity extends AppCompatActivity{
         for (Group group : groups) {
             if (!myDAO.hasGroup(group.getGid())) {
                 myDAO.addGroup(group);
-                myDAO.addGroupMembers(group);
             } else {
                 myDAO.updateGroup(group);
             }

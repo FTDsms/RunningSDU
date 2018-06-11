@@ -1,7 +1,13 @@
 package com.sdu.runningsdu.Contact.GroupList;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Group;
@@ -17,35 +23,39 @@ import me.zhouzhuo.zzletterssidebar.viewholder.BaseViewHolder;
  * Created by FTDsm on 2018/6/8.
  */
 
-public class GroupListAdapter extends BaseSortListViewAdapter<Group, GroupListAdapter.ViewHolder> {
+public class GroupListAdapter extends ArrayAdapter<Group> {
 
-    public GroupListAdapter(Context context, List<Group> groups) {
-        super(context, groups);
+    private int resourceId;
+
+    public GroupListAdapter(Context context, int textViewResourceId, List<Group> groups) {
+        super(context, textViewResourceId, groups);
+        resourceId = textViewResourceId;
     }
 
+    @NonNull
     @Override
-    public int getLayoutId() {
-        return R.layout.list_item_group;
-    }
-
-    @Override
-    public GroupListAdapter.ViewHolder getViewHolder(View view) {
-        GroupListAdapter.ViewHolder viewHolder = new GroupListAdapter.ViewHolder();
-        viewHolder.image = view.findViewById(R.id.list_item_group_image);
-        viewHolder.groupName = view.findViewById(R.id.list_item_group_image);
-        return viewHolder;
-    }
-
-    @Override
-    public void bindValues(GroupListAdapter.ViewHolder viewHolder, int position) {
-        //TODO viewHolder.image.setImageBitmap();
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        Group group = getItem(position);
+        View view;
+        GroupListAdapter.ViewHolder viewHolder;
+        if (convertView == null) {
+            view = LayoutInflater.from(getContext()).inflate(resourceId, null);
+            viewHolder = new GroupListAdapter.ViewHolder();
+            viewHolder.image = view.findViewById(R.id.list_item_group_image);
+            viewHolder.groupName = view.findViewById(R.id.list_item_group_name);
+            view.setTag(viewHolder);
+        } else {
+            view = convertView;
+            viewHolder = (GroupListAdapter.ViewHolder) view.getTag();
+        }
         viewHolder.image.setImageResource(R.drawable.head_image);
-        viewHolder.groupName.setText(mDatas.get(position).getName());
+        viewHolder.groupName.setText(group.getName());
+        return view;
     }
 
-    class ViewHolder extends BaseViewHolder {
-        protected CircleImageView image;
-        protected TextView groupName;
+    class ViewHolder {
+        CircleImageView image;
+        TextView groupName;
     }
 
 }

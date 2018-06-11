@@ -3,6 +3,7 @@ package com.sdu.runningsdu.Contact.GroupList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -61,12 +62,13 @@ public class GroupListActivity extends AppCompatActivity {
         toolbarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 打开添加好友Activity
+                // 打开创建群聊Activity
 //                Intent intent = new Intent(NewFriendActivity.this, xxx.class);
             }
         });
 
         groupListView = findViewById(R.id.group_list_view);
+        groupListView.setAdapter(groupListAdapter);
 
         View footer = LayoutInflater.from(this).inflate(R.layout.list_item_foot, null);
         foot = footer.findViewById(R.id.tv_foot);
@@ -83,9 +85,7 @@ public class GroupListActivity extends AppCompatActivity {
         myApplication = (MyApplication) getApplication();
         myDAO = new MyDAO(this, myApplication.getUser().getName());
         groups = myDAO.findAllGroup();
-
-        groupListAdapter = new GroupListAdapter(this, groups);
-        groupListAdapter.updateListView(groups);
+        groupListAdapter = new GroupListAdapter(this, R.layout.list_item_group, groups);
     }
 
     private void initThread() {

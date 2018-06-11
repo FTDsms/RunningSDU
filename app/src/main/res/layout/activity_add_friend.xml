@@ -93,7 +93,7 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:paddingTop="10dp"
-            android:src="@drawable/qrcode"/>
+            android:src="@drawable/qrcode" />
 
     </LinearLayout>
 

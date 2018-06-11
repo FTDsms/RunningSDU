@@ -72,18 +72,22 @@ public class SearchResultActivity extends AppCompatActivity {
         searchResultAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // 打开详细信息页面
-                if (myDAO.hasFriend(friends.get(position).getSid())) {
-                    // 已是好友
-                    Intent intent = new Intent(SearchResultActivity.this, DetailedInfoActivity.class);
-                    intent.putExtra("sid", friends.get(position).getSid());
-                    startActivity(intent);
-                } else {
-                    // 还不是好友
-                    Intent intent = new Intent(SearchResultActivity.this, NonFriendDetailedInfoActivity.class);
-                    intent.putExtra("sid", friends.get(position).getSid());
-                    startActivity(intent);
-                }
+//                // 打开详细信息页面
+//                if (myDAO.hasFriend(friends.get(position).getSid())) {
+//                    // 已是好友
+//                    Intent intent = new Intent(SearchResultActivity.this, DetailedInfoActivity.class);
+//                    intent.putExtra("sid", friends.get(position).getSid());
+//                    startActivity(intent);
+//                } else {
+//                    // 还不是好友
+//                    Intent intent = new Intent(SearchResultActivity.this, NonFriendDetailedInfoActivity.class);
+//                    intent.putExtra("sid", friends.get(position).getSid());
+//                    startActivity(intent);
+//                }
+                // TODO : test
+                Intent intent = new Intent(SearchResultActivity.this, DetailedInfoActivity.class);
+                intent.putExtra("sid", friends.get(position).getSid());
+                startActivity(intent);
             }
 
             @Override
@@ -102,22 +106,24 @@ public class SearchResultActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                friends.clear();
-                                friends.addAll(MyHttpClient.findUserByName(myApplication.getIp(), query));
-                                friends.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
-                                for (Friend friend : friends) {
-                                    Log.i("test search", friend.toString());
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        searchResultAdapter.notifyDataSetChanged();
-                                    }
-                                });
-                            } catch (IOException | JSONException e) {
-                                e.printStackTrace();
+//                            try {
+//                                friends.clear();
+//                                friends.addAll(MyHttpClient.findUserByName(myApplication.getIp(), query));
+//                                friends.add(MyHttpClient.findUserBySid(myApplication.getIp(), query));
+//                            } catch (IOException | JSONException e) {
+//                                e.printStackTrace();
+//                            }
+                            // TODO : test
+                            friends.add(new Friend("201500301132", "焦方锴", null));
+                            for (Friend friend : friends) {
+                                Log.i("test search", friend.toString());
                             }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchResultAdapter.notifyDataSetChanged();
+                                }
+                            });
                         }
                     }).start();
                 }

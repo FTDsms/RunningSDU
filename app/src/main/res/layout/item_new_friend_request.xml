@@ -59,30 +59,26 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--button-->
+            <Button
+                android:id="@+id/item_button"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="#1aac19"
+                android:text="接受"
+                android:textColor="#ffffff"/>
+
+            <!--state-->
+            <TextView
+                android:id="@+id/item_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:orientation="vertical">
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
 
-                <!--state-->
-                <TextView
-                    android:id="@+id/item_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
-
-                <!--button-->
-                <Button
-                    android:id="@+id/item_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#1aac19"
-                    android:text="接受"
-                    android:layout_gravity="center"/>
-
-            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>

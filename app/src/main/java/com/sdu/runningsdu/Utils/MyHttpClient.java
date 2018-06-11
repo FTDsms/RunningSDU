@@ -183,15 +183,17 @@ public class MyHttpClient {
      * @param url
      * @param receiver
      * @param sender
+     * @param message
      * @return
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean addFriendRequest(String url, String receiver, String sender) throws IOException, JSONException {
+    public static boolean addFriendRequest(String url, String receiver, String sender, String message) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("receiver", receiver)
                 .add("sender", sender)
+                .add("message", message)
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/saveRequest")

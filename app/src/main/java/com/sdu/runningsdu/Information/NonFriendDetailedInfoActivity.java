@@ -9,9 +9,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.Contact.NewFriend.VerificationActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 
 import org.json.JSONException;
@@ -33,6 +35,8 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
     private Button addFriend;
 
     private MyApplication myApplication;
+
+    private MyDAO myDAO;
 
     private Friend friend;
 
@@ -70,17 +74,9 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // 发送好友请求
-                            MyHttpClient.addFriendRequest(myApplication.getIp(), friend.getSid(), myApplication.getUser().getSid());
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                Intent intent = new Intent(NonFriendDetailedInfoActivity.this, VerificationActivity.class);
+                intent.putExtra("sid", friend.getSid());
+                startActivity(intent);
             }
         });
 
@@ -88,20 +84,25 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
 
     private void initData() {
         myApplication = (MyApplication) getApplication();
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
 
         Intent intent = getIntent();
         final String sid = intent.getStringExtra("sid");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    friend = MyHttpClient.findUserBySid(myApplication.getIp(), sid);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
+        if (!myApplication.isTest()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        friend = MyHttpClient.findUserBySid(myApplication.getIp(), sid);
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        } else {
+            friend = myDAO.findFriend(sid);
+        }
 
     }
 

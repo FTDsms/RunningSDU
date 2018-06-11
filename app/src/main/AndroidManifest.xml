@@ -161,6 +161,10 @@
             android:name=".Information.GroupChatInfoActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".Contact.NewFriend.VerificationActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
     </application>
 

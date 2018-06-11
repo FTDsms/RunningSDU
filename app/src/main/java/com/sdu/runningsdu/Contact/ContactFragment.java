@@ -17,9 +17,10 @@ import com.sdu.runningsdu.Contact.NewFriend.NewFriendActivity;
 import com.sdu.runningsdu.Contact.SubPage.SubscriptionActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.zhouzhuo.zzletterssidebar.ZzLetterSideBar;
@@ -48,6 +49,10 @@ public class ContactFragment extends Fragment {
 
     private MyApplication myApplication;
 
+    private MyDAO myDAO;
+
+    private Thread refreshThread;
+
     public ContactFragment() {
 
     }
@@ -58,26 +63,10 @@ public class ContactFragment extends Fragment {
     }
 
     private void initData() {
-        friends = new ArrayList<Friend>();
-        friends.add(new Friend("AAA"));
-        friends.add(new Friend("BBB"));
-        friends.add(new Friend("CCC"));
-        friends.add(new Friend("DDD"));
-        friends.add(new Friend("EEE"));
-        friends.add(new Friend("FFF"));
-        friends.add(new Friend("GGG"));
-        friends.add(new Friend("XXX"));
-        friends.add(new Friend("YYY"));
-        friends.add(new Friend("ZZZ"));
-        friends.add(new Friend("ABC"));
-        friends.add(new Friend("赵"));
-        friends.add(new Friend("钱"));
-        friends.add(new Friend("孙"));
-        friends.add(new Friend("李"));
-        friends.add(new Friend("周"));
-        friends.add(new Friend("吴"));
-        friends.add(new Friend("郑"));
-        friends.add(new Friend("王"));
+        myApplication = (MyApplication) getActivity().getApplication();
+        myDAO = new MyDAO(getContext(), myApplication.getUser().getName());
+        friends = myDAO.findAllFriend();
+
         friendListViewAdapter = new FriendListViewAdapter(getContext(), friends);
         friendListViewAdapter.updateListView(friends);
     }
@@ -146,8 +135,28 @@ public class ContactFragment extends Fragment {
 
     }
 
-    private void intiThread() {
-
+    private void initThread() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    DataSync.syncFriend(myApplication, myDAO);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            friendListViewAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
+        refreshThread.start();
     }
 
     @Override
@@ -155,7 +164,17 @@ public class ContactFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initData();
         initView();
-        intiThread();
+        if (!myApplication.isTest()) {
+            initThread();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!myApplication.isTest()) {
+            refreshThread.interrupt();
+        }
     }
 
 }

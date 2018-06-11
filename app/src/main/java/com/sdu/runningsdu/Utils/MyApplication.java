@@ -10,6 +10,8 @@ import com.sdu.runningsdu.JavaBean.User;
 
 public class MyApplication extends Application {
 
+    private boolean isTest = false;
+
     private String ip = "http://121.250.223.122:8080";
 
     private User user;
@@ -28,5 +30,13 @@ public class MyApplication extends Application {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public boolean isTest() {
+        return isTest;
+    }
+
+    public void setTest(boolean test) {
+        isTest = test;
     }
 }

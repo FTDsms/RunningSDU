@@ -124,28 +124,6 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     /**
-     * 从数据库中读取数据
-     * */
-    private void readFromDatabase() {
-        User user = myApplication.getUser();
-        user.setFriends(myDAO.findAllFriend());
-        user.setGroups(myDAO.findAllGroup());
-        user.setRequests(myDAO.findAllRequest());
-        List<Friend> friends = user.getFriends();
-        for (Friend friend : friends) {
-            friend.setMessages(myDAO.findFriendMessage(friend.getSid()));
-        }
-        user.setFriends(friends);
-        List<Group> groups = user.getGroups();
-        for (Group group : groups) {
-            group.setMembers(myDAO.findGroupMember(group.getGid()));
-            group.setMessages(myDAO.findGroupMessage(group.getGid()));
-        }
-        user.setGroups(groups);
-        myApplication.setUser(user);
-    }
-
-    /**
      * 同步数据
      * */
     private void syncData() throws IOException, JSONException {
@@ -285,9 +263,6 @@ public class LoginActivity extends AppCompatActivity{
                                 // 创建数据库
                                 initDatabase();
 
-                                // 从数据库中读取数据
-                                readFromDatabase();
-
                                 // 同步数据
                                 syncData();
 
@@ -351,12 +326,13 @@ public class LoginActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         try {
+                            // 创建数据库
+                            initDatabase();
+
                             // 初始化数据
                             User user = initData();
                             myApplication.setUser(user);
-
-                            // 创建数据库
-                            initDatabase();
+                            myApplication.setTest(true);
 
                             // 写入测试数据库
                             writeTestDatabase();
@@ -376,93 +352,12 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void writeTestDatabase() {
-        User user = myApplication.getUser();
-        List<Friend> friends = user.getFriends();
-        for (Friend friend : friends) {
-            if (!myDAO.hasFriend(friend.getSid())) {
-                myDAO.addFriend(friend);
-            } else {
-                myDAO.updateFriend(friend);
-            }
-        }
-        List<Group> groups = user.getGroups();
-        for (Group group : groups) {
-            if (!myDAO.hasGroup(group.getGid())) {
-                myDAO.addGroup(group);
-                myDAO.addGroupMembers(group);
-            } else {
-                myDAO.updateGroup(group);
-                List<String> members = group.getMembers();
-                for (String member : members) {
-                    if (!myDAO.hasGroupMember(group.getGid(), member)) {
-                        myDAO.addGroupMember(group.getGid(), member);
-                    }
-                }
-            }
-        }
-        List<Request> requests = user.getRequests();
-        for (Request request : requests) {
-            if (!myDAO.hasRequest(request.getRid())) {
-                myDAO.addRequest(request);
-            } else {
-                myDAO.updateRequest(request);
-            }
-        }
-        for (Friend friend : friends) {
-            List<Message> messages = friend.getMessages();
-            for (Message message : messages) {
-                if (!myDAO.hasFriendMessage(message)) {
-                    myDAO.addFriendMessage(message);
-                }
-            }
-            friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
-            myDAO.updateFriendUnread(friend);
-        }
-        for (Group group : groups) {
-            List<Message> messages = group.getMessages();
-            for (Message message : messages) {
-                if (!myDAO.hasGroupMessage(message)) {
-                    myDAO.addGroupMessage(message);
-                }
-            }
-            group.setUnread(group.getUnread()+messages.size()); //设置未读消息
-            myDAO.updateGroupUnread(group);
-        }
+
     }
 
     //初始化默认数据
     private User initData() throws IOException, JSONException {
         User user = new User("201500301182", "邵明山", MD5.md5("000000", "201500301182"), null);
-
-        // 初始化好友请求
-        List<Request> requests = new ArrayList<>();
-        Request request1 = new Request(-1, user.getSid(), "20150030xxx1", "你好，很高兴认识你", "time", 0);
-        Request request2 = new Request(-2, user.getSid(), "20150030xxx2", "你好，很高兴认识你", "time", 0);
-        requests.add(request1);
-        requests.add(request2);
-        user.setRequests(requests);
-
-        // 初始化群组
-        List<Group> groups = new ArrayList<>();
-        Group group = new Group(1,"创新实训",user.getSid(), null);
-        List<String> members = new ArrayList<>();
-        members.add("201500301182");
-        members.add("201500301132");
-        members.add("201500302002");
-        group.setMembers(members);
-        List<Message> groupMessages = new ArrayList<>();
-        for (int i=0; i<members.size(); ++i) {
-            Message message;
-            if (members.get(i).equals(user.getName())) {
-                message = new Message(-(i+1), group.getGid(), user.getSid(), Message.TYPE_SENT, "test", "15:00");
-            } else {
-                message = new Message(-(i+1), group.getGid(), members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
-            }
-            groupMessages.add(message);
-        }
-        group.setMessages(groupMessages);
-        groups.add(group);
-        user.setGroups(groups);
 
         // 初始化好友
         List<Friend> friends = new ArrayList<>();
@@ -484,19 +379,99 @@ public class LoginActivity extends AppCompatActivity{
         friend2.setMessages(messages2);
         friends.add(friend2);
 
-        Friend friend;
+        Friend friendTest;
         for(int i=0; i<10; ++i) {
-            friend = new Friend("test"+(i+1), "test"+(i+1), null);
+            friendTest = new Friend("test"+(i+1), "test"+(i+1), null);
             List<Message> messages = new ArrayList<>();
             for(int j=0; j<10; ++j) {
-                Message message = new Message(-((i+4)*j+1), friend.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+                Message message = new Message(-((i+4)*j+1), friendTest.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
                 messages.add(message);
             }
-            friend.setMessages(messages);
-            friends.add(friend);
+            friendTest.setMessages(messages);
+            friends.add(friendTest);
+        }
+        // 初始化好友
+        for (Friend friend : friends) {
+            if (!myDAO.hasFriend(friend.getSid())) {
+                myDAO.addFriend(friend);
+            } else {
+                myDAO.updateFriend(friend);
+            }
         }
 
-        user.setFriends(friends);
+        // 初始化群组
+        List<Group> groups = new ArrayList<>();
+        Group groupTest = new Group(1,"创新实训",user.getSid(), null);
+        List<String> members = new ArrayList<>();
+        members.add("201500301182");
+        members.add("201500301132");
+        members.add("201500302002");
+        groupTest.setMembers(members);
+        List<Message> groupMessages = new ArrayList<>();
+        for (int i=0; i<members.size(); ++i) {
+            Message message;
+            if (members.get(i).equals(user.getName())) {
+                message = new Message(-(i+1), groupTest.getGid(), user.getSid(), Message.TYPE_SENT, "test", "15:00");
+            } else {
+                message = new Message(-(i+1), groupTest.getGid(), members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
+            }
+            groupMessages.add(message);
+        }
+        groupTest.setMessages(groupMessages);
+        groups.add(groupTest);
+        //todo
+        for (Group group : groups) {
+            if (!myDAO.hasGroup(group.getGid())) {
+                myDAO.addGroup(group);
+                myDAO.addGroupMembers(group);
+            } else {
+                myDAO.updateGroup(group);
+                List<String> members = group.getMembers();
+                for (String member : members) {
+                    if (!myDAO.hasGroupMember(group.getGid(), member)) {
+                        myDAO.addGroupMember(group.getGid(), member);
+                    }
+                }
+            }
+        }
+
+        // 初始化好友请求
+        List<Request> requests = new ArrayList<>();
+        Request request1 = new Request(-1, user.getSid(), "20150030xxx1", "你好，很高兴认识你", "time", 0);
+        Request request2 = new Request(-2, user.getSid(), "20150030xxx2", "你好，很高兴认识你", "time", 0);
+        requests.add(request1);
+        requests.add(request2);
+        for (Request request : requests) {
+            if (!myDAO.hasRequest(request.getRid())) {
+                myDAO.addRequest(request);
+            } else {
+                myDAO.updateRequest(request);
+            }
+        }
+
+        //todo
+        for (Friend friend : friends) {
+            List<Message> messages = friend.getMessages();
+            for (Message message : messages) {
+                if (!myDAO.hasFriendMessage(message)) {
+                    myDAO.addFriendMessage(message);
+                }
+            }
+            friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
+            myDAO.updateFriendUnread(friend);
+        }
+
+        //todo
+        for (Group group : groups) {
+            List<Message> messages = group.getMessages();
+            for (Message message : messages) {
+                if (!myDAO.hasGroupMessage(message)) {
+                    myDAO.addGroupMessage(message);
+                }
+            }
+            group.setUnread(group.getUnread()+messages.size()); //设置未读消息
+            myDAO.updateGroupUnread(group);
+        }
 
         return user;
     }

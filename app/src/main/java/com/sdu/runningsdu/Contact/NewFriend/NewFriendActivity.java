@@ -15,7 +15,9 @@ import com.sdu.runningsdu.JavaBean.Request;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Message.RecyclerAdapter;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,10 @@ public class NewFriendActivity extends AppCompatActivity {
     private List<Request> requests = new ArrayList<>();
 
     private MyApplication myApplication;
+
+    private MyDAO myDAO;
+
+    private Thread refreshThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,12 +91,47 @@ public class NewFriendActivity extends AppCompatActivity {
             }
         });
 
+        if (!myApplication.isTest()) {
+            initThread();
+        }
 
     }
 
     private void initData() {
         myApplication = (MyApplication) getApplication();
-        requests = myApplication.getUser().getRequests();
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
+        requests = myDAO.findAllRequest();
     }
 
+    private void initThread() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    DataSync.syncRequest(myApplication, myDAO);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            newFriendListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
+        refreshThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!myApplication.isTest()) {
+
+        }
+    }
 }

@@ -46,7 +46,23 @@ public class NewFriendListAdapter extends RecyclerView.Adapter<NewFriendListAdap
         holder.icon.setImageResource(R.drawable.head_image);
         holder.name.setText(requests.get(position).getSender());
         holder.message.setText(requests.get(position).getMessage());
-        holder.state.setText(requests.get(position).getState());
+        int state = requests.get(position).getState();
+        switch (state) {
+            case 0:
+                holder.button.setVisibility(View.VISIBLE);
+                holder.state.setVisibility(View.GONE);
+                break;
+            case 1:
+                holder.button.setVisibility(View.GONE);
+                holder.state.setVisibility(View.VISIBLE);
+                holder.state.setText("已添加");
+                break;
+            case -1:
+                holder.button.setVisibility(View.GONE);
+                holder.state.setVisibility(View.VISIBLE);
+                holder.state.setText("已拒绝");
+                break;
+        }
 
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickListener != null) {

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,11 +25,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.sdu.runningsdu.Contact.ContactFragment;
 import com.sdu.runningsdu.Contact.NewFriend.AddFriendActivity;
 import com.sdu.runningsdu.Find.FindFragment;
+import com.sdu.runningsdu.JavaBean.Friend;
+import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Map.unityactivity;
@@ -36,8 +40,13 @@ import com.sdu.runningsdu.Me.UserInfoActivity;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.lang.reflect.Method;
+import java.util.List;
+
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView toolbarTitle;
 
     private MyApplication myApplication;
+
+    private MyDAO myDAO;
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -278,6 +289,37 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.navigation_message);
         navigationButtonIndex = 2;
         toolbarTitle.setText("消息");
+
+
+        Badge badge = new QBadgeView(this).bindTarget(findViewById(R.id.navigation_message));
+        badge.setBadgeGravity(Gravity.END | Gravity.TOP);
+        badge.setBadgeTextSize(12, true);
+        badge.setGravityOffset(15, 0, true); //设置外边距
+//            badge.setBadgePadding(6, true); //设置内边距
+        badge.setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
+            @Override
+            public void onDragStateChanged(int dragState, Badge badge, View targetView) {
+                if (dragState == STATE_SUCCEED) {
+
+                }
+            }
+        });
+
+        int unread = 0;
+        myDAO = new MyDAO(this, user.getName());
+        List<Friend> friends = myDAO.findAllFriend();
+        for (Friend friend : friends) {
+            unread += friend.getUnread();
+        }
+        List<Group> groups = myDAO.findAllGroup();
+        for (Group group : groups) {
+            unread += group.getUnread();
+        }
+        if (unread > 99) {
+            badge.setBadgeText("99+");
+        } else {
+            badge.setBadgeNumber(unread);
+        }
 
     }
 

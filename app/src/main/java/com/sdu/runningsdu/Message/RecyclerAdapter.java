@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdu.runningsdu.JavaBean.Friend;
+import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
@@ -130,7 +132,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 @Override
                 public void onDragStateChanged(int dragState, Badge badge, View targetView) {
                     if (dragState == STATE_SUCCEED) {
-                        Toast.makeText(context, String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                        if (list.get(getAdapterPosition()).isGroup()) {
+                            Group group = myDAO.findGroup(list.get(getAdapterPosition()).getGroup());
+                            group.setUnread(0);
+                            myDAO.updateGroupUnread(group);
+                        } else {
+                            Friend friend = myDAO.findFriend(list.get(getAdapterPosition()).getFriend());
+                            friend.setUnread(0);
+                            myDAO.updateFriendUnread(friend);
+                        }
+
                     }
                 }
             });

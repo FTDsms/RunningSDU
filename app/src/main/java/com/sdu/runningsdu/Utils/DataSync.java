@@ -25,9 +25,8 @@ public class DataSync {
      * 同步好友
      * */
     public static void syncFriend(MyApplication myApplication, MyDAO myDAO) {
-        User user = myApplication.getUser();
         String ip = myApplication.getIp();
-        String sid = user.getSid();
+        String sid = myApplication.getUser().getSid();
         try {
             List<Friend> friends = MyHttpClient.findMyFriend(ip, sid);
             if ((friends != null) && (friends.size() > 0)) {
@@ -41,13 +40,9 @@ public class DataSync {
                     }
                 }
                 // set friends to user
-                user.setFriends(friends);
             } else {
                 // if list == null or size <= 0
-                user.setFriends(new ArrayList<Friend>());
             }
-            // set user to MyApplication
-            myApplication.setUser(user);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -57,9 +52,8 @@ public class DataSync {
      * 同步群组
      * */
     public static void syncGroup(MyApplication myApplication, MyDAO myDAO) {
-        User user = myApplication.getUser();
         String ip = myApplication.getIp();
-        String sid = user.getSid();
+        String sid = myApplication.getUser().getSid();
         try {
             List<Group> groups = MyHttpClient.findMyGroup(ip, sid);
             if ((groups != null) && (groups.size() > 0)) {
@@ -79,14 +73,9 @@ public class DataSync {
                         }
                     }
                 }
-                // set groups to user
-                user.setGroups(groups);
             } else {
                 // if list == null or size <= 0
-                user.setFriends(new ArrayList<Friend>());
             }
-            // set user to MyApplication
-            myApplication.setUser(user);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -96,9 +85,8 @@ public class DataSync {
      * 同步好友申请
      * */
     public static void syncRequest(MyApplication myApplication, MyDAO myDAO) {
-        User user = myApplication.getUser();
         String ip = myApplication.getIp();
-        String sid = user.getSid();
+        String sid = myApplication.getUser().getSid();
         try {
             List<Request> requests = MyHttpClient.findReceivedRequest(ip, sid);
             if ((requests != null) && (requests.size() > 0)) {
@@ -111,14 +99,10 @@ public class DataSync {
                         myDAO.updateRequest(request);
                     }
                 }
-                // set requests to user
-                user.setRequests(requests);
             } else {
                 // if list == null or size <= 0
-                user.setRequests(new ArrayList<Request>());
             }
             // set user to MyApplication
-            myApplication.setUser(user);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -128,10 +112,9 @@ public class DataSync {
      * 同步好友消息
      * */
     public static void syncFriendMessage(MyApplication myApplication, MyDAO myDAO) {
-        User user = myApplication.getUser();
         String ip = myApplication.getIp();
-        String sid = user.getSid();
-        List<Friend> friends = user.getFriends();
+        String sid = myApplication.getUser().getSid();
+        List<Friend> friends = myDAO.findAllFriend();
         try {
             for (Friend friend : friends) {
                 int mid = myDAO.findLastFriendMessage(friend.getSid());
@@ -144,13 +127,8 @@ public class DataSync {
                     myDAO.updateFriendUnread(friend);
                 } else {
                     // if list == null or size <= 0
-                    user.setFriends(new ArrayList<Friend>());
                 }
             }
-            // set friends to user
-            user.setFriends(friends);
-            // set user to MyApplication
-            myApplication.setUser(user);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -160,10 +138,9 @@ public class DataSync {
      * 同步群组消息
      * */
     public static void syncGroupMessage(MyApplication myApplication, MyDAO myDAO) {
-        User user = myApplication.getUser();
         String ip = myApplication.getIp();
-        String sid = user.getSid();
-        List<Group> groups = user.getGroups();
+        String sid = myApplication.getUser().getSid();
+        List<Group> groups = myDAO.findAllGroup();
         try {
             for (Group group : groups) {
                 int mid = myDAO.findLastGroupMessage(group.getGid());
@@ -176,13 +153,8 @@ public class DataSync {
                     myDAO.updateGroupUnread(group);
                 } else {
                     // if list == null or size <= 0
-                    user.setFriends(new ArrayList<Friend>());
                 }
             }
-            // set groups to user
-            user.setGroups(groups);
-            // set user to MyApplication
-            myApplication.setUser(user);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

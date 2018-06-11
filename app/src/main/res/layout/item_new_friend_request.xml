@@ -78,6 +78,8 @@
                     android:id="@+id/item_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="#1aac19"
+                    android:text="接受"
                     android:layout_gravity="center"/>
 
             </LinearLayout>

@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
@@ -60,14 +62,12 @@ public class MessageFragment extends Fragment {
         myDAO = new MyDAO(getContext(), user.getName());
 
         list = new ArrayList<>();
-        List<Group> groups = user.getGroups();
-        if (groups != null) {
-            for (Group group : groups) {
-                List<Message> messages = group.getMessages();
-                list.add(messages.get(messages.size()-1));
-            }
+        List<Group> groups = myDAO.findAllGroup();
+        for (Group group : groups) {
+            List<Message> messages = group.getMessages();
+            list.add(messages.get(messages.size()-1));
         }
-        List<Friend> friends = user.getFriends();
+        List<Friend> friends = myDAO.findAllFriend();
         if (friends != null) {
             for(Friend friend : friends){
                 List<Message> messages = friend.getMessages();
@@ -110,6 +110,7 @@ public class MessageFragment extends Fragment {
 //                Toast.makeText(getActivity(),"onItemLongClick",Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private void refreshList() {
@@ -183,7 +184,9 @@ public class MessageFragment extends Fragment {
         initData();
         initView();
         refreshList();
-        syncData();
+        if (!myApplication.isTest()) {
+            syncData();
+        }
     }
 
     @Override
@@ -191,7 +194,9 @@ public class MessageFragment extends Fragment {
         super.onDestroy();
         //被销毁时终止线程
         refreshThread.interrupt();
-        syncThread1.interrupt();
-        syncThread5.interrupt();
+        if (!myApplication.isTest()) {
+            syncThread1.interrupt();
+            syncThread5.interrupt();
+        }
     }
 }

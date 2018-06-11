@@ -16,12 +16,6 @@ public class User {
 
     private String image; //TODO: head_image
 
-    private List<Friend> friends;
-
-    private List<Group> groups;
-
-    private List<Request> requests;
-
     public User() {
 
     }
@@ -63,30 +57,6 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public List<Friend> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Friend> friends) {
-        this.friends = friends;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public List<Request> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(List<Request> requests) {
-        this.requests = requests;
     }
 
     @Override

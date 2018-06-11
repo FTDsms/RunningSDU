@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,10 @@ public class GroupListActivity extends AppCompatActivity {
     private List<Group> groups = new ArrayList<>();
 
     private MyApplication myApplication;
+
+    private MyDAO myDAO;
+
+    private Thread refreshThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,13 +73,50 @@ public class GroupListActivity extends AppCompatActivity {
         groupListView.addFooterView(footer, null, false);
         foot.setText(groups.size() + "个群聊");
 
+        if (!myApplication.isTest()) {
+            initThread();
+        }
+
     }
 
     private void initData() {
         myApplication = (MyApplication) getApplication();
-        groups = myApplication.getUser().getGroups();
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
+        groups = myDAO.findAllGroup();
+
         groupListAdapter = new GroupListAdapter(this, groups);
         groupListAdapter.updateListView(groups);
     }
 
+    private void initThread() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
+                    }
+                    DataSync.syncGroup(myApplication, myDAO);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            groupListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
+        refreshThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!myApplication.isTest()) {
+            refreshThread.interrupt();
+        }
+    }
 }

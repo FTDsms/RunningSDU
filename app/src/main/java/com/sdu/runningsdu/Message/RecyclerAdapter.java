@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.List;
 
@@ -26,10 +28,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private List<Message> list;
     private Context context;
+    private MyDAO myDAO;
+    private MyApplication myApplication;
 
     public RecyclerAdapter(List<Message> list, Context context) {
         this.list = list;
         this.context = context;
+        myApplication = (MyApplication) context.getApplicationContext();
+        myDAO = new MyDAO(context, myApplication.getUser().getName());
     }
 
     @Override
@@ -47,7 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.icon.setImageResource(R.drawable.head_image);
         if (list.get(position).isGroup()) {
             // if is group, set group name and latest message
-            holder.name.setText(list.get(position).getGroup());
+            holder.name.setText(myDAO.findGroup(list.get(position).getGroup()).getName());
             if (list.get(position).getType() == Message.TYPE_SENT) {
                 //if message is sent, just set text without name
                 holder.message.setText(list.get(position).getContent());
@@ -55,13 +61,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 //if message is received, set text with friend name
                 holder.message.setText(list.get(position).getFriend()+": "+list.get(position).getContent());
             }
+            int unread = myDAO.findGroup(list.get(position).getGroup()).getUnread();
+            if (unread > 99) {
+                holder.badge.setBadgeText("99+");
+            } else {
+                holder.badge.setBadgeNumber(unread);
+            }
         } else {
             // if not group, set friend name and latest message
             holder.name.setText(list.get(position).getFriend());
             holder.message.setText(list.get(position).getContent());
+            int unread = myDAO.findFriend(list.get(position).getFriend()).getUnread();
+            if (unread > 99) {
+                holder.badge.setBadgeText("99+");
+            } else {
+                holder.badge.setBadgeNumber(unread);
+            }
         }
         holder.time.setText(list.get(position).getTime());
-        holder.badge.setBadgeNumber(1);
+//        holder.badge.setBadgeNumber(1);
 //        holder.badge.setBadgeText("99+");
 
         // 如果设置了回调，则设置点击事件

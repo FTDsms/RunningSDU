@@ -12,9 +12,13 @@ import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 import com.sdu.runningsdu.R;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +42,12 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private List<Message> messages = new ArrayList<>();
     private MyApplication myApplication;
-    private String groupName;
+    private int groupGid;
     private Group currentGroup;
+
+    private MyDAO myDAO;
+
+    private Thread refreshThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class GroupChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_group);
 
         Intent intent = getIntent();
-        groupName = intent.getStringExtra("groupName");
+        groupGid = intent.getIntExtra("groupGid", -1);
 
         initMsg(); //初始化消息数据
 
@@ -62,7 +70,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 finish();
             }
         });
-        toolbarTitle.setText(groupName);
+        toolbarTitle.setText(currentGroup.getName());
         toolbarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,45 +89,69 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = inputText.getText().toString();
                 if(!"".equals(content)) {
-                    Message message = new Message(groupName, null,  Message.TYPE_SENT, content, "22:09");
+                    Message message = new Message(-1, groupGid, null,  Message.TYPE_SENT, content, "22:09");
                     messages.add(message);
                     currentGroup.setMessages(messages);
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
                     //TODO: send message
-//                    sendMsg(content);
+                    sendMsg(message);
                     inputText.setText(""); //清空输入框中的内容
                 }
             }
         });
 
         msgListView.setSelection(messages.size()); //将ListView定位到最后一行
+
+        refreshList();
     }
 
-    private void sendMsg(String message) {
+    private void sendMsg(Message message) {
         try {
-            String response = MyHttpClient.login(myApplication.getIp()+"/","", "");
-        } catch (IOException e) {
+            MyHttpClient.sendGroupMessage(myApplication.getIp()+"/",message.getGroup(), myApplication.getUser().getSid(), "0", message.getContent());
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
 
     private void initMsg() {
         myApplication = (MyApplication) getApplication();
-        List<Group> groups = myApplication.getUser().getGroups();
-        for (Group group : groups) {
-            if (group.getName().equals(groupName)) {
-                currentGroup = group;
-                messages = group.getMessages();
-            }
-        }
-
-//        Msg msg1 = new Msg("Hello guy.", Msg.TYPE_RECEIVED);
-//        msgList.add(msg1);
-//        Msg msg2 = new Msg("Hello. Who is that?", Msg.TYPE_SENT);
-//        msgList.add(msg2);
-//        Msg msg3 = new Msg("This is Tom. Nice talking to you.", Msg.TYPE_RECEIVED);
-//        msgList.add(msg3);
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
+        currentGroup = myDAO.findGroup(groupGid);
+        messages = currentGroup.getMessages();
     }
+
+    private void refreshList() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                        DataSync.syncGroupMessage(myApplication, myDAO);
+                        messages.clear();
+                        messages.addAll(myDAO.findGroupMessage(groupGid));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            msgListView.setSelection(messages.size());
+                        }
+                    });
+                }
+            }
+        });
+        refreshThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        refreshThread.interrupt();
+    }
+
 
 }

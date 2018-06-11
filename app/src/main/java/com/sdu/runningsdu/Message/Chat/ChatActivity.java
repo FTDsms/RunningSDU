@@ -12,9 +12,13 @@ import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Message;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 import com.sdu.runningsdu.R;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +42,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<Message> messages = new ArrayList<>();
     private MyApplication myApplication;
-    private String friendName;
+    private String friendSid;
     private Friend currentFriend;
+
+    private MyDAO myDAO;
+
+    private Thread refreshThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.actitivy_chat);
 
         Intent intent = getIntent();
-        friendName = intent.getStringExtra("friendName");
+        friendSid = intent.getStringExtra("friendSid");
 
         initMsg(); //初始化消息数据
 
@@ -62,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         });
-        toolbarTitle.setText(friendName);
+        toolbarTitle.setText(currentFriend.getName());
         toolbarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,45 +89,67 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = inputText.getText().toString();
                 if(!"".equals(content)) {
-                    Message message = new Message(friendName, Message.TYPE_SENT, content, "22:09");
+                    Message message = new Message(-1, friendSid, Message.TYPE_SENT, content, "22:09");
                     messages.add(message);
-                    currentFriend.setMessages(messages);
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
                     //TODO: send message
-//                    sendMsg(content);
+//                    sendMsg(message);
                     inputText.setText(""); //清空输入框中的内容
                 }
             }
         });
 
         msgListView.setSelection(messages.size()); //将ListView定位到最后一行
+
+        refreshList();
     }
 
-    private void sendMsg(String message) {
+    private void sendMsg(Message message) {
         try {
-            String response = MyHttpClient.login(myApplication.getIp()+"/","", "");
-        } catch (IOException e) {
+            MyHttpClient.sendFriendMessage(myApplication.getIp()+"/",message.getFriend(), myApplication.getUser().getSid(), "0", message.getContent());
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
 
     private void initMsg() {
         myApplication = (MyApplication) getApplication();
-        List<Friend> friends = myApplication.getUser().getFriends();
-        for (Friend friend : friends) {
-            if (friend.getName().equals(friendName)) {
-                currentFriend = friend;
-                messages = friend.getMessages();
-            }
-        }
+        myDAO = new MyDAO(this, myApplication.getUser().getName());
+        currentFriend = myDAO.findFriend(friendSid);
+        messages = currentFriend.getMessages();
+    }
 
-//        Msg msg1 = new Msg("Hello guy.", Msg.TYPE_RECEIVED);
-//        msgList.add(msg1);
-//        Msg msg2 = new Msg("Hello. Who is that?", Msg.TYPE_SENT);
-//        msgList.add(msg2);
-//        Msg msg3 = new Msg("This is Tom. Nice talking to you.", Msg.TYPE_RECEIVED);
-//        msgList.add(msg3);
+    private void refreshList() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                        DataSync.syncFriendMessage(myApplication, myDAO);
+                        messages.clear();
+                        messages.addAll(myDAO.findFriendMessage(friendSid));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            msgListView.setSelection(messages.size());
+                        }
+                    });
+                }
+            }
+        });
+        refreshThread.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        refreshThread.interrupt();
     }
 
 }

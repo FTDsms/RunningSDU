@@ -38,10 +38,6 @@ public class Group extends SortModel {
         this.image = image;
     }
 
-    public Group(String name) {
-        this.name = name;
-    }
-
     public int getGid() {
         return gid;
     }

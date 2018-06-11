@@ -84,11 +84,11 @@ public class MyDAO {
     public void updateUser(User user) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
-        objects[0] = user.getSid();
-        objects[1] = user.getName();
-        objects[2] = user.getPassword();
-        objects[3] = user.getImage();
-        String sql = "update user set sid=?, name=?, password=?, image=?";
+        objects[0] = user.getName();
+        objects[1] = user.getPassword();
+        objects[2] = user.getImage();
+        objects[3] = user.getSid();
+        String sql = "update user set name=?, password=?, image=? where sid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update user: " + user.getName());
@@ -210,10 +210,10 @@ public class MyDAO {
     public void updateFriend(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[3];
-        objects[0] = friend.getSid();
-        objects[1] = friend.getName();
-        objects[2] = friend.getImage();
-        String sql = "update friend set sid=?, name=?, image=?";
+        objects[0] = friend.getName();
+        objects[1] = friend.getImage();
+        objects[2] = friend.getSid();
+        String sql = "update friend set name=?, image=? where sid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update friend: " + friend.getName());
@@ -226,9 +226,9 @@ public class MyDAO {
     public void updateFriendUnread(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[2];
-        objects[0] = friend.getSid();
-        objects[1] = friend.getUnread();
-        String sql = "update friend set sid=?, unread=?";
+        objects[0] = friend.getUnread();
+        objects[1] = friend.getSid();
+        String sql = "update friend set unread=? where sid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update friend unread: " + friend.getName() + " " + friend.getUnread());
@@ -354,11 +354,11 @@ public class MyDAO {
     public void updateGroup(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[4];
-        objects[0] = group.getGid();
-        objects[1] = group.getName();
-        objects[2] = group.getCreator();
+        objects[0] = group.getName();
+        objects[1] = group.getCreator();
         objects[2] = group.getImage();
-        String sql = "update groups set gid=?, name=?, creator, image=?";
+        objects[3] = group.getGid();
+        String sql = "update groups set name=?, creator=?, image=? where gid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update group: " + group.getName());
@@ -371,9 +371,9 @@ public class MyDAO {
     public void updateGroupUnread(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[2];
-        objects[0] = group.getGid();
-        objects[1] = group.getUnread();
-        String sql = "update groups set gid=?, unread=?";
+        objects[0] = group.getUnread();
+        objects[1] = group.getGid();
+        String sql = "update groups set unread=? where gid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update group unread: " + group.getName() + " " + group.getUnread());
@@ -445,18 +445,34 @@ public class MyDAO {
     }
 
     /**
+     * 添加单个群组成员
+     * @param gid
+     * @param sid
+     */
+    public void addGroupMember(int gid, String sid) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = gid;
+        objects[1] = sid;
+        String sql = "insert into groupmember(gid, sid) values(?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add group member: " + gid + " " + sid);
+        db.close();
+    }
+
+    /**
      * 添加群组成员
      * @param group Group对象
      */
-    public void addGroupMember(Group group) {
+    public void addGroupMembers(Group group) {
         int gid = group.getGid();
         List<String> members = group.getMembers();
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         for (String member : members) {
-            Object[] objects = new Object[5];
+            Object[] objects = new Object[2];
             objects[0] = gid;
             objects[1] = member;
-            String sql = "insert into groupmember(mid, sid, type, content, time) values(?,?,?,?,?)";
+            String sql = "insert into groupmember(gid, sid) values(?,?)";
             db.execSQL(sql, objects);
             Log.d("database", "add group member: " + gid + " " + member);
         }
@@ -477,22 +493,24 @@ public class MyDAO {
     }
 
     /**
-     * 更新群组成员
-     * @param group Group对象
+     * 是否有该群成员
+     * @param gid
+     * @param sid
+     * @return
      */
-    public void updateGroupMember(Group group) {
-        int gid = group.getGid();
-        List<String> members = group.getMembers();
-        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
-        for (String member : members) {
-            Object[] objects = new Object[2];
-            objects[0] = gid;
-            objects[1] = member;
-            String sql = "update groupmember set gid=?, sid=?";
-            db.execSQL(sql, objects);
-            Log.d("database", "update group member: " + gid + " " + member);
+    public boolean hasGroupMember(int gid, String sid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmember",
+                null,
+                "gid=? and sid=?",
+                new String[]{Integer.toString(gid), sid},
+                null, null, null);
+        if (cursor.getCount() > 0) {
+            Log.w("has groupmember", ""+cursor.getCount());
+            return true;
         }
         db.close();
+        return false;
     }
 
     /**
@@ -574,6 +592,26 @@ public class MyDAO {
     }
 
     /**
+     * 是否存在好友消息
+     * @param message
+     * @return
+     */
+    public boolean hasFriendMessage(Message message) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friendmessage",
+                null,
+                "mid=?",
+                new String[]{Integer.toString(message.getMid())},
+                null, null, null);
+        if (cursor.getCount() > 0) {
+            Log.w("has friendmessage", ""+message.getMid());
+            return true;
+        }
+        db.close();
+        return false;
+    }
+
+    /**
      * 查找好友消息
      * @param sid 好友学号
      * @return 和好友学号为sid的所有消息
@@ -636,6 +674,26 @@ public class MyDAO {
     }
 
     /**
+     * 是否存在群组消息
+     * @param message
+     * @return
+     */
+    public boolean hasGroupMessage(Message message) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groupmessage",
+                null,
+                "mid=?",
+                new String[]{Integer.toString(message.getMid())},
+                null, null, null);
+        if (cursor.getCount() > 0) {
+            Log.w("has groupmessage", ""+message.getMid());
+            return true;
+        }
+        db.close();
+        return false;
+    }
+
+    /**
      * 查找群聊最后一条消息的id
      * @param gid 群id
      * @return 群号为id的最后一条消息的id
@@ -674,7 +732,7 @@ public class MyDAO {
             int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("sid")));
             String content = cursor.getString(cursor.getColumnIndex("content"));
             String time = cursor.getString(cursor.getColumnIndex("time"));
-            messages.add(new Message(mid, Integer.toString(gid), sid, type, content, time));
+            messages.add(new Message(mid, gid, sid, type, content, time));
         }
         db.close();
         return messages;
@@ -727,13 +785,13 @@ public class MyDAO {
     public void updateRequest(Request request) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[6];
-        objects[0] = request.getRid();
-        objects[1] = request.getReceiver();
-        objects[2] = request.getSender();
-        objects[3] = request.getMessage();
-        objects[4] = request.getTime();
-        objects[5] = request.getState();
-        String sql = "update request set rid=?, receiver=?, sender=?, message=?, time=?, state=?";
+        objects[0] = request.getReceiver();
+        objects[1] = request.getSender();
+        objects[2] = request.getMessage();
+        objects[3] = request.getTime();
+        objects[4] = request.getState();
+        objects[5] = request.getRid();
+        String sql = "update request set receiver=?, sender=?, message=?, time=?, state=? where rid=?";
         db.execSQL(sql, objects);
         db.close();
         Log.d("database", "update request: " + request.getRid());

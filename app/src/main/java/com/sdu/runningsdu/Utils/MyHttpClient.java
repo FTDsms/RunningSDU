@@ -514,7 +514,7 @@ public class MyHttpClient {
             } else {
                 type = Message.TYPE_RECEIVED;
             }
-            Message message = new Message(gnid, Integer.toString(gid), sid, type, content, time);
+            Message message = new Message(gnid, gid, sid, type, content, time);
             messages.add(message);
         }
         return messages;
@@ -531,10 +531,10 @@ public class MyHttpClient {
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean sendGroupMessage(String url, String gid, String sid, String category, String content) throws IOException, JSONException {
+    public static boolean sendGroupMessage(String url, int gid, String sid, String category, String content) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("gid", gid)
+                .add("gid", Integer.toString(gid))
                 .add("sid", sid)
                 .add("category", category)
                 .add("content", content)

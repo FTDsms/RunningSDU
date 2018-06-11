@@ -65,16 +65,21 @@ public class DataSync {
             if ((groups != null) && (groups.size() > 0)) {
                 for (Group group : groups) {
                     if (!myDAO.hasGroup(group.getGid())) {
-                        // if friend not exists, add friend
+                        // if group not exists, add group
                         myDAO.addGroup(group);
-                        myDAO.addGroupMember(group);
+                        myDAO.addGroupMembers(group);
                     } else {
-                        // if friend exists, update friend
+                        // if group exists, update group
                         myDAO.updateGroup(group);
-                        myDAO.updateGroupMember(group);
+                        List<String> members = group.getMembers();
+                        for (String member : members) {
+                            if (!myDAO.hasGroupMember(group.getGid(), member)) {
+                                myDAO.addGroupMember(group.getGid(), member);
+                            }
+                        }
                     }
                 }
-                // set friends to user
+                // set groups to user
                 user.setGroups(groups);
             } else {
                 // if list == null or size <= 0
@@ -99,14 +104,14 @@ public class DataSync {
             if ((requests != null) && (requests.size() > 0)) {
                 for (Request request : requests) {
                     if (!myDAO.hasRequest(request.getRid())) {
-                        // if friend not exists, add friend
+                        // if request not exists, add request
                         myDAO.addRequest(request);
                     } else {
-                        // if friend exists, update friend
+                        // if request exists, update request
                         myDAO.updateRequest(request);
                     }
                 }
-                // set friends to user
+                // set requests to user
                 user.setRequests(requests);
             } else {
                 // if list == null or size <= 0
@@ -166,7 +171,7 @@ public class DataSync {
                 if ((messages != null) && (messages.size() > 0)) {
                     // set messages to group
                     group.setMessages(messages);
-                    myDAO.addFriendMessages(messages);
+                    myDAO.addGroupMessages(messages);
                     group.setUnread(group.getUnread()+messages.size()); //设置未读消息
                     myDAO.updateGroupUnread(group);
                 } else {

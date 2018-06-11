@@ -85,7 +85,7 @@ public class SearchResultActivity extends AppCompatActivity {
 //                    startActivity(intent);
 //                }
                 // TODO : test
-                Intent intent = new Intent(SearchResultActivity.this, DetailedInfoActivity.class);
+                Intent intent = new Intent(SearchResultActivity.this, NonFriendDetailedInfoActivity.class);
                 intent.putExtra("sid", friends.get(position).getSid());
                 startActivity(intent);
             }

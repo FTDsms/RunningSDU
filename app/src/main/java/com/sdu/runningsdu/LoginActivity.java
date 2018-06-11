@@ -184,7 +184,6 @@ public class LoginActivity extends AppCompatActivity{
         mProgressView = findViewById(R.id.login_progress);
         forgetPassword = findViewById(R.id.forget_password);
         register = findViewById(R.id.register);
-        register = findViewById(R.id.register);
         testButton = findViewById(R.id.test_button);
         testText = findViewById(R.id.test_text);
 
@@ -338,48 +337,126 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+        register.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         testButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 初始化数据
-                User user = initData();
-                myApplication.setUser(user);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // 初始化数据
+                            User user = initData();
+                            myApplication.setUser(user);
 
-                // 创建数据库
-                try {
-                    initDatabase();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                            // 创建数据库
+                            initDatabase();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                            // 写入测试数据库
+                            writeTestDatabase();
+
+                        } catch (IOException |JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }).start();
             }
         });
 
     }
 
-    //初始化默认数据
-    private User initData() {
-        User user = new User("201500301182", "邵明山", MD5.md5("000000", "201500301182"), null);
-//        User user = new User();
-//        user.setName("邵明山");
+    private void writeTestDatabase() {
+        User user = myApplication.getUser();
+        List<Friend> friends = user.getFriends();
+        for (Friend friend : friends) {
+            if (!myDAO.hasFriend(friend.getSid())) {
+                myDAO.addFriend(friend);
+            } else {
+                myDAO.updateFriend(friend);
+            }
+        }
+        List<Group> groups = user.getGroups();
+        for (Group group : groups) {
+            if (!myDAO.hasGroup(group.getGid())) {
+                myDAO.addGroup(group);
+                myDAO.addGroupMembers(group);
+            } else {
+                myDAO.updateGroup(group);
+                List<String> members = group.getMembers();
+                for (String member : members) {
+                    if (!myDAO.hasGroupMember(group.getGid(), member)) {
+                        myDAO.addGroupMember(group.getGid(), member);
+                    }
+                }
+            }
+        }
+        List<Request> requests = user.getRequests();
+        for (Request request : requests) {
+            if (!myDAO.hasRequest(request.getRid())) {
+                myDAO.addRequest(request);
+            } else {
+                myDAO.updateRequest(request);
+            }
+        }
+        for (Friend friend : friends) {
+            List<Message> messages = friend.getMessages();
+            for (Message message : messages) {
+                if (!myDAO.hasFriendMessage(message)) {
+                    myDAO.addFriendMessage(message);
+                }
+            }
+            friend.setUnread(friend.getUnread()+messages.size()); //设置未读消息
+            myDAO.updateFriendUnread(friend);
+        }
+        for (Group group : groups) {
+            List<Message> messages = group.getMessages();
+            for (Message message : messages) {
+                if (!myDAO.hasGroupMessage(message)) {
+                    myDAO.addGroupMessage(message);
+                }
+            }
+            group.setUnread(group.getUnread()+messages.size()); //设置未读消息
+            myDAO.updateGroupUnread(group);
+        }
+    }
 
+    //初始化默认数据
+    private User initData() throws IOException, JSONException {
+        User user = new User("201500301182", "邵明山", MD5.md5("000000", "201500301182"), null);
+
+        // 初始化好友请求
+        List<Request> requests = new ArrayList<>();
+        Request request1 = new Request(-1, user.getSid(), "20150030xxx1", "你好，很高兴认识你", "time", 0);
+        Request request2 = new Request(-2, user.getSid(), "20150030xxx2", "你好，很高兴认识你", "time", 0);
+        requests.add(request1);
+        requests.add(request2);
+        user.setRequests(requests);
+
+        // 初始化群组
         List<Group> groups = new ArrayList<>();
-        Group group = new Group("创新实训");
+        Group group = new Group(1,"创新实训",user.getSid(), null);
         List<String> members = new ArrayList<>();
-        members.add("邵明山");
-        members.add("焦方锴");
-        members.add("叶蕴盈");
+        members.add("201500301182");
+        members.add("201500301132");
+        members.add("201500302002");
         group.setMembers(members);
         List<Message> groupMessages = new ArrayList<>();
         for (int i=0; i<members.size(); ++i) {
             Message message;
             if (members.get(i).equals(user.getName())) {
-                message = new Message("创新实训", members.get(i), Message.TYPE_SENT, "test", "15:00");
+                message = new Message(-(i+1), group.getGid(), user.getSid(), Message.TYPE_SENT, "test", "15:00");
             } else {
-                message = new Message("创新实训", members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
+                message = new Message(-(i+1), group.getGid(), members.get(i), Message.TYPE_RECEIVED, "test", "15:00");
             }
             groupMessages.add(message);
         }
@@ -387,11 +464,12 @@ public class LoginActivity extends AppCompatActivity{
         groups.add(group);
         user.setGroups(groups);
 
+        // 初始化好友
         List<Friend> friends = new ArrayList<>();
         Friend friend1 = new Friend("201500301132", "焦方锴", null);
         List<Message> messages1 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message1 = new Message(friend1.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message1 = new Message(-(j*2+1), friend1.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages1.add(message1);
         }
         friend1.setMessages(messages1);
@@ -400,7 +478,7 @@ public class LoginActivity extends AppCompatActivity{
         Friend friend2 = new Friend("201500302002","叶蕴盈", null);
         List<Message> messages2 = new ArrayList<>();
         for(int j=0; j<10; ++j) {
-            Message message2 = new Message(friend2.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+            Message message2 = new Message(-(j*3+1), friend2.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
             messages2.add(message2);
         }
         friend2.setMessages(messages2);
@@ -408,10 +486,10 @@ public class LoginActivity extends AppCompatActivity{
 
         Friend friend;
         for(int i=0; i<10; ++i) {
-            friend = new Friend("test"+(i+1));
+            friend = new Friend("test"+(i+1), "test"+(i+1), null);
             List<Message> messages = new ArrayList<>();
             for(int j=0; j<10; ++j) {
-                Message message = new Message(friend.getName(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
+                Message message = new Message(-((i+4)*j+1), friend.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
                 messages.add(message);
             }
             friend.setMessages(messages);
@@ -419,9 +497,6 @@ public class LoginActivity extends AppCompatActivity{
         }
 
         user.setFriends(friends);
-
-        List<Request> requests = new ArrayList<>();
-        user.setRequests(requests);
 
         return user;
     }

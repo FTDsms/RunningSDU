@@ -12,7 +12,7 @@ public class Message {
 
     private String friend;
 
-    private String group;
+    private int group;
 
     //时间
     private String time;
@@ -40,15 +40,6 @@ public class Message {
     private String file;
 
     // 好友消息
-    public Message(String friend, int type, String content, String time) {
-        this.isGroup = false;
-        this.friend = friend;
-        this.type = type;
-        this.content = content;
-        this.time = time;
-    }
-
-    // 好友消息
     public Message(int mid, String friend, int type, String content, String time) {
         this.mid = mid;
         this.isGroup = false;
@@ -59,17 +50,7 @@ public class Message {
     }
 
     // 群聊消息
-    public Message(String group, String friend, int type, String content, String time) {
-        this.isGroup = true;
-        this.group = group;
-        this.friend = friend;
-        this.type = type;
-        this.content = content;
-        this.time = time;
-    }
-
-    // 群聊消息
-    public Message(int mid, String group, String friend, int type, String content, String time) {
+    public Message(int mid, int group, String friend, int type, String content, String time) {
         this.mid = mid;
         this.isGroup = true;
         this.group = group;
@@ -95,11 +76,11 @@ public class Message {
         isGroup = group;
     }
 
-    public String getGroup() {
+    public int getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(int group) {
         this.group = group;
     }
 

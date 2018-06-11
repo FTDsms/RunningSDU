@@ -75,16 +75,6 @@ public class MessageFragment extends Fragment {
             }
         }
 
-//        list = new ArrayList<String>();
-//        list.add("test1");
-//        list.add("test2");
-//        list.add("test3");
-//        list.add("test4");
-//        list.add("test5");
-//        list.add("test6");
-//        list.add("test7");
-//        list.add("test8");
-//        list.add("test9");
     }
 
     private void initView() {
@@ -103,14 +93,14 @@ public class MessageFragment extends Fragment {
                 if (isGroup) {
                     // if is group, start GroupChatActivity
                     Intent intent = new Intent(getActivity(), GroupChatActivity.class);
-                    String groupName = list.get(position).getGroup();
-                    intent.putExtra("groupName", groupName);
+                    int groupGid = list.get(position).getGroup();
+                    intent.putExtra("groupGid", groupGid);
                     startActivity(intent);
                 } else {
                     // if not group, start ChatActivity
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
-                    String friendName = list.get(position).getFriend();
-                    intent.putExtra("friendName", friendName);
+                    String friendSid = list.get(position).getFriend();
+                    intent.putExtra("friendSid", friendSid);
                     startActivity(intent);
                 }
             }

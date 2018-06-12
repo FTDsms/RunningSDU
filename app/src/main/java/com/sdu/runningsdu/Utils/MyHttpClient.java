@@ -385,17 +385,21 @@ public class MyHttpClient {
      */
     public static Group createGroup(String url, String name, List<String> members) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
-        JSONArray jsonArray = new JSONArray();
-        for (int i=0; i<members.size(); ++i) {
-            jsonArray.put(members.get(i));
+//        JSONArray jsonArray = new JSONArray();
+//        for (int i=0; i<members.size(); ++i) {
+//            jsonArray.put(members.get(i));
+//        }
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(members.get(0));
+        for (int i=1; i<members.size(); ++i) {
+            stringBuffer.append(",");
+            stringBuffer.append(members.get(i));
         }
-        for (int i=0; i<jsonArray.length(); ++i) {
-            Log.d("test", jsonArray.get(i).toString());
-        }
-        Log.d("test", jsonArray.toString());
+//        Log.d("StringBuffer", stringBuffer.toString());
         FormBody formBody = new FormBody.Builder()
                 .add("name", name)
-                .add("members", jsonArray.toString())
+//                .add("members", jsonArray.toString())
+                .add("members", stringBuffer.toString())
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/createGroup")
@@ -465,18 +469,20 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        JSONArray json = new JSONArray(response.body().string());
-        for (int i=0; i<json.length(); ++i) {
-            JSONObject obj = json.optJSONObject(i);
-            int gid = Integer.parseInt(obj.optString("gid"));
-            String name = obj.optString("name");
-            String creator = obj.optString("creator");
-            String image = obj.optString("image");
+        JSONArray jsonObject = new JSONArray(response.body().string());
+        for (int i=0; i<jsonObject.length(); ++i) {
+            JSONObject json = jsonObject.optJSONObject(i);
+            JSONObject wechat = json.optJSONObject("wechat");
+            int gid = Integer.parseInt(wechat.optString("gid"));
+            String name = wechat.optString("name");
+            String creator = wechat.optString("creator");
+            String image = wechat.optString("image");
             Group group = new Group(gid, name, creator, image);
-            JSONArray jsonArray = obj.optJSONArray("members");
+            JSONArray memberInfos = json.optJSONArray("memberInfos");
             List<String> members = new ArrayList<>();
-            for (int j=0; j<jsonArray.length(); ++j) {
-                members.add(jsonArray.getString(j));
+            for (int j=0; j<memberInfos.length(); ++j) {
+                JSONObject memberinfo = memberInfos.optJSONObject(j);
+                members.add(memberinfo.optString("sid"));
             }
             group.setMembers(members);
             groups.add(group);
@@ -506,9 +512,9 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        JSONObject json = new JSONObject(response.body().string());
-        JSONObject obj = json.optJSONObject("obj");
-        for (int i=0; i<obj.length(); ++i) {
+        JSONArray json = new JSONArray(response.body().string());
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
             int gnid = Integer.parseInt(obj.optString("gnid"));
             String sid = obj.optString("sid");
             String content = obj.optString("content");
@@ -536,12 +542,14 @@ public class MyHttpClient {
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean sendGroupMessage(String url, int gid, String sid, String category, String content) throws IOException, JSONException {
+    public static boolean sendGroupMessage(String url, int gid, String sid, String category ,String audio, String photo, String content) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
                 .add("gid", Integer.toString(gid))
                 .add("sid", sid)
                 .add("category", category)
+                .add("audio", audio)
+                .add("photo", photo)
                 .add("content", content)
                 .build();
         Request request = new Request.Builder()

@@ -61,7 +61,12 @@ public class DataSync {
                     if (!myDAO.hasGroup(group.getGid())) {
                         // if group not exists, add group
                         myDAO.addGroup(group);
-                        myDAO.addGroupMembers(group);
+                        List<String> members = group.getMembers();
+                        for (String member : members) {
+                            if (!myDAO.hasGroupMember(group.getGid(), member)) {
+                                myDAO.addGroupMember(group.getGid(), member);
+                            }
+                        }
                     } else {
                         // if group exists, update group
                         myDAO.updateGroup(group);
@@ -150,7 +155,7 @@ public class DataSync {
                 if ((messages != null) && (messages.size() > 0)) {
                     for (Message message : messages) {
                         if (!myDAO.hasGroupMessage(message)) {
-                            myDAO.addGroupMessages(messages);
+                            myDAO.addGroupMessage(message);
                         }
                     }
                     group.setUnread(group.getUnread()+messages.size()); //设置未读消息

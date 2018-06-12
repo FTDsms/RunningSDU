@@ -117,7 +117,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    MyHttpClient.sendGroupMessage(myApplication.getIp()+"/",message.getGroup(), myApplication.getUser().getSid(), "0", message.getContent());
+                    MyHttpClient.sendGroupMessage(myApplication.getIp()+"/",message.getGroup(), myApplication.getUser().getSid(), "0", "", "", message.getContent());
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }

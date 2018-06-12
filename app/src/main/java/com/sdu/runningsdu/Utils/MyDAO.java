@@ -167,11 +167,12 @@ public class MyDAO {
      */
     public void addFriend(Friend friend) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
-        Object[] objects = new Object[3];
+        Object[] objects = new Object[4];
         objects[0] = friend.getSid();
         objects[1] = friend.getName();
         objects[2] = friend.getImage();
-        String sql = "insert into friend(sid, name, image) values(?,?,?)";
+        objects[3] = 0;
+        String sql = "insert into friend(sid, name, image, unread) values(?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add friend: " + friend.getName());
 //        db.close();
@@ -312,12 +313,13 @@ public class MyDAO {
      */
     public void addGroup(Group group) {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
-        Object[] objects = new Object[4];
+        Object[] objects = new Object[5];
         objects[0] = group.getGid();
         objects[1] = group.getName();
         objects[2] = group.getCreator();
         objects[3] = group.getImage();
-        String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
+        objects[4] = 0;
+        String sql = "insert into groups(gid, name, creator, image, unread) values(?,?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add group: " + group.getName());
 //        db.close();

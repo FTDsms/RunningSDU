@@ -84,9 +84,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                         memberSid.add(friends.get(i).getSid());
                     }
                 }
-                for (String sid : memberSid) {
-                    Log.i("test", sid);
-                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {

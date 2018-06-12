@@ -4,7 +4,9 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -166,6 +168,10 @@ public class LoginActivity extends AppCompatActivity{
         testButton = findViewById(R.id.test_button);
         testText = findViewById(R.id.test_text);
 
+        SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+        sidView.setText(sp.getString("sid", null));
+        passwordView.setText(sp.getString("password", null));
+
         loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -215,6 +221,11 @@ public class LoginActivity extends AppCompatActivity{
                         }
                         User user = new User();
                         try {
+                            SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                            sp.edit()
+                                    .putString("sid", sidView.getText().toString())
+                                    .putString("password", passwordView.getText().toString())
+                                    .apply();
                             String response = MyHttpClient.login(myApplication.getIp(), sid, password);
                             Log.w("test", response);
                             JSONObject json = new JSONObject(response);
@@ -316,7 +327,8 @@ public class LoginActivity extends AppCompatActivity{
         register.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sidView.setText("20150030");
+                passwordView.setText("000000");
             }
         });
 

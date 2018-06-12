@@ -1,4 +1,4 @@
-package com.sdu.runningsdu.Me;
+package com.sdu.runningsdu.Test;
 
 import android.net.Uri;
 import android.os.Bundle;

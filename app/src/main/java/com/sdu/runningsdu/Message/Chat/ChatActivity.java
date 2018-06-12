@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.Information.ChatInfoActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.Utils.DataSync;
@@ -76,8 +77,10 @@ public class ChatActivity extends AppCompatActivity {
         toolbarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //点击查看好友信息
-
+                //点击查看聊天信息
+                Intent intent1 = new Intent(ChatActivity.this, ChatInfoActivity.class);
+                intent1.putExtra("friendSid", friendSid);
+                startActivity(intent1);
             }
         });
 

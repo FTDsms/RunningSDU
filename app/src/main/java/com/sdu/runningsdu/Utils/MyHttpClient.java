@@ -392,6 +392,7 @@ public class MyHttpClient {
         for (int i=0; i<jsonArray.length(); ++i) {
             Log.d("test", jsonArray.get(i).toString());
         }
+        Log.d("test", jsonArray.toString());
         FormBody formBody = new FormBody.Builder()
                 .add("name", name)
                 .add("members", jsonArray.toString())

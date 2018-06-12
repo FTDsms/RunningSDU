@@ -1,4 +1,4 @@
-package com.sdu.runningsdu.Me;
+package com.sdu.runningsdu.Information;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,6 +80,14 @@ public class UserInfoActivity extends AppCompatActivity {
         head_image.setImageResource(R.drawable.head_image);
         name.setText(user.getName());
         sid.setText(user.getSid());
+
+        setHeadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击上传头像
+
+            }
+        });
 
     }
 

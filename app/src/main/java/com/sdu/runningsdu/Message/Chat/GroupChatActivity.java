@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sdu.runningsdu.Information.GroupChatInfoActivity;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.Utils.DataSync;
@@ -75,7 +76,9 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //点击查看群聊信息
-
+                Intent intent1 = new Intent(GroupChatActivity.this, GroupChatInfoActivity.class);
+                intent1.putExtra("groupGid", groupGid);
+                startActivity(intent1);
             }
         });
 

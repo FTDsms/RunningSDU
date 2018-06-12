@@ -3,6 +3,7 @@ package com.sdu.runningsdu.Utils;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -17,6 +18,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context, String name) {
         super(context, name, null, DB_VERSION);
+        if(Build.VERSION.SDK_INT >= 11){
+            getWritableDatabase().enableWriteAheadLogging();
+        }
     }
 
     /**
@@ -25,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param name
      * @return DatabaseHelper
      */
-    public static DatabaseHelper getInstance(Context context, String name) {
+    public static synchronized DatabaseHelper getInstance(Context context, String name) {
         if (databaseHelper == null) {
             databaseHelper = new DatabaseHelper(context, name);
         }
@@ -113,5 +117,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String requestSQL = "drop table if exists request";
         sqLiteDatabase.execSQL(requestSQL);
         onCreate(sqLiteDatabase);
+    }
+
+    @Override
+    public synchronized void close() {
+        super.close();
     }
 }

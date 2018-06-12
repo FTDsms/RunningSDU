@@ -31,7 +31,7 @@ public class MyDAO {
         this.name = name;
         this.databaseHelper = DatabaseHelper.getInstance(context, name);
         Log.d("database", "database name: " + databaseHelper.getDatabaseName());
-        findTable();
+//        findTable();
 //        findAllUser();
     }
 
@@ -46,7 +46,7 @@ public class MyDAO {
             Log.d("database", cursor.getString(0));
         }
         cursor.close();
-        db.close();
+//        db.close();
     }
 
     /**
@@ -62,7 +62,7 @@ public class MyDAO {
         objects[3] = user.getImage();
         String sql = "insert into user(sid, name, password, image) values(?,?,?,?)";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "add user: " + user.getName());
     }
 
@@ -74,7 +74,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from user where sid = ?";
         db.execSQL(sql, new Object[]{sid});
-        db.close();
+//        db.close();
         Log.d("database", "delete user: " + sid);
     }
 
@@ -91,7 +91,7 @@ public class MyDAO {
         objects[3] = user.getSid();
         String sql = "update user set name=?, password=?, image=? where sid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update user: " + user.getName());
     }
 
@@ -108,7 +108,7 @@ public class MyDAO {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -133,7 +133,7 @@ public class MyDAO {
         }
         Log.d("database", "find user: " + user.toString());
         cursor.close();
-        db.close();
+//        db.close();
         return user;
     }
 
@@ -157,7 +157,7 @@ public class MyDAO {
             users.add(user);
         }
         cursor.close();
-        db.close();
+//        db.close();
         return users;
     }
 
@@ -174,7 +174,7 @@ public class MyDAO {
         String sql = "insert into friend(sid, name, image) values(?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add friend: " + friend.getName());
-        db.close();
+//        db.close();
     }
 
     /**
@@ -192,7 +192,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add friend: " + friend.getName());
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -203,7 +203,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from friend where sid = ?";
         db.execSQL(sql, new Object[]{sid});
-        db.close();
+//        db.close();
         Log.d("database", "delete friend: " + sid);
     }
 
@@ -219,7 +219,7 @@ public class MyDAO {
         objects[2] = friend.getSid();
         String sql = "update friend set name=?, image=? where sid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update friend: " + friend.getName());
     }
 
@@ -234,7 +234,7 @@ public class MyDAO {
         objects[1] = friend.getSid();
         String sql = "update friend set unread=? where sid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update friend unread: " + friend.getName() + " " + friend.getUnread());
     }
 
@@ -255,7 +255,7 @@ public class MyDAO {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -279,7 +279,7 @@ public class MyDAO {
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
-        db.close();
+//        db.close();
         return friend;
     }
 
@@ -302,7 +302,7 @@ public class MyDAO {
             friends.add(friend);
         }
         cursor.close();
-        db.close();
+//        db.close();
         return friends;
     }
 
@@ -320,7 +320,7 @@ public class MyDAO {
         String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add group: " + group.getName());
-        db.close();
+//        db.close();
     }
 
     /**
@@ -339,7 +339,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add group: " + group.getName());
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -350,7 +350,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from groups where gid = ?";
         db.execSQL(sql, new Object[]{Integer.toString(gid)});
-        db.close();
+//        db.close();
         Log.d("database", "delete group: " + gid);
     }
 
@@ -367,7 +367,7 @@ public class MyDAO {
         objects[3] = group.getGid();
         String sql = "update groups set name=?, creator=?, image=? where gid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update group: " + group.getName());
     }
 
@@ -382,7 +382,7 @@ public class MyDAO {
         objects[1] = group.getGid();
         String sql = "update groups set unread=? where gid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update group unread: " + group.getName() + " " + group.getUnread());
     }
 
@@ -403,7 +403,7 @@ public class MyDAO {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -426,7 +426,7 @@ public class MyDAO {
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
-        db.close();
+//        db.close();
         return group;
     }
 
@@ -450,7 +450,7 @@ public class MyDAO {
             groups.add(group);
         }
         cursor.close();
-        db.close();
+//        db.close();
         return groups;
     }
 
@@ -467,7 +467,7 @@ public class MyDAO {
         String sql = "insert into groupmember(gid, sid) values(?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add group member: " + gid + " " + sid);
-        db.close();
+//        db.close();
     }
 
     /**
@@ -486,7 +486,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add group member: " + gid + " " + member);
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -498,7 +498,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         String sql = "delete from groupmember where gid=?, sid=?";
         db.execSQL(sql, new Object[]{Integer.toString(gid), sid});
-        db.close();
+//        db.close();
         Log.d("database", "delete group member: " + gid);
     }
 
@@ -520,7 +520,7 @@ public class MyDAO {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -539,7 +539,7 @@ public class MyDAO {
             members.add(cursor.getString(cursor.getColumnIndex("sid")));
         }
         cursor.close();
-        db.close();
+//        db.close();
         return members;
     }
 
@@ -558,7 +558,7 @@ public class MyDAO {
         String sql = "insert into friendmessage(mid, sid, type, content, time) values(?,?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add friendmessage: " + message.getMid());
-        db.close();
+//        db.close();
     }
 
     /**
@@ -578,7 +578,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add friendmessage: " + message.getMid());
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -598,11 +598,11 @@ public class MyDAO {
         if (cursor.moveToLast()) {
             mid = cursor.getInt(0);
             cursor.close();
-            db.close();
+//            db.close();
             return mid;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return mid;
     }
 
@@ -621,11 +621,11 @@ public class MyDAO {
         if (cursor.getCount() > 0) {
             Log.w("has friendmessage", ""+message.getMid());
             cursor.close();
-            db.close();
+//            db.close();
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -648,7 +648,7 @@ public class MyDAO {
             messages.add(new Message(mid, sid, type, content, time));
         }
         cursor.close();
-        db.close();
+//        db.close();
         return messages;
     }
 
@@ -668,7 +668,7 @@ public class MyDAO {
         String sql = "insert into groupmessage(mid, gid, sid, type, content, time) values(?,?,?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add groupmessage: " + message.getMid());
-        db.close();
+//        db.close();
     }
 
     /**
@@ -689,7 +689,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add groupmessage: " + message.getMid());
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -707,11 +707,11 @@ public class MyDAO {
         if (cursor.getCount() > 0) {
             Log.w("has groupmessage", ""+message.getMid());
             cursor.close();
-            db.close();
+//            db.close();
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -732,11 +732,11 @@ public class MyDAO {
         if (cursor.moveToLast()) {
             mid = cursor.getInt(0);
             cursor.close();
-            db.close();
+//            db.close();
             return mid;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return mid;
     }
 
@@ -760,7 +760,7 @@ public class MyDAO {
             messages.add(new Message(mid, gid, sid, type, content, time));
         }
         cursor.close();
-        db.close();
+//        db.close();
         return messages;
     }
 
@@ -780,7 +780,7 @@ public class MyDAO {
         String sql = "insert into request(rid, receiver, sender, message, time, state) values(?,?,?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add request: " + request.getRid());
-        db.close();
+//        db.close();
     }
 
     /**
@@ -801,7 +801,7 @@ public class MyDAO {
             db.execSQL(sql, objects);
             Log.d("database", "add request: " + request.getRid());
         }
-        db.close();
+//        db.close();
     }
 
     /**
@@ -819,7 +819,7 @@ public class MyDAO {
         objects[5] = request.getRid();
         String sql = "update request set receiver=?, sender=?, message=?, time=?, state=? where rid=?";
         db.execSQL(sql, objects);
-        db.close();
+//        db.close();
         Log.d("database", "update request: " + request.getRid());
     }
 
@@ -838,11 +838,11 @@ public class MyDAO {
         if (cursor.getCount() > 0) {
             Log.w("has Request", ""+cursor.getCount());
             cursor.close();
-            db.close();
+//            db.close();
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
 
@@ -867,7 +867,7 @@ public class MyDAO {
             requests.add(request);
         }
         cursor.close();
-        db.close();
+//        db.close();
         return requests;
     }
 

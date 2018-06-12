@@ -143,7 +143,6 @@ public class GroupChatActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             adapter.notifyDataSetChanged();
-                            msgListView.setSelection(messages.size());
                         }
                     });
                 }

@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity{
     private void initDatabase() throws IOException {
         User user = myApplication.getUser();
         myDAO = new MyDAO(LoginActivity.this, user.getName());
+        myDAO.findTable();
 //        myDAO.deleteUser(user.getSid()); // 删除用户
         if (!myDAO.hasUser() || !myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
             // if user not exists, add user

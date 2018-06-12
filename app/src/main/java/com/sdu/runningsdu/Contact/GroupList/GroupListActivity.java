@@ -1,5 +1,6 @@
 package com.sdu.runningsdu.Contact.GroupList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -63,7 +64,8 @@ public class GroupListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 打开创建群聊Activity
-//                Intent intent = new Intent(NewFriendActivity.this, xxx.class);
+                Intent intent = new Intent(GroupListActivity.this, CreateGroupActivity.class);
+                startActivity(intent);
             }
         });
 

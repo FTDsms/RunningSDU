@@ -71,7 +71,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             }
         } else {
             // if not group, set friend name and latest message
-            holder.name.setText(list.get(position).getFriend());
+            holder.name.setText(myDAO.findFriend(list.get(position).getFriend()).getName());
             holder.message.setText(list.get(position).getContent());
             int unread = myDAO.findFriend(list.get(position).getFriend()).getUnread();
             if (unread > 99) {

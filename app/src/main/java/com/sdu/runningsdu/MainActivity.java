@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.sdu.runningsdu.Contact.ContactFragment;
+import com.sdu.runningsdu.Contact.GroupList.CreateGroupActivity;
+import com.sdu.runningsdu.Contact.GroupList.GroupListActivity;
 import com.sdu.runningsdu.Contact.NewFriend.AddFriendActivity;
 import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.Friend;
@@ -180,11 +182,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
+                Intent intent;
                 switch (id) {
                     case R.id.item_create_group:
+                        // 打开创建群聊Activity
+                        intent = new Intent(MainActivity.this, CreateGroupActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.item_add_friend:
-                        Intent intent = new Intent(MainActivity.this, AddFriendActivity.class);
+                        intent = new Intent(MainActivity.this, AddFriendActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.item_scan:
@@ -256,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 //                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //                drawer.closeDrawer(GravityCompat.START);
-                return true;
+                return false;
             }
         });
 

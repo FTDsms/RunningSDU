@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/create_group_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@drawable/title_bar"
+        android:fitsSystemWindows="true"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp">
+
+        <TextView
+            android:id="@+id/create_group_toolbar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/keyboard_arrow_left_white_36x36"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="发起群聊"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/create_group_toolbar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="#009100"
+            android:textSize="16sp"
+            android:visibility="visible"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.6">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:clickable="false">
+
+        </android.support.v7.widget.SearchView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="50dp"
+            android:text="搜索" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/group_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:scrollbars="none">
+
+    </ListView>
+
+    <!--触摸时显示的字母-->
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/tv_dialog_bg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:visibility="gone" />
+
+    <!--右侧字母栏-->
+    <me.zhouzhuo.zzletterssidebar.ZzLetterSideBar
+        android:id="@+id/sidebar"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true" />
+
+</LinearLayout>

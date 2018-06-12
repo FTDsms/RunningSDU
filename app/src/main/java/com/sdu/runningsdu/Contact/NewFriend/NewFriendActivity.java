@@ -91,9 +91,9 @@ public class NewFriendActivity extends AppCompatActivity {
             }
         });
 
-        if (!myApplication.isTest()) {
-            initThread();
-        }
+//        if (!myApplication.isTest()) {
+//            initThread();
+//        }
 
     }
 
@@ -128,10 +128,31 @@ public class NewFriendActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!myApplication.isTest()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataSync.syncRequest(myApplication, myDAO);
+                    requests.clear();
+                    requests.addAll(myDAO.findAllRequest());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            newFriendListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!myApplication.isTest()) {
-            refreshThread.interrupt();
-        }
+//        if (!myApplication.isTest()) {
+//            refreshThread.interrupt();
+//        }
     }
 }

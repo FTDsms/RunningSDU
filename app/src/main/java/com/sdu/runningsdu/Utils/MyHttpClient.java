@@ -379,21 +379,22 @@ public class MyHttpClient {
      * @param url
      * @param name
      * @param members
-     * @param image
      * @return
      * @throws IOException
      * @throws JSONException
      */
-    public static Group createGroup(String url, String name, String[] members, String image) throws IOException, JSONException {
+    public static Group createGroup(String url, String name, List<String> members) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         JSONArray jsonArray = new JSONArray();
-        for (int i=0; i<members.length; ++i) {
-            jsonArray.put(members[i]);
+        for (int i=0; i<members.size(); ++i) {
+            jsonArray.put(members.get(i));
+        }
+        for (int i=0; i<jsonArray.length(); ++i) {
+            Log.d("test", jsonArray.get(i).toString());
         }
         FormBody formBody = new FormBody.Builder()
                 .add("name", name)
                 .add("members", jsonArray.toString())
-                .add("image", image)
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/createGroup")
@@ -402,7 +403,8 @@ public class MyHttpClient {
         Response response = okHttpClient.newCall(request).execute();
         JSONObject jsonObject = new JSONObject(response.body().string());
         int gid = Integer.parseInt(jsonObject.optString("gid"));
-        return new Group(gid, name, members[0], image);
+        String image = jsonObject.optString("image");
+        return new Group(gid, name, members.get(0), image);
     }
 
     /**

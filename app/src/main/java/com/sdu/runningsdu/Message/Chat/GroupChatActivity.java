@@ -91,11 +91,11 @@ public class GroupChatActivity extends AppCompatActivity {
                 if(!"".equals(content)) {
                     Message message = new Message(-1, groupGid, null,  Message.TYPE_SENT, content, "22:09");
                     messages.add(message);
-//                    currentGroup.setMessages(messages); TODO: sync message
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
-                    //TODO: send message
-                    sendMsg(message);
+                    if (!myApplication.isTest()) {
+                        sendMsg(message);
+                    }
                     inputText.setText(""); //清空输入框中的内容
                 }
             }
@@ -103,7 +103,10 @@ public class GroupChatActivity extends AppCompatActivity {
 
         msgListView.setSelection(messages.size()); //将ListView定位到最后一行
 
-        refreshList();
+        if (!myApplication.isTest()) {
+            refreshList();
+        }
+
     }
 
     private void sendMsg(final Message message) {
@@ -154,7 +157,9 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        refreshThread.interrupt();
+        if (!myApplication.isTest()) {
+            refreshThread.interrupt();
+        }
     }
 
 

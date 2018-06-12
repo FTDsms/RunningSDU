@@ -52,7 +52,6 @@ public class FriendListViewAdapter extends BaseSortListViewAdapter<Friend, Frien
         viewHolder.friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, mDatas.get(position).toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, DetailedInfoActivity.class);
                 intent.putExtra("sid", mDatas.get(position).getSid());
                 context.startActivity(intent);

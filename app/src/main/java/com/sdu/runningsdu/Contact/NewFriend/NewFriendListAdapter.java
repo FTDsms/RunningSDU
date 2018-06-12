@@ -117,16 +117,18 @@ public class NewFriendListAdapter extends RecyclerView.Adapter<NewFriendListAdap
                 @Override
                 public void onClick(View view) {
                     requests.get(getAdapterPosition()).setState(1);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                MyHttpClient.agreeRequest(myApplication.getIp(), requests.get(getAdapterPosition()).getRid());
-                            } catch (IOException | JSONException e) {
-                                e.printStackTrace();
+                    if (!myApplication.isTest()) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    MyHttpClient.agreeRequest(myApplication.getIp(), requests.get(getAdapterPosition()).getRid());
+                                } catch (IOException | JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    }).start();
+                        }).start();
+                    }
                 }
             });
         }

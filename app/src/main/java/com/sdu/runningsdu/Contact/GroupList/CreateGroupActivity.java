@@ -1,9 +1,11 @@
 package com.sdu.runningsdu.Contact.GroupList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
@@ -11,14 +13,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.Friend;
+import com.sdu.runningsdu.JavaBean.Group;
+import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import me.zhouzhuo.zzletterssidebar.ZzLetterSideBar;
-import me.zhouzhuo.zzletterssidebar.interf.OnLetterTouchListener;
 
 /**
  * Created by FTDsm on 2018/6/12.
@@ -32,15 +38,14 @@ public class CreateGroupActivity extends AppCompatActivity {
     private RelativeLayout search;
 
     private ListView listView;
-    private ZzLetterSideBar sideBar;
-    private TextView dialog;
-
 
     private CreateGroupFriendListAdapter createGroupFriendListAdapter;
     private List<Friend> friends;
 
     private MyApplication myApplication;
     private MyDAO myDAO;
+
+    private List<String> memberSid = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,16 +57,13 @@ public class CreateGroupActivity extends AppCompatActivity {
         myDAO = new MyDAO(this, myApplication.getUser().getName());
         friends = myDAO.findAllFriend();
 
-        createGroupFriendListAdapter = new CreateGroupFriendListAdapter(this, friends);
-        createGroupFriendListAdapter.updateListView(friends);
+        createGroupFriendListAdapter = new CreateGroupFriendListAdapter(this, R.layout.list_item_create_group, friends);
 
         toolbarBack = findViewById(R.id.create_group_toolbar_back);
         toolbarButton = findViewById(R.id.create_group_toolbar_button);
         searchView = findViewById(R.id.search_view);
         search = findViewById(R.id.search);
-        sideBar = findViewById(R.id.sidebar);
-        dialog = findViewById(R.id.tv_dialog);
-        listView = findViewById(R.id.list_view);
+        listView = findViewById(R.id.group_list_view);
         listView.setAdapter(createGroupFriendListAdapter);
 
         toolbarBack.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +77,29 @@ public class CreateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 创建群聊
-
+                memberSid.clear();
+                memberSid.add(myApplication.getUser().getSid());
+                for (int i=0; i<createGroupFriendListAdapter.checked.size(); ++i) {
+                    if (createGroupFriendListAdapter.checked.get(i)) {
+                        memberSid.add(friends.get(i).getSid());
+                    }
+                }
+                for (String sid : memberSid) {
+                    Log.i("test", sid);
+                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Group group = MyHttpClient.createGroup(myApplication.getIp(), "群聊", memberSid);
+                            Intent intent = new Intent(CreateGroupActivity.this, GroupChatActivity.class);
+                            intent.putExtra("groupGid", group.getGid());
+                            startActivity(intent);
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
 
@@ -98,17 +122,6 @@ public class CreateGroupActivity extends AppCompatActivity {
             }
         });
 
-        sideBar.setLetterTouchListener(listView, createGroupFriendListAdapter, dialog, new OnLetterTouchListener() {
-            @Override
-            public void onLetterTouch(String letter, int position) {
-
-            }
-
-            @Override
-            public void onActionUp() {
-
-            }
-        });
 
     }
 

@@ -75,8 +75,25 @@ public class GroupListActivity extends AppCompatActivity {
         groupListView.addFooterView(footer, null, false);
         foot.setText(groups.size() + "个群聊");
 
+//        if (!myApplication.isTest()) {
+//            initThread();
+//        }
+
         if (!myApplication.isTest()) {
-            initThread();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataSync.syncGroup(myApplication, myDAO);
+                    groups.clear();
+                    groups.addAll(myDAO.findAllGroup());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            groupListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
         }
 
     }
@@ -100,6 +117,8 @@ public class GroupListActivity extends AppCompatActivity {
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
                     DataSync.syncGroup(myApplication, myDAO);
+                    groups.clear();
+                    groups.addAll(myDAO.findAllGroup());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -112,11 +131,13 @@ public class GroupListActivity extends AppCompatActivity {
         refreshThread.start();
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!myApplication.isTest()) {
-            refreshThread.interrupt();
-        }
+//        if (!myApplication.isTest()) {
+//            refreshThread.interrupt();
+//        }
     }
 }

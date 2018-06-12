@@ -106,12 +106,17 @@ public class GroupChatActivity extends AppCompatActivity {
         refreshList();
     }
 
-    private void sendMsg(Message message) {
-        try {
-            MyHttpClient.sendGroupMessage(myApplication.getIp()+"/",message.getGroup(), myApplication.getUser().getSid(), "0", message.getContent());
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+    private void sendMsg(final Message message) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MyHttpClient.sendGroupMessage(myApplication.getIp()+"/",message.getGroup(), myApplication.getUser().getSid(), "0", message.getContent());
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void initMsg() {

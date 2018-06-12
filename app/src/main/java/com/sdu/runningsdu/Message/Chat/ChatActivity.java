@@ -3,6 +3,7 @@ package com.sdu.runningsdu.Message.Chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -57,6 +58,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         friendSid = intent.getStringExtra("friendSid");
+        Log.i("test", friendSid);
 
         initMsg(); //初始化消息数据
 
@@ -94,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
                     //TODO: send message
-//                    sendMsg(message);
+                    sendMsg(message);
                     inputText.setText(""); //清空输入框中的内容
                 }
             }
@@ -105,12 +107,18 @@ public class ChatActivity extends AppCompatActivity {
         refreshList();
     }
 
-    private void sendMsg(Message message) {
-        try {
-            MyHttpClient.sendFriendMessage(myApplication.getIp()+"/",message.getFriend(), myApplication.getUser().getSid(), "0", message.getContent());
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+    private void sendMsg(final Message message) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.w("test", message.toString());
+                    MyHttpClient.sendFriendMessage(myApplication.getIp()+"/",message.getFriend(), myApplication.getUser().getSid(), "0", message.getContent());
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void initMsg() {

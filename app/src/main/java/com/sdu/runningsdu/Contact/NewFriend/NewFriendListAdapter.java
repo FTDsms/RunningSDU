@@ -12,7 +12,12 @@ import android.widget.TextView;
 import com.sdu.runningsdu.JavaBean.Request;
 import com.sdu.runningsdu.Message.RecyclerAdapter;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,9 +32,12 @@ public class NewFriendListAdapter extends RecyclerView.Adapter<NewFriendListAdap
 
     private Context context;
 
+    private MyApplication myApplication;
+
     public NewFriendListAdapter(List<Request> requests, Context context) {
         this.requests = requests;
         this.context = context;
+        myApplication = (MyApplication) context.getApplicationContext();
     }
 
     @Override
@@ -108,7 +116,17 @@ public class NewFriendListAdapter extends RecyclerView.Adapter<NewFriendListAdap
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    requests.get(getAdapterPosition()).setState(1);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                MyHttpClient.agreeRequest(myApplication.getIp(), requests.get(getAdapterPosition()).getRid());
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
             });
         }

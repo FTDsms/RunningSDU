@@ -82,6 +82,7 @@ public class SearchResultActivity extends AppCompatActivity {
                     } else {
                         // 还不是好友
                         Intent intent = new Intent(SearchResultActivity.this, NonFriendDetailedInfoActivity.class);
+                        Log.w("test", friends.get(position).getSid());
                         intent.putExtra("sid", friends.get(position).getSid());
                         startActivity(intent);
                     }

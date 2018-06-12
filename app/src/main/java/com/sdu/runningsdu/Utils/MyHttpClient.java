@@ -217,10 +217,10 @@ public class MyHttpClient {
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean agreeRequest(String url, String rid) throws IOException, JSONException {
+    public static boolean agreeRequest(String url, int rid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("rid", rid)
+                .add("rid", Integer.toString(rid))
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/agreeRequest")
@@ -244,10 +244,10 @@ public class MyHttpClient {
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean rejectRequest(String url, String rid) throws IOException, JSONException {
+    public static boolean rejectRequest(String url, int rid) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("rid", rid)
+                .add("rid", Integer.toString(rid))
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/disagreeRequest")
@@ -285,9 +285,10 @@ public class MyHttpClient {
         JSONArray json = new JSONArray(response.body().string());
         for (int i=0; i<json.length(); ++i) {
             JSONObject obj = json.optJSONObject(i);
+            String fsid = obj.optString("sid");
             String name = obj.optString("name");
             String image = obj.optString("image");
-            Friend friend = new Friend(sid, name, image);
+            Friend friend = new Friend(fsid, name, image);
             friends.add(friend);
         }
         return friends;
@@ -316,9 +317,10 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        JSONObject json = new JSONObject(response.body().string());
-        JSONObject obj = json.optJSONObject("obj");
-        for (int i=0; i<obj.length(); ++i) {
+
+        JSONArray json = new JSONArray(response.body().string());
+        for (int i=0; i<json.length(); ++i) {
+            JSONObject obj = json.optJSONObject(i);
             int mmid = Integer.parseInt(obj.optString("coid"));
             String sender = obj.optString("sender");
             String receiver = obj.optString("receiver");

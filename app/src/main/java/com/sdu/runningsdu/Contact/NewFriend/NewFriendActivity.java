@@ -131,7 +131,7 @@ public class NewFriendActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (!myApplication.isTest()) {
-
+            refreshThread.interrupt();
         }
     }
 }

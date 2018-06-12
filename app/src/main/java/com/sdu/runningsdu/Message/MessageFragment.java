@@ -65,13 +65,17 @@ public class MessageFragment extends Fragment {
         List<Group> groups = myDAO.findAllGroup();
         for (Group group : groups) {
             List<Message> messages = myDAO.findGroupMessage(group.getGid());
-            list.add(messages.get(messages.size()-1));
+            if (!messages.isEmpty()) {
+                list.add(messages.get(messages.size()-1));
+            }
         }
         List<Friend> friends = myDAO.findAllFriend();
         if (friends != null) {
             for(Friend friend : friends){
                 List<Message> messages = myDAO.findFriendMessage(friend.getSid());
-                list.add(messages.get(messages.size()-1));
+                if (!messages.isEmpty()) {
+                    list.add(messages.get(messages.size()-1));
+                }
             }
         }
 

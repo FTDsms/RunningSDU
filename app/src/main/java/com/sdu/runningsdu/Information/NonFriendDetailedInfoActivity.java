@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -46,8 +47,6 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_datail_info_non_friend);
 
-        initData();
-
         toolbarBack = findViewById(R.id.detail_info_toolbar_back);
         toolbarBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +61,7 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
         userSid = findViewById(R.id.user_sid);
         addFriend = findViewById(R.id.add_friend);
 
-        try {
-            headImage.setImageResource(R.drawable.head_image);
-            userName.setText(friend.getName());
-            userSid.setText(friend.getSid());
-        } catch (NullPointerException e) {
-            // Maybe network disconnect
-            // ignore
-        }
+        initData();
 
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +80,7 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         final String sid = intent.getStringExtra("sid");
+        Log.w("test", sid);
 
         if (!myApplication.isTest()) {
             new Thread(new Runnable() {
@@ -98,6 +91,15 @@ public class NonFriendDetailedInfoActivity extends AppCompatActivity{
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
+                    // 根据friend信息更新UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            headImage.setImageResource(R.drawable.head_image);
+                            userName.setText(friend.getName());
+                            userSid.setText(friend.getSid());
+                        }
+                    });
                 }
             }).start();
         } else {

@@ -45,6 +45,7 @@ public class MyDAO {
         while (cursor.moveToNext()) {
             Log.d("database", cursor.getString(0));
         }
+        cursor.close();
         db.close();
     }
 
@@ -106,6 +107,7 @@ public class MyDAO {
         if (cursor.getCount() > 0) {
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -130,6 +132,7 @@ public class MyDAO {
             user.setImage(cursor.getString(cursor.getColumnIndex("image")));
         }
         Log.d("database", "find user: " + user.toString());
+        cursor.close();
         db.close();
         return user;
     }
@@ -153,6 +156,7 @@ public class MyDAO {
             Log.d("database", "find user: " + user.toString());
             users.add(user);
         }
+        cursor.close();
         db.close();
         return users;
     }
@@ -250,6 +254,7 @@ public class MyDAO {
             Log.w("has friend", ""+cursor.getCount());
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -273,6 +278,7 @@ public class MyDAO {
             friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
+        cursor.close();
         db.close();
         return friend;
     }
@@ -295,6 +301,7 @@ public class MyDAO {
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             friends.add(friend);
         }
+        cursor.close();
         db.close();
         return friends;
     }
@@ -395,6 +402,7 @@ public class MyDAO {
         if (cursor.getCount() > 0) {
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -417,6 +425,7 @@ public class MyDAO {
             group.setImage(cursor.getString(cursor.getColumnIndex("image")));
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
+        cursor.close();
         db.close();
         return group;
     }
@@ -440,6 +449,7 @@ public class MyDAO {
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             groups.add(group);
         }
+        cursor.close();
         db.close();
         return groups;
     }
@@ -509,6 +519,7 @@ public class MyDAO {
             Log.w("has groupmember", ""+cursor.getCount());
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -527,6 +538,7 @@ public class MyDAO {
         while (cursor.moveToNext()) {
             members.add(cursor.getString(cursor.getColumnIndex("sid")));
         }
+        cursor.close();
         db.close();
         return members;
     }
@@ -585,9 +597,12 @@ public class MyDAO {
         int mid = -1;
         if (cursor.moveToLast()) {
             mid = cursor.getInt(0);
+            cursor.close();
             db.close();
             return mid;
         }
+        cursor.close();
+        db.close();
         return mid;
     }
 
@@ -605,8 +620,11 @@ public class MyDAO {
                 null, null, null);
         if (cursor.getCount() > 0) {
             Log.w("has friendmessage", ""+message.getMid());
+            cursor.close();
+            db.close();
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -629,6 +647,7 @@ public class MyDAO {
             String time = cursor.getString(cursor.getColumnIndex("time"));
             messages.add(new Message(mid, sid, type, content, time));
         }
+        cursor.close();
         db.close();
         return messages;
     }
@@ -687,8 +706,11 @@ public class MyDAO {
                 null, null, null);
         if (cursor.getCount() > 0) {
             Log.w("has groupmessage", ""+message.getMid());
+            cursor.close();
+            db.close();
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -709,9 +731,12 @@ public class MyDAO {
         int mid = -1;
         if (cursor.moveToLast()) {
             mid = cursor.getInt(0);
+            cursor.close();
             db.close();
             return mid;
         }
+        cursor.close();
+        db.close();
         return mid;
     }
 
@@ -734,6 +759,7 @@ public class MyDAO {
             String time = cursor.getString(cursor.getColumnIndex("time"));
             messages.add(new Message(mid, gid, sid, type, content, time));
         }
+        cursor.close();
         db.close();
         return messages;
     }
@@ -811,8 +837,11 @@ public class MyDAO {
                 null, null, null);
         if (cursor.getCount() > 0) {
             Log.w("has Request", ""+cursor.getCount());
+            cursor.close();
+            db.close();
             return true;
         }
+        cursor.close();
         db.close();
         return false;
     }
@@ -837,6 +866,7 @@ public class MyDAO {
             Request request = new Request(rid, receiver, sender, message, time, state);
             requests.add(request);
         }
+        cursor.close();
         db.close();
         return requests;
     }

@@ -115,4 +115,17 @@ public class Message {
     public void setType(int type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "mid=" + mid +
+                ", isGroup=" + isGroup +
+                ", friend='" + friend + '\'' +
+                ", group=" + group +
+                ", time='" + time + '\'' +
+                ", type=" + type +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

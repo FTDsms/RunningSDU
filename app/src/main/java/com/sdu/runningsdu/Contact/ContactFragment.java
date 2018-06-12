@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdu.runningsdu.Contact.GroupList.GroupListActivity;
 import com.sdu.runningsdu.Contact.SubPage.LabelActivity;
@@ -67,7 +68,7 @@ public class ContactFragment extends Fragment {
         myDAO = new MyDAO(getContext(), myApplication.getUser().getName());
         friends = myDAO.findAllFriend();
 
-        friendListViewAdapter = new FriendListViewAdapter(getContext(), friends);
+        friendListViewAdapter = new FriendListViewAdapter(getActivity(), friends);
         friendListViewAdapter.updateListView(friends);
     }
 
@@ -133,6 +134,8 @@ public class ContactFragment extends Fragment {
             }
         });
 
+
+
     }
 
     private void initThread() {
@@ -147,6 +150,8 @@ public class ContactFragment extends Fragment {
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
                     DataSync.syncFriend(myApplication, myDAO);
+                    friends.clear();
+                    friends.addAll(myDAO.findAllFriend());
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -164,17 +169,38 @@ public class ContactFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initData();
         initView();
+//        if (!myApplication.isTest()) {
+//            initThread();
+//        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (!myApplication.isTest()) {
-            initThread();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataSync.syncFriend(myApplication, myDAO);
+                    friends.clear();
+                    friends.addAll(myDAO.findAllFriend());
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            friendListViewAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!myApplication.isTest()) {
-            refreshThread.interrupt();
-        }
+//        if (!myApplication.isTest()) {
+//            refreshThread.interrupt();
+//        }
     }
 
 }

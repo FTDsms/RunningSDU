@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,11 +36,13 @@ import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Information.UserInfoActivity;
+import com.sdu.runningsdu.Map.NetWorkClass;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -363,5 +366,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        new Thread() {
+            @Override
+            public void run() {
+                //NetWorkClass.postJson(NetWorkClass.BuildLongLatiJson(location.getLongitude(),location.getLatitude()),"/updateLocation");
+                try {
+                    NetWorkClass.postlocation("null", "null");
+                } catch (IOException e) {
+                    Log.e("locationdemo", "ioexception");
+                }
+            }
+        }.start();
     }
+    
 }

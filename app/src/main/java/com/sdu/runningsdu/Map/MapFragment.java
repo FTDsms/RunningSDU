@@ -66,6 +66,9 @@ import java.util.HashMap;
 import java.util.List;
 import com.sdu.runningsdu.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 /**
  * Created by FTDsm on 2018/4/16.
@@ -106,6 +109,9 @@ public class MapFragment extends Fragment {
     String missionLocation[];
     HashMap<Integer, double[]> hashMap = new HashMap<>();
     AlertDialog kaishirenwuDialog;
+    String friendslongitude,friendslatitude;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -525,12 +531,18 @@ public class MapFragment extends Fragment {
                     @Override
                     public void run() {
                         try{
-                            Log.e("friendsLocation",NetWorkClass.receivelocation());
+                            Log.e("friendsLocation",NetWorkClass.receiveFriendslocation());
+                            getListPersonByArray(NetWorkClass.receiveFriendslocation());
+                            //添加他人位置
+//                            Resources r = LocationDemo.this.getResources();
+//                            Bitmap bmp= BitmapFactory.decodeResource(r, R.drawable.touxiang);
+//                            addOthersLocation(36.6736687292,117.1459498599,bmp);
                         }catch (IOException e) {
                             Log.e("locationdemo", "ioexception");
                         }
                     }
                 }.start();
+
 
                 //区域检索
 //                new Thread() {
@@ -715,6 +727,37 @@ public class MapFragment extends Fragment {
 
         super.onDestroy();
     }
+
+    //解析好友jsonarray
+    public void getListPersonByArray(String jsonString){
+        try {
+            JSONArray jsonArray=new JSONArray(jsonString);
+            Log.e("jsonArray.length()长度", jsonArray.length()+"长度");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject= (JSONObject) jsonArray.get(i);
+
+                String id = jsonObject.optString("sid");
+                friendslongitude = jsonObject.optString("longitude");
+                friendslatitude = jsonObject.optString("latitude");
+                if(!(friendslongitude.equals("null")&&friendslatitude.equals("null"))){
+                    //用sid获取头像
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+//                            Resources r = this.getResources();
+//                            Bitmap bmp= BitmapFactory.decodeResource(r, R.drawable.touxiang);
+//                            addOthersLocation((double)latitude,117.1459498599,bmp);
+
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void fandizhibianma(LatLng latLng){

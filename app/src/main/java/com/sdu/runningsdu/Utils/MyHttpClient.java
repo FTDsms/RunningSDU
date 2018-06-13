@@ -13,14 +13,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,6 +32,7 @@ import okhttp3.Response;
 public class MyHttpClient {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType PNG = MediaType.parse("image/png");
 
     public MyHttpClient() {
 

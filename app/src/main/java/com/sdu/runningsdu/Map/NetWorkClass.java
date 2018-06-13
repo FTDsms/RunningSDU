@@ -29,6 +29,22 @@ public class NetWorkClass {
 //        }.start();
 //    }
 
+    //接收好友位置
+    public static String receiveFriendslocation() throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+//        RequestBody body = RequestBody.create(JSON, json);
+        FormBody formBody = new FormBody.Builder()
+                .add("sid", DataConst.id)
+                .build();
+        Request request = new Request.Builder()
+                .url(DataConst.locationip+"/getFriendsLocations")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response.body().string();
+    }
+
+
     public static String postlocation(String longtitute, String latitute) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
 //        RequestBody body = RequestBody.create(JSON, json);
@@ -63,33 +79,6 @@ public class NetWorkClass {
 //        return response.body().string();
 //    }
 
-    //接收好友位置
-    public static String receivelocation() throws IOException {
-        OkHttpClient okHttpClient = new OkHttpClient();
-//        RequestBody body = RequestBody.create(JSON, json);
-        FormBody formBody = new FormBody.Builder()
-                .add("sid", DataConst.id)
-                .build();
-        Request request = new Request.Builder()
-                .url(DataConst.locationip+"/getFriendsLocations")
-                .post(formBody)
-                .build();
-        Response response = okHttpClient.newCall(request).execute();
-        return response.body().string();
-//        okHttpClient.newCall(request).enqueue(new Callback() {
-//            public void onFailure(Call call, IOException e) {
-//
-//            }
-//            public void onResponse(Call call, Response response) throws IOException {
-//                InputStream inputStream = response.body().byteStream();//得到图片的流
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                Message msg = new Message();
-//                msg.obj = bitmap;
-//                //handler.sendMessage(msg);
-//                return msg;
-//            }
-//        });
-    }
 
 
     public static void postJson(String json, String requeste) {

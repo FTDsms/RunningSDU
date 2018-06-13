@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -17,7 +18,13 @@ import com.sdu.runningsdu.Utils.MyHttpClient;
 
 import org.json.JSONException;
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by FTDsm on 2018/6/13.
@@ -63,7 +70,7 @@ public class DownloadImageTest extends AppCompatActivity {
                         try {
                             // 下载图片
                             bitmap[0] = MyHttpClient.downloadImage(myApplication.getIp(), myApplication.getUser().getImagePath());
-                        } catch (IOException | JSONException e) {
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                         runOnUiThread(new Runnable() {

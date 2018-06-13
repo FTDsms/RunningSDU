@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -85,15 +89,66 @@ public class UserInfoActivity extends AppCompatActivity {
         setHeadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 点击弹出popueWindow
-                // 上传头像（本地相册、相机拍摄）
-
                 // test 下载头像
-                Intent intent = new Intent(UserInfoActivity.this, DownloadImageTest.class);
-                startActivity(intent);
+//                Intent intent = new Intent(UserInfoActivity.this, DownloadImageTest.class);
+//                startActivity(intent);
 
+                // 点击弹出popueWindow 上传头像（从相册选择图片、拍照、取消）
+                showPopupWindow();
             }
         });
+
+    }
+
+    private void showPopupWindow() {
+        View popView = View.inflate(this, R.layout.popup_window, null);
+        Button album = popView.findViewById(R.id.btn_pop_album);
+        Button camera = popView.findViewById(R.id.btn_pop_camera);
+        Button cancel = popView.findViewById(R.id.btn_pop_cancel);
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels / 3;
+
+        final PopupWindow popupWindow = new PopupWindow(popView, width, height);
+//        popupWindow.setAnimationStyle(R.style.an);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+
+        album.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 从相册中选择图片
+                Intent intent = new Intent();
+                startActivity(intent);
+            }
+        });
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 拍照
+                Intent intent = new Intent();
+                startActivity(intent);
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 取消
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+                layoutParams.alpha = 1.0f;
+                getWindow().setAttributes(layoutParams);
+            }
+        });
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.alpha = 0.7f;
+        getWindow().setAttributes(layoutParams);
+        popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 50);
 
     }
 

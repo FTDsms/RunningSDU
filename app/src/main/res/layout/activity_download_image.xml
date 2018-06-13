@@ -37,6 +37,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:gravity="center"
+            android:text="下载图片"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:visibility="visible"/>

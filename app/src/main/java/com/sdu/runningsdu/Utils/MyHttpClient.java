@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -685,33 +687,43 @@ public class MyHttpClient {
         return friends;
     }
 
-    public static Bitmap downloadImage(String url, String imagePath) throws IOException, JSONException {
+    /**
+     * 下载图片
+     * @param url
+     * @param imagePath 头像路径
+     * @return
+     * @throws IOException
+     */
+    public static Bitmap downloadImage(String url, String imagePath) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
-        HttpUrl httpUrl = new HttpUrl.Builder()
-                .host(url)
-                .addPathSegment(url+"/show")
-                .addQueryParameter("image", imagePath)
-                .build();
         Request request = new Request.Builder()
-                .url(httpUrl)
+                .url(url+"/show?fileName="+imagePath)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        Log.i("download image", response.body().toString());
         InputStream is = response.body().byteStream();
         Bitmap bitmap = BitmapFactory.decodeStream(is);
+//        byte[] bytes = response.body().bytes();
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return bitmap;
     }
 
-    public static void uploadImage(String url,String imagePath) throws IOException, JSONException {
+
+    public static String uploadImage(String url, String sid, Bitmap bitmap) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes = baos.toByteArray();
         FormBody formBody = new FormBody.Builder()
-                .add("imagePath", imagePath)
+                .add("sid", sid)
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/uploadImage")
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
+        JSONObject jsonObject = new JSONObject(response.body().toString());
+        String image = jsonObject.optString("image");
+        return image;
     }
 
     public static String post(String url, String json) throws IOException {

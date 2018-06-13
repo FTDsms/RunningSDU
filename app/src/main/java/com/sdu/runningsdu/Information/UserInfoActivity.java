@@ -21,9 +21,13 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.R;
-import com.sdu.runningsdu.Test.DownloadImageTest;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -127,16 +131,16 @@ public class UserInfoActivity extends AppCompatActivity {
                 // 从相册中选择图片
                 PictureSelector.create(UserInfoActivity.this)
                         .openGallery(PictureMimeType.ofImage())
-//                        .theme()
-                        .maxSelectNum(1)
+                        .isCamera(false)
                         .imageSpanCount(4)
                         .previewImage(true)
                         .enableCrop(true)
                         .isGif(false)
                         .withAspectRatio(1, 1)
-                        .rotateEnabled(true)
-                        .isDragFrame(true)
+                        .rotateEnabled(false)
+//                        .isDragFrame(true)
                         .previewEggs(true)
+                        .selectionMode(PictureConfig.SINGLE)
                         .forResult(PictureConfig.CHOOSE_REQUEST);
 
                 popupWindow.dismiss();
@@ -178,21 +182,43 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片、视频、音频选择结果回调
-                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-                    if (selectList.get(0).isCut()) {
-                        Log.d("cut path", selectList.get(0).getCutPath());
-                    } else {
-                        Log.d("path", selectList.get(0).getPath());
-                    }
                     // 例如 LocalMedia 里面返回三种path
                     // 1.media.getPath(); 为原图path
                     // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true  注意：音视频除外
                     // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true  注意：音视频除外
                     // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                    if (selectList.get(0).isCut()) {
+                        final String imagePath = selectList.get(0).getCutPath();
+                        Log.e("cut path", imagePath);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                } catch (IOException | JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    } else {
+                        final String imagePath = selectList.get(0).getPath();
+                        Log.e("path", imagePath);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                } catch (IOException | JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
                     break;
             }
         }

@@ -707,11 +707,9 @@ public class MyHttpClient {
     }
 
 
-    public static String uploadImage(String url, String sid, Bitmap bitmap) throws IOException, JSONException {
+    public static String uploadImage(String url, String sid, String imagePath) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] bytes = baos.toByteArray();
+
         FormBody formBody = new FormBody.Builder()
                 .add("sid", sid)
                 .build();

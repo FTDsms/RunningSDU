@@ -42,15 +42,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "(sid varchar(20) primary key, " +
                 "name varchar(255), " +
                 "password varchar(255), " +
-                "image varchar(255))";
+                "imagePath varchar(255), " +
+                "image blob)";
         sqLiteDatabase.execSQL(userSQL);
         Log.d("database", "create table user");
 
         String friendSQL = "create table if not exists friend " +
                 "(sid varchar(20) primary key, " +
                 "name varchar(255), " +
-                "image varchar(255), " +
-                "unread integer)";
+                "imagePath varchar(255), " +
+                "unread integer, " +
+                "image blob)";
         sqLiteDatabase.execSQL(friendSQL);
         Log.d("database", "create table friend");
 
@@ -58,8 +60,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "(gid integer primary key, " +
                 "name varchar(255), " +
                 "creator varchar(255), " +
-                "image varchar(255), " +
-                "unread varchar(255))";
+                "imagePath varchar(255), " +
+                "unread varchar(255), " +
+                "image blob)";
         sqLiteDatabase.execSQL(groupSQL);
         Log.d("database", "create table groups");
 

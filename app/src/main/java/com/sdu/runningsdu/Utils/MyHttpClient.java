@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -689,8 +691,8 @@ public class MyHttpClient {
     /**
      * 下载图片
      * @param url
-     * @param imagePath 头像路径
-     * @return
+     * @param imagePath 图片路径
+     * @return Bitmap
      * @throws IOException
      */
     public static Bitmap downloadImage(String url, String imagePath) throws IOException {
@@ -706,21 +708,33 @@ public class MyHttpClient {
         return bitmap;
     }
 
-
+    /**
+     * 上传图片
+     * @param url
+     * @param sid
+     * @param imagePath 图片路径
+     * @return 新图片的路径
+     * @throws IOException
+     * @throws JSONException
+     */
     public static String uploadImage(String url, String sid, String imagePath) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
-
-        FormBody formBody = new FormBody.Builder()
-                .add("sid", sid)
+        Log.d("imagePath", imagePath);
+        File file = new File(imagePath);
+        RequestBody image = RequestBody.create(PNG, file);
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("sid", sid)
+                .addFormDataPart("file", imagePath, image)
                 .build();
         Request request = new Request.Builder()
                 .url(url+"/uploadImage")
-                .post(formBody)
+                .post(requestBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
         JSONObject jsonObject = new JSONObject(response.body().toString());
-        String image = jsonObject.optString("image");
-        return image;
+        Log.d("response", response.body().toString());
+        return jsonObject.optString("image");
     }
 
     public static String post(String url, String json) throws IOException {

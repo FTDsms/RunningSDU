@@ -60,7 +60,7 @@ public class MyDAO {
         objects[1] = user.getName();
         objects[2] = user.getPassword();
         objects[3] = user.getImagePath();
-        String sql = "insert into user(sid, name, password, image) values(?,?,?,?)";
+        String sql = "insert into user(sid, name, password, imagePath) values(?,?,?,?)";
         db.execSQL(sql, objects);
 //        db.close();
         Log.d("database", "add user: " + user.getName());
@@ -89,7 +89,7 @@ public class MyDAO {
         objects[1] = user.getPassword();
         objects[2] = user.getImagePath();
         objects[3] = user.getSid();
-        String sql = "update user set name=?, password=?, image=? where sid=?";
+        String sql = "update user set name=?, password=?, imagePath=? where sid=?";
         db.execSQL(sql, objects);
 //        db.close();
         Log.d("database", "update user: " + user.getName());
@@ -121,7 +121,7 @@ public class MyDAO {
         User user = new User();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("user",
-                new String[]{"sid", "name", "password", "image"},
+                new String[]{"sid", "name", "password", "imagePath"},
                 "sid = ?",
                 new String[]{sid},
                 null, null, null);
@@ -129,7 +129,7 @@ public class MyDAO {
             user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             user.setName(cursor.getString(cursor.getColumnIndex("name")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            user.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
         }
         Log.d("database", "find user: " + user.toString());
         cursor.close();
@@ -145,14 +145,14 @@ public class MyDAO {
         List<User> users = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("user",
-                new String[]{"sid", "name", "password", "image"},
+                new String[]{"sid", "name", "password", "imagePath"},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             User user = new User();
             user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             user.setName(cursor.getString(cursor.getColumnIndex("name")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            user.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
             Log.d("database", "find user: " + user.toString());
             users.add(user);
         }
@@ -172,7 +172,7 @@ public class MyDAO {
         objects[1] = friend.getName();
         objects[2] = friend.getImagePath();
         objects[3] = 0;
-        String sql = "insert into friend(sid, name, image, unread) values(?,?,?,?)";
+        String sql = "insert into friend(sid, name, imagePath, unread) values(?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add friend: " + friend.getName());
 //        db.close();
@@ -189,7 +189,7 @@ public class MyDAO {
             objects[0] = friend.getSid();
             objects[1] = friend.getName();
             objects[2] = friend.getImagePath();
-            String sql = "insert into friend(sid, name, image) values(?,?,?)";
+            String sql = "insert into friend(sid, name, imagePath) values(?,?,?)";
             db.execSQL(sql, objects);
             Log.d("database", "add friend: " + friend.getName());
         }
@@ -218,7 +218,7 @@ public class MyDAO {
         objects[0] = friend.getName();
         objects[1] = friend.getImagePath();
         objects[2] = friend.getSid();
-        String sql = "update friend set name=?, image=? where sid=?";
+        String sql = "update friend set name=?, imagePath=? where sid=?";
         db.execSQL(sql, objects);
 //        db.close();
         Log.d("database", "update friend: " + friend.getName());
@@ -269,14 +269,14 @@ public class MyDAO {
         Friend friend = new Friend();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
-                new String[]{"sid", "name", "image", "unread"},
+                new String[]{"sid", "name", "imagePath", "unread"},
                 "sid = ?",
                 new String[]{sid},
                 null, null, null);
         if (cursor.moveToNext()) {
             friend.setSid(sid);
             friend.setName(cursor.getString(cursor.getColumnIndex("name")));
-            friend.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
@@ -292,13 +292,13 @@ public class MyDAO {
         List<Friend> friends = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
-                new String[]{"sid", "name", "image", "unread"},
+                new String[]{"sid", "name", "imagePath", "unread"},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             Friend friend = new Friend();
             friend.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             friend.setName(cursor.getString(cursor.getColumnIndex("name")));
-            friend.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             friends.add(friend);
         }
@@ -319,7 +319,7 @@ public class MyDAO {
         objects[2] = group.getCreator();
         objects[3] = group.getImagePath();
         objects[4] = 0;
-        String sql = "insert into groups(gid, name, creator, image, unread) values(?,?,?,?,?)";
+        String sql = "insert into groups(gid, name, creator, imagePath, unread) values(?,?,?,?,?)";
         db.execSQL(sql, objects);
         Log.d("database", "add group: " + group.getName());
 //        db.close();
@@ -337,7 +337,7 @@ public class MyDAO {
             objects[1] = group.getName();
             objects[2] = group.getCreator();
             objects[3] = group.getImagePath();
-            String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
+            String sql = "insert into groups(gid, name, creator, imagePath) values(?,?,?,?)";
             db.execSQL(sql, objects);
             Log.d("database", "add group: " + group.getName());
         }
@@ -367,7 +367,7 @@ public class MyDAO {
         objects[1] = group.getCreator();
         objects[2] = group.getImagePath();
         objects[3] = group.getGid();
-        String sql = "update groups set name=?, creator=?, image=? where gid=?";
+        String sql = "update groups set name=?, creator=?, imagePath=? where gid=?";
         db.execSQL(sql, objects);
 //        db.close();
         Log.d("database", "update group: " + group.getName());
@@ -418,13 +418,13 @@ public class MyDAO {
         Group group = new Group();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groups",
-                new String[]{"gid", "name", "creator", "image", "unread"},
+                new String[]{"gid", "name", "creator", "imagePath", "unread"},
                 null, null, null, null, null);
         if (cursor.moveToNext()) {
             group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
             group.setName(cursor.getString(cursor.getColumnIndex("name")));
             group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
-            group.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            group.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
@@ -440,14 +440,14 @@ public class MyDAO {
         List<Group> groups = new ArrayList<>();
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groups",
-                new String[]{"gid", "name", "creator", "image", "unread"},
+                new String[]{"gid", "name", "creator", "imagePath", "unread"},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             Group group = new Group();
             group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
             group.setName(cursor.getString(cursor.getColumnIndex("name")));
             group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
-            group.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
+            group.setImagePath(cursor.getString(cursor.getColumnIndex("imagePath")));
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             groups.add(group);
         }
@@ -871,6 +871,237 @@ public class MyDAO {
         cursor.close();
 //        db.close();
         return requests;
+    }
+
+    /**
+     * 添加用户头像
+     * @param sid
+     * @param image
+     */
+    public void addUserImage(String sid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = sid;
+        objects[1] = image;
+        String sql = "insert into user(sid, image) values(?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add user image");
+//        db.close();
+    }
+
+    /**
+     * 更新用户头像
+     * @param sid
+     * @param image
+     */
+    public void updateUserImage(String sid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = image;
+        objects[1] = sid;
+        String sql = "update user set image=? where sid=?";
+        db.execSQL(sql, objects);
+//        db.close();
+        Log.d("database", "update user image");
+    }
+
+    /**
+     * 判断用户头像路径是否相同
+     * @param sid
+     * @param imagePath
+     * @return
+     */
+    public boolean equalsUserImagePath(String sid, String imagePath) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                new String[]{"imagePath"},
+                "sid",
+                new String[]{sid}, null, null, null);
+        if (cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
+                Log.w("equals user image path", "true");
+                cursor.close();
+//                db.close();
+                return true;
+            }
+        }
+        Log.w("equals user image path", "false");
+        cursor.close();
+//        db.close();
+        return false;
+    }
+
+    /**
+     * 查询用户头像
+     * @param sid
+     * @return 图片byte数组
+     */
+    public byte[] findUserImage(String sid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("user",
+                new String[]{"image"},
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
+        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+        Log.d("database", "find user image");
+        cursor.close();
+//        db.close();
+        return bytes;
+    }
+
+    /**
+     * 添加好友头像
+     * @param sid
+     * @param image
+     */
+    public void addFriendImage(String sid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = sid;
+        objects[1] = image;
+        String sql = "insert into friend(sid, image) values(?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friend image");
+//        db.close();
+    }
+
+    /**
+     * 更新好友头像
+     * @param sid
+     * @param image
+     */
+    public void updateFriendImage(String sid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = image;
+        objects[1] = sid;
+        String sql = "update friend set image=? where sid=?";
+        db.execSQL(sql, objects);
+//        db.close();
+        Log.d("database", "update friend image");
+    }
+
+    /**
+     * 判断好友头像路径是否相同
+     * @param sid
+     * @param imagePath
+     * @return
+     */
+    public boolean equalsFriendImagePath(String sid, String imagePath) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friend",
+                new String[]{"imagePath"},
+                "sid",
+                new String[]{sid}, null, null, null);
+        if (cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
+                Log.w("equals friend imagePath", "true");
+                cursor.close();
+//                db.close();
+                return true;
+            }
+        }
+        Log.w("equals friend imagePath", "false");
+        cursor.close();
+//        db.close();
+        return false;
+    }
+
+    /**
+     * 查询好友头像
+     * @param sid
+     * @return 图片byte数组
+     */
+    public byte[] findFriendImage(String sid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("friend",
+                new String[]{"image"},
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
+        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+        Log.d("database", "find friend image");
+        cursor.close();
+//        db.close();
+        return bytes;
+    }
+
+    /**
+     * 添加群组头像
+     * @param gid
+     * @param image
+     */
+    public void addGroupImage(String gid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = gid;
+        objects[1] = image;
+        String sql = "insert into groups(gid, image) values(?,?)";
+        db.execSQL(sql, objects);
+        Log.d("database", "add friend image");
+//        db.close();
+    }
+
+    /**
+     * 更新群组头像
+     * @param gid
+     * @param image
+     */
+    public void updateGroupImage(int gid, byte[] image) {
+        SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
+        Object[] objects = new Object[2];
+        objects[0] = image;
+        objects[1] = gid;
+        String sql = "update groups set image=? where gid=?";
+        db.execSQL(sql, objects);
+//        db.close();
+        Log.d("database", "update groups image");
+    }
+
+    /**
+     * 判断群组头像路径是否相同
+     * @param gid
+     * @param imagePath
+     * @return
+     */
+    public boolean equalsGroupImagePath(int gid, String imagePath) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groups",
+                new String[]{"imagePath"},
+                "gid",
+                new String[]{Integer.toString(gid)}, null, null, null);
+        if (cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
+                Log.w("equals groups imagePath", "true");
+                cursor.close();
+//                db.close();
+                return true;
+            }
+        }
+        Log.w("equals groups imagePath", "false");
+        cursor.close();
+//        db.close();
+        return false;
+    }
+
+    /**
+     * 查询群组头像
+     * @param gid
+     * @return 图片byte数组
+     */
+    public byte[] findGroupImage(int gid) {
+        SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
+        Cursor cursor = db.query("groups",
+                new String[]{"image"},
+                "gid = ?",
+                new String[]{Integer.toString(gid)},
+                null, null, null);
+        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+        Log.d("database", "find groups image");
+        cursor.close();
+//        db.close();
+        return bytes;
     }
 
 }

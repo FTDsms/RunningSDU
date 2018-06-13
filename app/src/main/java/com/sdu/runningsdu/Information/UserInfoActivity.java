@@ -1,6 +1,8 @@
 package com.sdu.runningsdu.Information;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -27,6 +30,7 @@ import com.sdu.runningsdu.Utils.MyHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -152,6 +156,10 @@ public class UserInfoActivity extends AppCompatActivity {
                 // 拍照
                 PictureSelector.create(UserInfoActivity.this)
                         .openCamera(PictureMimeType.ofImage())
+                        .enableCrop(true)
+                        .withAspectRatio(1, 1)
+                        .rotateEnabled(false)
+                        .previewEggs(true)
                         .forResult(PictureConfig.CHOOSE_REQUEST);
 
                 popupWindow.dismiss();
@@ -199,7 +207,12 @@ public class UserInfoActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 try {
-                                    MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                    byte[] bytes = baos.toByteArray();
+                                    String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                    Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                                 } catch (IOException | JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -212,7 +225,16 @@ public class UserInfoActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 try {
-                                    MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                    // 获取图片转成byte数组
+                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                    byte[] bytes = baos.toByteArray();
+                                    // 写入数据库
+
+                                    // 上传头像
+                                    String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
+                                    Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                                 } catch (IOException | JSONException e) {
                                     e.printStackTrace();
                                 }

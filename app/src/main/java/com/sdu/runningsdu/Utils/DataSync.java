@@ -169,5 +169,37 @@ public class DataSync {
         }
     }
 
+    /**
+     * 同步用户头像
+     * */
+    public static void syncUserImage(MyApplication myApplication, MyDAO myDAO) {
+        String ip = myApplication.getIp();
+        String sid = myApplication.getUser().getSid();
+        try {
+            String imagePath = MyHttpClient.findUserBySid(ip, sid).getImagePath();
+            if (!myDAO.equalsUserImagePath(sid, imagePath)) {
+
+//                myDAO.updateUserImage(sid, );
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 同步好友头像
+     * */
+    public static void syncFriendImage(MyApplication myApplication, MyDAO myDAO) {
+
+    }
+
+    /**
+     * 同步群组头像
+     * */
+    public static void syncGroupImage(MyApplication myApplication, MyDAO myDAO) {
+
+    }
+
 
 }

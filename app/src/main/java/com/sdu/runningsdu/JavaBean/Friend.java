@@ -1,6 +1,6 @@
 package com.sdu.runningsdu.JavaBean;
 
-import java.util.List;
+import android.graphics.Bitmap;
 
 import me.zhouzhuo.zzletterssidebar.anotation.Letter;
 import me.zhouzhuo.zzletterssidebar.entity.SortModel;
@@ -17,7 +17,9 @@ public class Friend extends SortModel{
     @Letter(isSortField = true)
     private String name;
 
-    private String image; //TODO: head_image
+    private String imagePath; //TODO: head_image
+
+    private Bitmap image;
 
     private int unread;
 
@@ -25,10 +27,10 @@ public class Friend extends SortModel{
 
     }
 
-    public Friend(String sid, String name, String image) {
+    public Friend(String sid, String name, String imagePath) {
         this.sid = sid;
         this.name = name;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     public Friend(String name) {
@@ -51,12 +53,12 @@ public class Friend extends SortModel{
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getUnread() {
@@ -72,7 +74,7 @@ public class Friend extends SortModel{
         return "Friend{" +
                 "sid='" + sid + '\'' +
                 ", name='" + name + '\'' +
-                ", image='" + image + '\'' +
+                ", imagePath='" + imagePath + '\'' +
                 ", unread=" + unread +
                 '}';
     }

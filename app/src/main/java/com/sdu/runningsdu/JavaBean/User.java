@@ -1,6 +1,6 @@
 package com.sdu.runningsdu.JavaBean;
 
-import java.util.List;
+import android.graphics.Bitmap;
 
 /**
  * Created by FTDsm on 2018/5/14.
@@ -14,17 +14,19 @@ public class User {
 
     private String password;
 
-    private String image; //TODO: head_image
+    private String imagePath; //TODO: head_image
+
+    private Bitmap image;
 
     public User() {
 
     }
 
-    public User(String sid, String name, String password, String image) {
+    public User(String sid, String name, String password, String imagePath) {
         this.sid = sid;
         this.name = name;
         this.password = password;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     public String getSid() {
@@ -51,12 +53,12 @@ public class User {
         this.password = password;
     }
 
-    public String getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class User {
                 "sid='" + sid + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", image='" + image + '\'' +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }

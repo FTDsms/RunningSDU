@@ -1,5 +1,7 @@
 package com.sdu.runningsdu.Utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.sdu.runningsdu.JavaBean.Friend;
@@ -11,10 +13,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -681,8 +685,34 @@ public class MyHttpClient {
         return friends;
     }
 
-//    public static boolean uploadImage(String url,String sid,)
-//    public static boolean downloadImage(String url,String sid,)
+    public static Bitmap downloadImage(String url, String imagePath) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl httpUrl = new HttpUrl.Builder()
+                .host(url)
+                .addPathSegment(url+"/show")
+                .addQueryParameter("image", imagePath)
+                .build();
+        Request request = new Request.Builder()
+                .url(httpUrl)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        Log.i("download image", response.body().toString());
+        InputStream is = response.body().byteStream();
+        Bitmap bitmap = BitmapFactory.decodeStream(is);
+        return bitmap;
+    }
+
+    public static void uploadImage(String url,String imagePath) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("imagePath", imagePath)
+                .build();
+        Request request = new Request.Builder()
+                .url(url+"/uploadImage")
+                .post(formBody)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+    }
 
     public static String post(String url, String json) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();

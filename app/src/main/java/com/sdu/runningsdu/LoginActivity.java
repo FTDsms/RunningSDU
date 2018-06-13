@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
-        //TODO: 权限申请
+        // 权限申请
         requestForPermissions();
         myApplication = (MyApplication) getApplication();
 
@@ -268,7 +268,7 @@ public class LoginActivity extends AppCompatActivity{
                                 user.setSid(userObject.optString("sid"));
                                 user.setName(userObject.optString("name"));
                                 user.setPassword(userObject.optString("password"));
-                                user.setImage(userObject.optString("image"));
+                                user.setImagePath(userObject.optString("image"));
 //                                User user = initUser();
                                 myApplication.setUser(user);
 

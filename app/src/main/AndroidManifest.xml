@@ -169,6 +169,10 @@
             android:name=".Contact.GroupList.CreateGroupActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".Test.DownloadImageTest"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
     </application>
 

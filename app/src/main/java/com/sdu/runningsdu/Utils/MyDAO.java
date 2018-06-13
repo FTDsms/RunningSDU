@@ -59,7 +59,7 @@ public class MyDAO {
         objects[0] = user.getSid();
         objects[1] = user.getName();
         objects[2] = user.getPassword();
-        objects[3] = user.getImage();
+        objects[3] = user.getImagePath();
         String sql = "insert into user(sid, name, password, image) values(?,?,?,?)";
         db.execSQL(sql, objects);
 //        db.close();
@@ -87,7 +87,7 @@ public class MyDAO {
         Object[] objects = new Object[4];
         objects[0] = user.getName();
         objects[1] = user.getPassword();
-        objects[2] = user.getImage();
+        objects[2] = user.getImagePath();
         objects[3] = user.getSid();
         String sql = "update user set name=?, password=?, image=? where sid=?";
         db.execSQL(sql, objects);
@@ -129,7 +129,7 @@ public class MyDAO {
             user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             user.setName(cursor.getString(cursor.getColumnIndex("name")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            user.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
         }
         Log.d("database", "find user: " + user.toString());
         cursor.close();
@@ -152,7 +152,7 @@ public class MyDAO {
             user.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             user.setName(cursor.getString(cursor.getColumnIndex("name")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
-            user.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            user.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
             Log.d("database", "find user: " + user.toString());
             users.add(user);
         }
@@ -170,7 +170,7 @@ public class MyDAO {
         Object[] objects = new Object[4];
         objects[0] = friend.getSid();
         objects[1] = friend.getName();
-        objects[2] = friend.getImage();
+        objects[2] = friend.getImagePath();
         objects[3] = 0;
         String sql = "insert into friend(sid, name, image, unread) values(?,?,?,?)";
         db.execSQL(sql, objects);
@@ -188,7 +188,7 @@ public class MyDAO {
             Object[] objects = new Object[3];
             objects[0] = friend.getSid();
             objects[1] = friend.getName();
-            objects[2] = friend.getImage();
+            objects[2] = friend.getImagePath();
             String sql = "insert into friend(sid, name, image) values(?,?,?)";
             db.execSQL(sql, objects);
             Log.d("database", "add friend: " + friend.getName());
@@ -216,7 +216,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getWritableDatabase();
         Object[] objects = new Object[3];
         objects[0] = friend.getName();
-        objects[1] = friend.getImage();
+        objects[1] = friend.getImagePath();
         objects[2] = friend.getSid();
         String sql = "update friend set name=?, image=? where sid=?";
         db.execSQL(sql, objects);
@@ -276,7 +276,7 @@ public class MyDAO {
         if (cursor.moveToNext()) {
             friend.setSid(sid);
             friend.setName(cursor.getString(cursor.getColumnIndex("name")));
-            friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
@@ -298,7 +298,7 @@ public class MyDAO {
             Friend friend = new Friend();
             friend.setSid(cursor.getString(cursor.getColumnIndex("sid")));
             friend.setName(cursor.getString(cursor.getColumnIndex("name")));
-            friend.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            friend.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
             friend.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             friends.add(friend);
         }
@@ -317,7 +317,7 @@ public class MyDAO {
         objects[0] = group.getGid();
         objects[1] = group.getName();
         objects[2] = group.getCreator();
-        objects[3] = group.getImage();
+        objects[3] = group.getImagePath();
         objects[4] = 0;
         String sql = "insert into groups(gid, name, creator, image, unread) values(?,?,?,?,?)";
         db.execSQL(sql, objects);
@@ -336,7 +336,7 @@ public class MyDAO {
             objects[0] = group.getGid();
             objects[1] = group.getName();
             objects[2] = group.getCreator();
-            objects[3] = group.getImage();
+            objects[3] = group.getImagePath();
             String sql = "insert into groups(gid, name, creator, image) values(?,?,?,?)";
             db.execSQL(sql, objects);
             Log.d("database", "add group: " + group.getName());
@@ -365,7 +365,7 @@ public class MyDAO {
         Object[] objects = new Object[4];
         objects[0] = group.getName();
         objects[1] = group.getCreator();
-        objects[2] = group.getImage();
+        objects[2] = group.getImagePath();
         objects[3] = group.getGid();
         String sql = "update groups set name=?, creator=?, image=? where gid=?";
         db.execSQL(sql, objects);
@@ -424,7 +424,7 @@ public class MyDAO {
             group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
             group.setName(cursor.getString(cursor.getColumnIndex("name")));
             group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
-            group.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            group.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
         }
         cursor.close();
@@ -447,7 +447,7 @@ public class MyDAO {
             group.setGid(Integer.parseInt(cursor.getString(cursor.getColumnIndex("gid"))));
             group.setName(cursor.getString(cursor.getColumnIndex("name")));
             group.setCreator(cursor.getString(cursor.getColumnIndex("creator")));
-            group.setImage(cursor.getString(cursor.getColumnIndex("image")));
+            group.setImagePath(cursor.getString(cursor.getColumnIndex("image")));
             group.setUnread(cursor.getInt(cursor.getColumnIndex("unread")));
             groups.add(group);
         }

@@ -1,5 +1,7 @@
 package com.sdu.runningsdu.JavaBean;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 import me.zhouzhuo.zzletterssidebar.anotation.Letter;
@@ -21,7 +23,9 @@ public class Group extends SortModel {
 
     private List<String> members;
 
-    private String image;
+    private String imagePath;
+
+    private Bitmap image;
 
     private int unread;
 
@@ -29,11 +33,11 @@ public class Group extends SortModel {
 
     }
 
-    public Group(int gid, String name, String creator, String image) {
+    public Group(int gid, String name, String creator, String imagePath) {
         this.gid = gid;
         this.name = name;
         this.creator = creator;
-        this.image = image;
+        this.imagePath = imagePath;
     }
 
     public int getGid() {
@@ -68,12 +72,12 @@ public class Group extends SortModel {
         this.members = members;
     }
 
-    public String getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getUnread() {
@@ -90,7 +94,7 @@ public class Group extends SortModel {
                 "gid=" + gid +
                 ", name='" + name + '\'' +
                 ", creator='" + creator + '\'' +
-                ", image='" + image + '\'' +
+                ", imagePath='" + imagePath + '\'' +
                 ", unread=" + unread +
                 '}';
     }

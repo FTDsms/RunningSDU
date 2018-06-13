@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Test.DownloadImageTest;
 import com.sdu.runningsdu.Utils.MyApplication;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -84,7 +85,12 @@ public class UserInfoActivity extends AppCompatActivity {
         setHeadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 点击上传头像
+                // 点击弹出popueWindow
+                // 上传头像（本地相册、相机拍摄）
+
+                // test 下载头像
+                Intent intent = new Intent(UserInfoActivity.this, DownloadImageTest.class);
+                startActivity(intent);
 
             }
         });

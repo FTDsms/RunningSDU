@@ -104,7 +104,7 @@ public class MapFragment extends Fragment {
     LatLng last = new LatLng(0, 0);//上一个定位点
     //MapStatus.Builder builder;
 
-    boolean jieshourenwu = false;
+    //boolean jieshourenwu = false;
     int didian;//任务地点
     String missionLocation[];
     HashMap<Integer, double[]> hashMap = new HashMap<>();
@@ -190,11 +190,11 @@ public class MapFragment extends Fragment {
         missionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!jieshourenwu){
+                if(!DataConst.jieshourenwu){
                     dia1 = new AlertDialog.Builder(getActivity()).setTitle("是否接受任务？")
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    jieshourenwu = true;
+                                    DataConst.jieshourenwu = true;
                                     dia2 = new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
                                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -206,7 +206,7 @@ public class MapFragment extends Fragment {
                             })
                             .show();
                 }
-                if(jieshourenwu) {
+                if(DataConst.jieshourenwu) {
                     dia2 = new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -215,7 +215,6 @@ public class MapFragment extends Fragment {
                             })
                             .show();
                 }
-
             }
         });
 
@@ -326,7 +325,7 @@ public class MapFragment extends Fragment {
             new AlertDialog.Builder(getActivity()).setTitle("任务完成")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            jieshourenwu = false;
+                            DataConst.jieshourenwu = false;
                         }
                     })
                     .show();
@@ -335,7 +334,7 @@ public class MapFragment extends Fragment {
             new AlertDialog.Builder(getActivity()).setTitle("任务完成")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            jieshourenwu = false;
+                            DataConst.jieshourenwu = false;
                         }
                     })
                     .show();
@@ -435,7 +434,7 @@ public class MapFragment extends Fragment {
             if (location == null || mMapView == null)
                 return;
 
-            if(jieshourenwu) {
+            if(DataConst.jieshourenwu) {
                 for(int a = 0;a<missionLocation.length;a++){
 
                     if(Math.abs(location.getLongitude()-hashMap.get(a)[0])<=0.0003 && Math.abs(location.getLatitude()-hashMap.get(a)[1])<=0.0003) {

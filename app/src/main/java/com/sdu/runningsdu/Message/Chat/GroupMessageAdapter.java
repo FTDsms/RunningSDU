@@ -71,7 +71,7 @@ public class GroupMessageAdapter extends ArrayAdapter<Message> {
             viewHolder.rightLayout.setVisibility(View.VISIBLE);
             viewHolder.leftLayout.setVisibility(View.GONE);
             byte[] bytes = myDAO.findUserImage(myApplication.getUser().getSid());
-            viewHolder.leftImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            viewHolder.rightImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             viewHolder.rightMsg.setText(message.getContent());
             viewHolder.rightName.setText(myApplication.getUser().getName());
         }

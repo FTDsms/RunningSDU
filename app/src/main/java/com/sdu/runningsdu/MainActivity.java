@@ -1,5 +1,6 @@
 package com.sdu.runningsdu;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -36,11 +38,13 @@ import com.sdu.runningsdu.Find.FindFragment;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.JavaBean.User;
+import com.sdu.runningsdu.Map.DataConst;
 import com.sdu.runningsdu.Map.MapFragment;
 import com.sdu.runningsdu.Information.UserInfoActivity;
 import com.sdu.runningsdu.Map.NetWorkClass;
 import com.sdu.runningsdu.Message.MessageFragment;
 import com.sdu.runningsdu.Utils.CircleDrawable;
+import com.sdu.runningsdu.Utils.DataSync;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.Utils.MyDAO;
 
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private TextView toolbarTitle;
+
+    private CircleImageView imageView;
 
     private MyApplication myApplication;
 
@@ -292,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         userName.setText(user.getName());
         TextView userSid = navigationView.getHeaderView(0).findViewById(R.id.user_sid);
         userSid.setText(user.getSid());
-        CircleImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+        imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
         byte[] bytes1 = myDAO.findUserImage(user.getSid());
         imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes1, 0, bytes1.length));
 
@@ -374,6 +380,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!myApplication.isTest()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final byte[] bytes = myDAO.findUserImage(myApplication.getUser().getSid());
+                    Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                    int size = 44;
+                    final CircleDrawable circleDrawable = new CircleDrawable(drawable, MainActivity.this, size);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            toolbar.setNavigationIcon(circleDrawable);
+                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                        }
+                    });
+                }
+            }).start();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         new Thread() {
@@ -388,5 +417,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
     }
-    
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK) //从handgesture返回的回调
+        {
+            //连接服务器
+            DataConst.jieshourenwu = false;
+
+            new AlertDialog.Builder(MainActivity.this).setTitle("任务完成！").show();
+        }
+        if (requestCode == 1 && resultCode == 4) { //从unityactivity返回的回调
+            //Log.d("dddddddddd","lalala");
+            //textview.setText(s);
+            DataConst.jieshourenwu = false;
+
+            new AlertDialog.Builder(MainActivity.this).setTitle("任务完成！").show();
+        }
+
+    }
+
 }

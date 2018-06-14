@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<com.example.yyy.myapplication2.AutoFitTextureView-->
-        <!--android:id="@+id/texture"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="center" />-->
-
     <com.sdu.runningsdu.Map.AutoFitTextureView
+        android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/texture"
-        android:orientation="vertical"/>
+        android:layout_gravity="center" />
+
+    <!--<com.sdu.runningsdu.Map.AutoFitTextureView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/texture"-->
+        <!--android:orientation="vertical"/>-->
 
     <!--<ImageButton-->
         <!--android:id="@+id/capture"-->

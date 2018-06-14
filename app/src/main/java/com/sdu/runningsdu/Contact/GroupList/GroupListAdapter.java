@@ -2,6 +2,7 @@ package com.sdu.runningsdu.Contact.GroupList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.sdu.runningsdu.JavaBean.Group;
 import com.sdu.runningsdu.Message.Chat.GroupChatActivity;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.List;
 
@@ -32,10 +35,16 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
 
     private Context context;
 
+    private MyApplication myApplication;
+
+    private MyDAO myDAO;
+
     public GroupListAdapter(Context context, int textViewResourceId, List<Group> groups) {
         super(context, textViewResourceId, groups);
         resourceId = textViewResourceId;
         this.context = context;
+        myApplication = (MyApplication) context.getApplicationContext();
+        myDAO = new MyDAO(context, myApplication.getUser().getName());
     }
 
     @NonNull
@@ -55,7 +64,8 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
             view = convertView;
             viewHolder = (GroupListAdapter.ViewHolder) view.getTag();
         }
-        viewHolder.image.setImageResource(R.drawable.head_image);
+        byte[] bytes = myDAO.findGroupImage(group.getGid());
+        viewHolder.image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         viewHolder.groupName.setText(group.getName());
         viewHolder.group.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,6 +2,8 @@ package com.sdu.runningsdu;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -46,6 +48,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
@@ -135,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         SDKInitializer.initialize(this.getApplicationContext());
         setContentView(R.layout.activity_main);
 
+        myApplication = (MyApplication) getApplication();
+        User user = myApplication.getUser();
+        myDAO = new MyDAO(this, user.getName());
+
 //        Button unityButton = findViewById(R.id.unitybutton);
 //        unityButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -167,7 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
         // "setNavigationIcon" should after "setSupportActionBar" and "addDrawerListener"
         Resources resources = MainActivity.this.getResources();
-        Drawable drawable = resources.getDrawable(R.drawable.head_image);
+        byte[] bytes = myDAO.findUserImage(user.getSid());
+        Log.e("bytes length", bytes.length+"");
+        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         int size = 44;
         CircleDrawable circleDrawable = new CircleDrawable(drawable, MainActivity.this, size);
         toolbar.setNavigationIcon(circleDrawable);
@@ -277,13 +286,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myApplication = (MyApplication) getApplication();
-        User user = myApplication.getUser();
         //通过NavigationView获取headerLayout，进而获取其中组件
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
         userName.setText(user.getName());
         TextView userSid = navigationView.getHeaderView(0).findViewById(R.id.user_sid);
         userSid.setText(user.getSid());
+        CircleImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+        byte[] bytes1 = myDAO.findUserImage(user.getSid());
+        imageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes1, 0, bytes1.length));
 
         // 初始化 消息页面
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -311,7 +321,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         int unread = 0;
-        myDAO = new MyDAO(this, user.getName());
         List<Friend> friends = myDAO.findAllFriend();
         for (Friend friend : friends) {
             unread += friend.getUnread();

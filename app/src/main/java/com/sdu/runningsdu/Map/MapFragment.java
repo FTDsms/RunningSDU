@@ -108,7 +108,7 @@ public class MapFragment extends Fragment {
     int didian;//任务地点
     String missionLocation[];
     HashMap<Integer, double[]> hashMap = new HashMap<>();
-    AlertDialog kaishirenwuDialog;
+    AlertDialog kaishirenwuDialog,dia1,dia2;
     String friendslongitude,friendslatitude;
 
 
@@ -191,11 +191,11 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!jieshourenwu){
-                    new AlertDialog.Builder(getActivity()).setTitle("是否接受任务？")
+                    dia1 = new AlertDialog.Builder(getActivity()).setTitle("是否接受任务？")
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     jieshourenwu = true;
-                                    new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
+                                    dia2 = new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
                                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -207,7 +207,7 @@ public class MapFragment extends Fragment {
                             .show();
                 }
                 if(jieshourenwu) {
-                    new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
+                    dia2 = new AlertDialog.Builder(getActivity()).setTitle("任务地点").setMessage(missionLocation[didian])
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -218,26 +218,6 @@ public class MapFragment extends Fragment {
 
             }
         });
-
-//        unityButton = getActivity().findViewById(R.id.unityButton);
-//        unityButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), unityactivity.class);
-//                startActivityForResult(intent,1);
-//                //startActivity(intent);
-//            }
-//        });
-//
-//        gestureButton = getActivity().findViewById(R.id.gestureButton);
-//        gestureButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent2 = new Intent(getActivity(),HandgestureActivity.class);
-//                startActivityForResult(intent2, 4);
-//            }
-//        });
-
 
         // 地图初始化
         mMapView = (MapView) getView().findViewById(R.id.bmapView);
@@ -267,11 +247,6 @@ public class MapFragment extends Fragment {
         Sensor accelerometerSensor=mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(listener,magenticSensor,SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(listener,accelerometerSensor,SensorManager.SENSOR_DELAY_GAME);
-
-        //添加他人位置
-        Resources r = this.getResources();
-        Bitmap bmp= BitmapFactory.decodeResource(r, R.drawable.touxiang);
-        addOthersLocation(36.6736687292,117.1459498599,bmp);
 
         //轨迹
         startguiji = (Button)getView().findViewById(R.id.startguiji);
@@ -314,19 +289,27 @@ public class MapFragment extends Fragment {
         AlertDialog.Builder kaishirenwuDialogBuilder = new AlertDialog.Builder(getActivity()).setTitle("是否开始任务？")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        double mi = Math.random() * 3;
-                        int missiond = (int) mi;//3个任务
+                        int missiond = (int) (Math.random() * 3) ;//3个任务
                         switch (missiond){
-                            case 0:
+                            case 0:{
+                                kaishirenwuDialog.dismiss();
+                                dia1.dismiss();
+                                dia2.dismiss();
                                 startActivityForResult(new Intent(getActivity(),unityactivity.class),1);
-                                break;
-                            case 1:
+                                break;}
+                            case 1:{
+                                kaishirenwuDialog.dismiss();
+                                dia1.dismiss();
+                                dia2.dismiss();
                                 startActivityForResult(new Intent(getActivity(),HandgestureActivity.class), 4);
 
-                                break;
-                            case 2:
+                                break;}
+                            case 2:{
+                                kaishirenwuDialog.dismiss();
+                                dia1.dismiss();
+                                dia2.dismiss();
 
-                                break;
+                                break;}
                         }
                     }
                 });
@@ -451,62 +434,27 @@ public class MapFragment extends Fragment {
             // map view 销毁后不在处理新接收的位置
             if (location == null || mMapView == null)
                 return;
-//            Log.d("longtitude",location.getLongitude()+"");
-//            Log.d("Latitude",location.getLatitude()+"");
-            //Toast.makeText(LocationDemo.this, "longtitude:  "+location.getLongitude()+"latitude:  "+location.getLatitude(), Toast.LENGTH_LONG).show();
-            //http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=location.getLatitude(),location.getLongitude()&output=json&pois=1&ak=您的ak //GET请求
-//            if(Math.abs(location.getLongitude()-hashMap.get(didian)[0])<=0.03 && Math.abs(location.getLatitude()-hashMap.get(didian)[1])<=0.03) {
-//                switch (didian){
-//                    case 0:
-//                        //Toast.makeText(LocationDemo.this, "你在三区", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 1:
-//                        //Toast.makeText(LocationDemo.this, "你在一号食堂", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case 2:
-//                        //Toast.makeText(LocationDemo.this, "你在二号宿舍楼", Toast.LENGTH_LONG).show();
-//                        break;
-//                    default:
-//                        //Toast.makeText(LocationDemo.this, "longtitude:  "+location.getLongitude()+"latitude:  "+location.getLatitude(), Toast.LENGTH_LONG).show();
-//
-//                }
-//            }
-
-            //fandizhibianma(new LatLng(location.getLatitude(),location.getLongitude()));
-            //获取定位位置描述信息  http://lbsyun.baidu.com/index.php?title=android-locsdk/guide/get-location/describe
-//            Toast.makeText(getActivity(), location.getLocationDescribe(),Toast.LENGTH_SHORT).show();
 
             if(jieshourenwu) {
-                for(int i = 0;i<missionLocation.length;i++){
-                    //                double longtitude = hashMap.get(i)[0];
-                    //                double latitude = hashMap.get(i)[1];
-                    if(Math.abs(location.getLongitude()-hashMap.get(i)[0])<=0.0003 && Math.abs(location.getLatitude()-hashMap.get(i)[1])<=0.0003) {
-                        //                switch (didian){
-                        //                    case 0:
-                        //                        //Toast.makeText(LocationDemo.this, "你在三区", Toast.LENGTH_LONG).show();
-                        //                        break;
-                        //                    case 1:
-                        //                        //Toast.makeText(LocationDemo.this, "你在一号食堂", Toast.LENGTH_LONG).show();
-                        //                        break;
-                        //                    case 2:
-                        //                        //Toast.makeText(LocationDemo.this, "你在二号宿舍楼", Toast.LENGTH_LONG).show();
-                        //                        break;
-                        //                    default:
-                        //                        //Toast.makeText(LocationDemo.this, "longtitude:  "+location.getLongitude()+"latitude:  "+location.getLatitude(), Toast.LENGTH_LONG).show();
-                        //
-                        //                }
-                        if((!kaishirenwuDialog.isShowing())&&i==didian){
-                            Toast.makeText(getActivity(), "你已到达"+missionLocation[i],Toast.LENGTH_SHORT).show();
+                for(int a = 0;a<missionLocation.length;a++){
+
+                    if(Math.abs(location.getLongitude()-hashMap.get(a)[0])<=0.0003 && Math.abs(location.getLatitude()-hashMap.get(a)[1])<=0.0003) {
+
+                        if((!kaishirenwuDialog.isShowing())&&a==didian){
+                            Toast.makeText(getActivity(), "你已到达"+missionLocation[a],Toast.LENGTH_SHORT).show();
                             kaishirenwuDialog.show();
                         }
-
                         break;
-                    } else{
-                        //Toast.makeText(LocationDemo.this, location.getLongitude()+"  ,  "+location.getLatitude(),Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
+            final MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction((float)degree).latitude(location.getLatitude())
+                    .longitude(location.getLongitude()).build();
+            mBaiduMap.setMyLocationData(locData);
 
             i++;
             if(i%10 == 0) {
@@ -514,10 +462,7 @@ public class MapFragment extends Fragment {
                 new Thread() {
                     @Override
                     public void run() {
-                        //NetWorkClass.postJson(NetWorkClass.BuildLongLatiJson(location.getLongitude(),location.getLatitude()),"/updateLocation");
                         try {
-//                            Log.d("longtitude", location.getLongitude() + "");
-//                            Log.d("Latitude", location.getLatitude() + "");
                             NetWorkClass.postlocation(location.getLongitude() + "", location.getLatitude() + "");
                         } catch (IOException e) {
                             Log.e("locationdemo", "ioexception");
@@ -526,58 +471,21 @@ public class MapFragment extends Fragment {
                     }
                 }.start();
 
-                //获取好友位置
+//获取好友位置
                 new Thread() {
                     @Override
                     public void run() {
                         try{
-                            Log.e("friendsLocation",NetWorkClass.receiveFriendslocation());
-                            getListPersonByArray(NetWorkClass.receiveFriendslocation());
-                            //添加他人位置
-//                            Resources r = LocationDemo.this.getResources();
-//                            Bitmap bmp= BitmapFactory.decodeResource(r, R.drawable.touxiang);
-//                            addOthersLocation(36.6736687292,117.1459498599,bmp);
+                            //Log.e("friendsLocation",NetWorkClass.receiveFriendslocation());
+                            getListPersonByArray(NetWorkClass.receiveFriendslocation(),locData);
+
                         }catch (IOException e) {
                             Log.e("locationdemo", "ioexception");
                         }
                     }
                 }.start();
-
-
-                //区域检索
-//                new Thread() {
-//                    @Override
-//                    public void run() {
-//                        //NetWorkClass.postJson(NetWorkClass.BuildLongLatiJson(location.getLongitude(),location.getLatitude()),"/updateLocation");
-//                        try {
-////                            Log.d("longtitude", location.getLongitude() + "");
-////                            Log.d("Latitude", location.getLatitude() + "");
-//                            Log.e("请求",NetWorkClass.getAPIlocation(location.getLongitude() + "", location.getLatitude() + ""));
-//                        } catch (IOException e) {
-//                            Log.e("locationdemo", "ioexception");
-//                        }
-//
-//                    }
-//                }.start();
-
-                //https://blog.csdn.net/u010142437/article/details/11664781
-//                nearby();
-
-                //同时请求好友位置(更新频率差不多就一起请求就行
-//                new Thread() {
-//                    @Override
-//                    public void run() {
-//                        //获取到好友位置不为"null"就显示
-//
-//                    }
-//                }.start();
             }
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                    // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction((float)degree).latitude(location.getLatitude())
-                    .longitude(location.getLongitude()).build();
-            mBaiduMap.setMyLocationData(locData);
+
             if (isFirstLoc) {
                 isFirstLoc = false;
                 //定义Maker坐标点
@@ -589,8 +497,6 @@ public class MapFragment extends Fragment {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(ll,
                         f - 2);
                 mBaiduMap.animateMapStatus(u);
-                //地图位置显示
-                //Toast.makeText(LocationDemo.this, location.getAddrStr(),Toast.LENGTH_SHORT).show();
             }
 
             if(guiji) {
@@ -645,17 +551,47 @@ public class MapFragment extends Fragment {
         }
 
     }
+    //解析好友jsonarray
+    public void getListPersonByArray(String jsonString,final MyLocationData locData) {
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mBaiduMap.clear();
+                    mBaiduMap.setMyLocationData(locData);
+                }
+            });
 
-//    private void nearby(){
-//        NearbySearchInfo r = new NearbySearchInfo();
-//        r.queryWords = "北京";
-//        r.ak = "3307f6443b2bdcae21af5d9564b5a88c";
-//        r.location = new GeoPoint(39956948, 116412214);
-//        r.radius = 10000000;
-//        r.filter.put("databox", 848);
-//        r.scope = 2;
-//        GeoSearchManager.getInstance().searchNearby(r);
-//    }
+            //final List<OverlayOptions> options = new ArrayList<OverlayOptions>();//存好友marker数组
+            JSONArray jsonArray=new JSONArray(jsonString);
+            Log.e("jsonArray.length()长度", jsonArray.toString());
+            Resources r = this.getResources();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject= (JSONObject) jsonArray.get(i);
+
+                String id = jsonObject.optString("sid");
+                friendslongitude = jsonObject.optString("longitude");
+                friendslatitude = jsonObject.optString("latitude");
+                if(!(friendslongitude.equals("null")&&friendslatitude.equals("null"))) {
+                    //http://lbsyun.baidu.com/index.php?title=androidsdk/guide/render-map/point
+
+                    final double friendslatitudeD = Double.parseDouble(friendslatitude);
+                    final double friendslongitudeD = Double.parseDouble(friendslongitude);
+
+                    final Bitmap bmp1= BitmapFactory.decodeResource(r, R.drawable.head_image);//默认头像
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            addOthersLocation(friendslatitudeD,friendslongitudeD,bmp1);
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 首次定位很重要，选一个精度相对较高的起始点
@@ -716,7 +652,6 @@ public class MapFragment extends Fragment {
         new Thread() {
             @Override
             public void run() {
-                //NetWorkClass.postJson(NetWorkClass.BuildLongLatiJson(location.getLongitude(),location.getLatitude()),"/updateLocation");
                 try {
                     NetWorkClass.postlocation("null", "null");
                 } catch (IOException e) {
@@ -728,83 +663,4 @@ public class MapFragment extends Fragment {
         super.onDestroy();
     }
 
-    //解析好友jsonarray
-    public void getListPersonByArray(String jsonString){
-        try {
-            JSONArray jsonArray=new JSONArray(jsonString);
-            Log.e("jsonArray.length()长度", jsonArray.length()+"长度");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject= (JSONObject) jsonArray.get(i);
-
-                String id = jsonObject.optString("sid");
-                friendslongitude = jsonObject.optString("longitude");
-                friendslatitude = jsonObject.optString("latitude");
-                if(!(friendslongitude.equals("null")&&friendslatitude.equals("null"))){
-                    //用sid获取头像
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-//                            Resources r = this.getResources();
-//                            Bitmap bmp= BitmapFactory.decodeResource(r, R.drawable.touxiang);
-//                            addOthersLocation((double)latitude,117.1459498599,bmp);
-
-                        }
-                    });
-                }
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void fandizhibianma(LatLng latLng){
-        //反地址编码
-        GeoCoder geoCoder = GeoCoder.newInstance();
-        //
-        OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
-            // 反地理编码查询结果回调函数
-            @Override
-            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-                if (result == null
-                        || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                    // 没有检测到结果
-//                    Toast.makeText(getActivity(), "抱歉，未能找到结果",
-//                            Toast.LENGTH_LONG).show();
-                }
-//                Toast.makeText(getActivity(),
-//                        "位置：" + result.getAddress(), Toast.LENGTH_LONG)
-//                        .show();
-            }
-
-            // 地理编码查询结果回调函数
-            @Override
-            public void onGetGeoCodeResult(GeoCodeResult result) {
-                if (result == null
-                        || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                    // 没有检测到结果
-                }
-            }
-        };
-        // 设置地理编码检索监听者
-        geoCoder.setOnGetGeoCodeResultListener(listener);
-        //
-        geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-        // 释放地理编码检索实例
-        // geoCoder.destroy();
-    }
-
-//
-//    public class MyLocationListener implements BDAbstractLocationListener {
-//        @Override
-//        public void onReceiveLocation(BDLocation location){
-//            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
-//            //以下只列举部分获取位置描述信息相关的结果
-//            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
-//
-//            String locationDescribe = location.getLocationDescribe();    //获取位置描述信息
-//        }
-//    }
 }

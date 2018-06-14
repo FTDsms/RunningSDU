@@ -64,6 +64,8 @@
 
 
     <application
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:name=".Utils.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

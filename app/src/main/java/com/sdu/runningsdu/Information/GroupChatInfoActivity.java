@@ -1,6 +1,7 @@
 package com.sdu.runningsdu.Information;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +58,8 @@ public class GroupChatInfoActivity extends AppCompatActivity {
 
         headImage = findViewById(R.id.user_image);
         userName = findViewById(R.id.user_name);
-        headImage.setImageResource(R.drawable.head_image);
+        byte[] bytes = myDAO.findGroupImage(group.getGid());
+        headImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         userName.setText(group.getName());
 
     }

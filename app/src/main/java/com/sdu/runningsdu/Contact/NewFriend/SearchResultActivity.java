@@ -67,7 +67,7 @@ public class SearchResultActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        searchResultAdapter = new SearchResultAdapter(friends, this);
+        searchResultAdapter = new SearchResultAdapter(friends, SearchResultActivity.this);
         recyclerView.setAdapter(searchResultAdapter);
         searchResultAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override

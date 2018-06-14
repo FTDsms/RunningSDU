@@ -2,6 +2,7 @@ package com.sdu.runningsdu.Contact;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +11,8 @@ import android.widget.Toast;
 import com.sdu.runningsdu.Information.DetailedInfoActivity;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.List;
 
@@ -25,9 +28,15 @@ public class FriendListViewAdapter extends BaseSortListViewAdapter<Friend, Frien
 
     private Context context;
 
+    private MyApplication myApplication;
+
+    private MyDAO myDAO;
+
     public FriendListViewAdapter(Context context, List<Friend> friends) {
         super(context, friends);
         this.context = context;
+        myApplication  = (MyApplication) context.getApplicationContext();
+        myDAO = new MyDAO(context, myApplication.getUser().getName());
     }
 
     @Override
@@ -46,8 +55,8 @@ public class FriendListViewAdapter extends BaseSortListViewAdapter<Friend, Frien
 
     @Override
     public void bindValues(ViewHolder viewHolder, final int position) {
-        //TODO viewHolder.image.setImageBitmap();
-        viewHolder.image.setImageResource(R.drawable.head_image);
+        byte[] bytes = myDAO.findFriendImage(mDatas.get(position).getSid());
+        viewHolder.image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         viewHolder.tvName.setText(mDatas.get(position).getName());
         viewHolder.friend.setOnClickListener(new View.OnClickListener() {
             @Override

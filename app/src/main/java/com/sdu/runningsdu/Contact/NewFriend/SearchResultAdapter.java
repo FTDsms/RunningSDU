@@ -11,7 +11,10 @@ import android.widget.TextView;
 import com.sdu.runningsdu.JavaBean.Friend;
 import com.sdu.runningsdu.Message.RecyclerAdapter;
 import com.sdu.runningsdu.R;
+import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,9 +29,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     private Context context;
 
+    private MyApplication myApplication;
+
     public SearchResultAdapter(List<Friend> friends, Context context) {
         this.friends = friends;
         this.context = context;
+        myApplication = (MyApplication) context.getApplicationContext();
     }
 
     @Override
@@ -42,7 +48,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     public void onBindViewHolder(final SearchResultAdapter.ViewHolder holder, int position) {
         // 将数据填充到具体的view中
         // 刷新列表操作
-        holder.icon.setImageResource(R.drawable.head_image);
+        holder.icon.setImageResource(R.drawable.image);
         holder.name.setText(friends.get(position).getName());
         holder.sid.setText(friends.get(position).getSid());
 

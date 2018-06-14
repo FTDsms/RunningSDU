@@ -437,21 +437,24 @@ public class MyHttpClient {
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
+
         JSONObject jsonObject = new JSONObject(response.body().string());
         String flag = jsonObject.optString("flag");
         if (!flag.equals("true")) {
             return null;
         } else {
-            JSONObject obj = jsonObject.getJSONObject("obj");
-            JSONArray jsonArray = obj.optJSONArray("members");
-            List<String> members = new ArrayList<>();
-            for (int i=0; i<jsonArray.length(); ++i) {
-                members.add(jsonArray.getString(i));
-            }
-            String name = obj.optString("name");
-            String creator = obj.optString("creator");
-            String image = obj.optString("image");
+            JSONObject json = jsonObject.getJSONObject("obj");
+            JSONObject wechat = json.optJSONObject("wechat");
+            String name = wechat.optString("name");
+            String creator = wechat.optString("creator");
+            String image = wechat.optString("image");
             Group group = new Group(gid, name, creator, image);
+            JSONArray memberInfos = json.optJSONArray("memberInfos");
+            List<String> members = new ArrayList<>();
+            for (int j=0; j<memberInfos.length(); ++j) {
+                JSONObject memberinfo = memberInfos.optJSONObject(j);
+                members.add(memberinfo.optString("sid"));
+            }
             group.setMembers(members);
             return group;
         }

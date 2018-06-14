@@ -1,7 +1,9 @@
 package com.sdu.runningsdu.Message;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.sdu.runningsdu.Utils.MyDAO;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
@@ -52,10 +55,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //将数据填充到具体的view中
         //刷新列表操作
         //TODO: user head image
-        holder.icon.setImageResource(R.drawable.head_image);
         if (list.get(position).isGroup()) {
             // if is group, set group name and latest message
             holder.name.setText(myDAO.findGroup(list.get(position).getGroup()).getName());
+            byte[] bytes = myDAO.findGroupImage(list.get(position).getGroup());
+            holder.icon.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             if (list.get(position).getType() == Message.TYPE_SENT) {
                 //if message is sent, just set text without name
                 holder.message.setText(list.get(position).getContent());
@@ -73,6 +77,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             // if not group, set friend name and latest message
             holder.name.setText(myDAO.findFriend(list.get(position).getFriend()).getName());
             holder.message.setText(list.get(position).getContent());
+            byte[] bytes = myDAO.findFriendImage(list.get(position).getFriend());
+            holder.icon.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             int unread = myDAO.findFriend(list.get(position).getFriend()).getUnread();
             if (unread > 99) {
                 holder.badge.setBadgeText("99+");
@@ -111,7 +117,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView icon;
+        private CircleImageView icon;
         private TextView name;
         private TextView message;
         private TextView time;
@@ -119,7 +125,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.item_image);
+            icon = itemView.findViewById(R.id.item_image);
             name = (TextView) itemView.findViewById(R.id.item_name);
             message = (TextView) itemView.findViewById(R.id.item_message);
             time = (TextView) itemView.findViewById(R.id.item_time);

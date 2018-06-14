@@ -181,6 +181,7 @@ public class DataSync {
                 // if server path is not equals local path
                 // then download new image and update
                 byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                Log.e("bytes length111", bytes.length+"");
                 myDAO.updateUserImage(sid, bytes);
             }
         } catch (IOException | JSONException e) {

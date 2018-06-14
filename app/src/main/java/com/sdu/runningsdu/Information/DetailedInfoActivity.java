@@ -1,6 +1,7 @@
 package com.sdu.runningsdu.Information;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +59,8 @@ public class DetailedInfoActivity extends AppCompatActivity {
         sendMessage = findViewById(R.id.send_message);
         deleteFriend = findViewById(R.id.delete_friend);
 
-        headImage.setImageResource(R.drawable.head_image);
+        byte[] bytes = myDAO.findFriendImage(friend.getSid());
+        headImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         userName.setText(friend.getName());
         userSid.setText(friend.getSid());
 

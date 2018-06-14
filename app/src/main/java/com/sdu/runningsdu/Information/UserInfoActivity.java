@@ -101,7 +101,8 @@ public class UserInfoActivity extends AppCompatActivity {
         getUserMore = findViewById(R.id.user_more);
         getUserAddress = findViewById(R.id.user_address);
 
-        head_image.setImageResource(R.drawable.head_image);
+        byte[] bytes = myDAO.findUserImage(user.getSid());
+        head_image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         name.setText(user.getName());
         sid.setText(user.getSid());
 
@@ -213,7 +214,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                 try {// 获取图片转成byte数组
                                     final Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
                                     // 写入数据库
                                     myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);
@@ -241,7 +242,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     // 获取图片转成byte数组
                                     final Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
                                     // 写入数据库
                                     myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);

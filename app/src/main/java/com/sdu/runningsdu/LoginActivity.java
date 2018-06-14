@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +44,7 @@ import com.sdu.runningsdu.Utils.MyHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -350,6 +353,12 @@ public class LoginActivity extends AppCompatActivity{
                             // 创建数据库
                             initDatabase();
 
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.head_image);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                            byte[] bytes = baos.toByteArray();
+                            myDAO.updateUserImage(user.getSid(), bytes);
+
                             // 写入测试数据库
                             initData();
 
@@ -375,11 +384,16 @@ public class LoginActivity extends AppCompatActivity{
     // 写入测试数据库
     private void initData() {
         User user = myApplication.getUser();
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        byte[] bytes = baos.toByteArray();
+
         // 初始化好友
         List<Friend> friends = new ArrayList<>();
         friends.add(new Friend("201500301132", "焦方锴", null));
         friends.add(new Friend("201500302002","叶蕴盈", null));
-        for(int i=0; i<10; ++i) {
+        for(int i=0; i<5; ++i) {
             friends.add(new Friend("test"+(i+1), "test"+(i+1), null));
         }
         for (Friend friend : friends) {
@@ -388,13 +402,14 @@ public class LoginActivity extends AppCompatActivity{
             } else {
                 myDAO.updateFriend(friend);
             }
+            myDAO.updateFriendImage(friend.getSid(), bytes);
         }
 
         // 初始化好友消息
         int fmid = 0;
         for (Friend friend : friends) {
             List<Message> messages = new ArrayList<>();
-            for(int j=0; j<10; ++j) {
+            for(int j=0; j<3; ++j) {
                 Message message = new Message(fmid, friend.getSid(), Message.TYPE_RECEIVED, "test"+(j+1), "21:07");
                 if (!myDAO.hasFriendMessage(message)) {
                     myDAO.addFriendMessage(message);
@@ -415,6 +430,7 @@ public class LoginActivity extends AppCompatActivity{
             } else {
                 myDAO.updateGroup(group);
             }
+            myDAO.updateGroupImage(group.getGid(), bytes);
         }
 
         // 初始化群组成员

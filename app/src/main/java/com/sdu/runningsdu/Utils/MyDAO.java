@@ -915,7 +915,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("user",
                 new String[]{"imagePath"},
-                "sid",
+                "sid = ?",
                 new String[]{sid}, null, null, null);
         if (cursor.moveToNext()) {
             if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
@@ -943,11 +943,14 @@ public class MyDAO {
                 "sid = ?",
                 new String[]{sid},
                 null, null, null);
-        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
-        Log.d("database", "find user image");
-        cursor.close();
+        if (cursor.moveToNext()) {
+            byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+            Log.d("database", "find user image");
+            cursor.close();
 //        db.close();
-        return bytes;
+            return bytes;
+        }
+        return null;
     }
 
     /**
@@ -992,7 +995,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friend",
                 new String[]{"imagePath"},
-                "sid",
+                "sid = ?",
                 new String[]{sid}, null, null, null);
         if (cursor.moveToNext()) {
             if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
@@ -1020,11 +1023,14 @@ public class MyDAO {
                 "sid = ?",
                 new String[]{sid},
                 null, null, null);
-        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
-        Log.d("database", "find friend image");
-        cursor.close();
+        if (cursor.moveToNext()) {
+            byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+            Log.d("database", "find friend image");
+            cursor.close();
 //        db.close();
-        return bytes;
+            return bytes;
+        }
+        return null;
     }
 
     /**
@@ -1069,7 +1075,7 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groups",
                 new String[]{"imagePath"},
-                "gid",
+                "gid = ?",
                 new String[]{Integer.toString(gid)}, null, null, null);
         if (cursor.moveToNext()) {
             if (cursor.getString(cursor.getColumnIndex("imagePath")).equals(imagePath)) {
@@ -1097,11 +1103,14 @@ public class MyDAO {
                 "gid = ?",
                 new String[]{Integer.toString(gid)},
                 null, null, null);
-        byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
-        Log.d("database", "find groups image");
-        cursor.close();
+        if (cursor.moveToNext()) {
+            byte[] bytes = cursor.getBlob(cursor.getColumnIndex("image"));
+            Log.d("database", "find groups image");
+            cursor.close();
 //        db.close();
-        return bytes;
+            return bytes;
+        }
+        return null;
     }
 
 }

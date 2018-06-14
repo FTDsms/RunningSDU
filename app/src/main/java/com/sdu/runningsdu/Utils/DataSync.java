@@ -21,14 +21,41 @@ import java.util.List;
 
 public class DataSync {
 
+    public static void syncUser(MyApplication myApplication, MyDAO myDAO) {
+        String ip = myApplication.getIp();
+        User user = myApplication.getUser();
+        String sid = myApplication.getUser().getSid();
+        if (!myDAO.hasUser() || !myDAO.findUser(sid).getSid().equals(sid)) {
+            // if user not exists, add user
+            myDAO.addUser(user);
+        } else {
+            // if user exists, update user info
+            myDAO.updateUser(user);
+        }
+        // sync user image
+        try {
+            String imagePath = user.getImagePath();
+            Log.e("bytes", imagePath);
+            if (!myDAO.equalsUserImagePath(sid, imagePath)) {
+                // if server path is not equals local path
+                // then download new image and update
+                byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                Log.e("bytes length", bytes.length+"");
+                myDAO.updateUserImage(sid, imagePath, bytes);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 同步好友
      * */
     public static void syncFriend(MyApplication myApplication, MyDAO myDAO) {
         String ip = myApplication.getIp();
-        String sid = myApplication.getUser().getSid();
+        User user = myApplication.getUser();
         try {
-            List<Friend> friends = MyHttpClient.findMyFriend(ip, sid);
+            List<Friend> friends = MyHttpClient.findMyFriend(ip, user.getSid());
             if ((friends != null) && (friends.size() > 0)) {
                 for (Friend friend : friends) {
                     if (!myDAO.hasFriend(friend.getSid())) {
@@ -38,8 +65,16 @@ public class DataSync {
                         // if friend exists, update friend
                         myDAO.updateFriend(friend);
                     }
+                    // sync friend image
+                    String sid = friend.getSid();
+                    String imagePath = friend.getImagePath();
+                    if (!myDAO.equalsFriendImagePath(sid, imagePath)) {
+                        // if server path is not equals local path
+                        // then download new image and update
+                        byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                        myDAO.updateFriendImage(sid, imagePath, bytes);
+                    }
                 }
-                // set friends to user
             } else {
                 // if list == null or size <= 0
             }
@@ -61,6 +96,7 @@ public class DataSync {
                     if (!myDAO.hasGroup(group.getGid())) {
                         // if group not exists, add group
                         myDAO.addGroup(group);
+                        // update members
                         List<String> members = group.getMembers();
                         for (String member : members) {
                             if (!myDAO.hasGroupMember(group.getGid(), member)) {
@@ -70,12 +106,22 @@ public class DataSync {
                     } else {
                         // if group exists, update group
                         myDAO.updateGroup(group);
+                        // update members
                         List<String> members = group.getMembers();
                         for (String member : members) {
                             if (!myDAO.hasGroupMember(group.getGid(), member)) {
                                 myDAO.addGroupMember(group.getGid(), member);
                             }
                         }
+                    }
+                    // sync group image
+                    int gid = group.getGid();
+                    String imagePath = group.getImagePath();
+                    if (!myDAO.equalsGroupImagePath(gid, imagePath)) {
+                        // if server path is not equals local path
+                        // then download new image and update
+                        byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                        myDAO.updateGroupImage(gid, imagePath, bytes);
                     }
                 }
             } else {
@@ -177,12 +223,13 @@ public class DataSync {
         String sid = myApplication.getUser().getSid();
         try {
             String imagePath = MyHttpClient.findUserBySid(ip, sid).getImagePath();
+            Log.e("bytes", imagePath);
             if (!myDAO.equalsUserImagePath(sid, imagePath)) {
                 // if server path is not equals local path
                 // then download new image and update
                 byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
                 Log.e("bytes length111", bytes.length+"");
-                myDAO.updateUserImage(sid, bytes);
+                myDAO.updateUserImage(sid, imagePath, bytes);
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -203,7 +250,7 @@ public class DataSync {
                     // if server path is not equals local path
                     // then download new image and update
                     byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
-                    myDAO.updateFriendImage(sid, bytes);
+                    myDAO.updateFriendImage(sid, imagePath, bytes);
                 }
             }
         } catch (IOException | JSONException e) {
@@ -225,7 +272,7 @@ public class DataSync {
                     // if server path is not equals local path
                     // then download new image and update
                     byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
-                    myDAO.updateGroupImage(gid, bytes);
+                    myDAO.updateGroupImage(gid, imagePath, bytes);
                 }
             }
         } catch (IOException | JSONException e) {

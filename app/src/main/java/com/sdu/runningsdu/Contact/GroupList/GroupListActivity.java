@@ -81,23 +81,7 @@ public class GroupListActivity extends AppCompatActivity {
 //            initThread();
 //        }
 
-        if (!myApplication.isTest()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    DataSync.syncGroup(myApplication, myDAO);
-                    DataSync.syncGroupImage(myApplication, myDAO);
-                    groups.clear();
-                    groups.addAll(myDAO.findAllGroup());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            groupListAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }).start();
-        }
+        syncData();
 
     }
 
@@ -120,7 +104,6 @@ public class GroupListActivity extends AppCompatActivity {
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
                     DataSync.syncGroup(myApplication, myDAO);
-                    DataSync.syncGroupImage(myApplication, myDAO);
                     groups.clear();
                     groups.addAll(myDAO.findAllGroup());
                     runOnUiThread(new Runnable() {
@@ -135,7 +118,30 @@ public class GroupListActivity extends AppCompatActivity {
         refreshThread.start();
     }
 
+    private void syncData() {
+        if (!myApplication.isTest()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataSync.syncGroup(myApplication, myDAO);
+                    groups.clear();
+                    groups.addAll(myDAO.findAllGroup());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            groupListAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        syncData();
+    }
 
     @Override
     protected void onDestroy() {

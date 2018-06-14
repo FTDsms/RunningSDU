@@ -217,7 +217,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
                                     // 写入数据库
-                                    myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);
+                                    myDAO.updateUserImage(myApplication.getUser().getSid(), imagePath, bytes);
                                     // 上传头像
                                     String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
                                     runOnUiThread(new Runnable() {
@@ -245,7 +245,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
                                     // 写入数据库
-                                    myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);
+                                    myDAO.updateUserImage(myApplication.getUser().getSid(), imagePath, bytes);
                                     // 上传头像
                                     String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
                                     runOnUiThread(new Runnable() {

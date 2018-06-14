@@ -120,27 +120,18 @@ public class LoginActivity extends AppCompatActivity{
         myDAO = new MyDAO(LoginActivity.this, user.getName());
         myDAO.findTable();
 //        myDAO.deleteUser(user.getSid()); // 删除用户
-        if (!myDAO.hasUser() || !myDAO.findUser(user.getSid()).getSid().equals(user.getSid())) {
-            // if user not exists, add user
-            myDAO.addUser(user);
-        } else {
-            // if user exists, update user info
-            myDAO.updateUser(user);
-        }
     }
 
     /**
      * 同步数据
      * */
     private void syncData() throws IOException, JSONException {
+        DataSync.syncUser(myApplication, myDAO);
         DataSync.syncFriend(myApplication, myDAO);
         DataSync.syncGroup(myApplication, myDAO);
         DataSync.syncRequest(myApplication, myDAO);
         DataSync.syncFriendMessage(myApplication, myDAO);
         DataSync.syncGroupMessage(myApplication, myDAO);
-        DataSync.syncUserImage(myApplication, myDAO);
-        DataSync.syncFriendImage(myApplication, myDAO);
-        DataSync.syncGroupImage(myApplication, myDAO);
     }
 
     private void changeBackground() {
@@ -353,11 +344,19 @@ public class LoginActivity extends AppCompatActivity{
                             // 创建数据库
                             initDatabase();
 
+                            String sid = user.getSid();
+                            if (!myDAO.hasUser() || !myDAO.findUser(sid).getSid().equals(sid)) {
+                                // if user not exists, add user
+                                myDAO.addUser(user);
+                            } else {
+                                // if user exists, update user info
+                                myDAO.updateUser(user);
+                            }
                             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.head_image);
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                             byte[] bytes = baos.toByteArray();
-                            myDAO.updateUserImage(user.getSid(), bytes);
+                            myDAO.updateUserImage(user.getSid(), "", bytes);
 
                             // 写入测试数据库
                             initData();
@@ -386,7 +385,7 @@ public class LoginActivity extends AppCompatActivity{
         User user = myApplication.getUser();
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] bytes = baos.toByteArray();
 
         // 初始化好友
@@ -402,7 +401,7 @@ public class LoginActivity extends AppCompatActivity{
             } else {
                 myDAO.updateFriend(friend);
             }
-            myDAO.updateFriendImage(friend.getSid(), bytes);
+            myDAO.updateFriendImage(friend.getSid(), "", bytes);
         }
 
         // 初始化好友消息
@@ -430,7 +429,7 @@ public class LoginActivity extends AppCompatActivity{
             } else {
                 myDAO.updateGroup(group);
             }
-            myDAO.updateGroupImage(group.getGid(), bytes);
+            myDAO.updateGroupImage(group.getGid(), "", bytes);
         }
 
         // 初始化群组成员

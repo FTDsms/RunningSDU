@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         // "setNavigationIcon" should after "setSupportActionBar" and "addDrawerListener"
         Resources resources = MainActivity.this.getResources();
+        Log.e("user id", user.getSid());
         byte[] bytes = myDAO.findUserImage(user.getSid());
         Log.e("bytes length", bytes.length+"");
         Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));

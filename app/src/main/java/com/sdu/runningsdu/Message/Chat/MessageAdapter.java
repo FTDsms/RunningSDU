@@ -69,7 +69,7 @@ public class MessageAdapter extends ArrayAdapter<Message>{
             viewHolder.leftLayout.setVisibility(View.GONE);
             viewHolder.rightMsg.setText(message.getContent());
             byte[] bytes = myDAO.findUserImage(myApplication.getUser().getSid());
-            viewHolder.leftImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            viewHolder.rightImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         }
         return view;
     }

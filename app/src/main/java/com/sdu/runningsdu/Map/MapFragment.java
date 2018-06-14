@@ -558,6 +558,17 @@ public class MapFragment extends Fragment {
                 public void run() {
                     mBaiduMap.clear();
                     mBaiduMap.setMyLocationData(locData);
+
+                    //起始点图层也会被清除，重新绘画
+                    MarkerOptions oStart = new MarkerOptions();
+                    oStart.position(points.get(0));
+                    oStart.icon(startBD);
+                    mBaiduMap.addOverlay(oStart);
+
+                    //将points集合中的点绘制轨迹线条图层，显示在地图上
+                    OverlayOptions ooPolyline = new PolylineOptions().width(13).color(0xAAFF0000).points(points);
+                    mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
+
                 }
             });
 

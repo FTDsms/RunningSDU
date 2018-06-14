@@ -98,8 +98,9 @@ public class ChatActivity extends AppCompatActivity {
                     messages.add(message);
                     adapter.notifyDataSetChanged(); //当有新消息时，刷新ListView中的显示
                     msgListView.setSelection(messages.size()); //将ListView定位到最后一行
-                    //TODO: send message
-                    sendMsg(message);
+                    if (!myApplication.isTest()) {
+                        sendMsg(message);
+                    }
                     inputText.setText(""); //清空输入框中的内容
                 }
             }
@@ -107,7 +108,9 @@ public class ChatActivity extends AppCompatActivity {
 
         msgListView.setSelection(messages.size()); //将ListView定位到最后一行
 
-        refreshList();
+        if (!myApplication.isTest()) {
+            refreshList();
+        }
     }
 
     private void sendMsg(final Message message) {
@@ -159,7 +162,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        refreshThread.interrupt();
+        if (!myApplication.isTest()) {
+            refreshThread.interrupt();
+        }
+        // 将未读消息数设为0
+        Friend friend = myDAO.findFriend(friendSid);
+        friend.setUnread(0);
+        myDAO.updateFriendUnread(friend);
     }
 
 }

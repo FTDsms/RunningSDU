@@ -81,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
     private MyDAO myDAO;
 
+    private Badge badge;
+
+    private Thread refreshThread;
+
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -237,10 +241,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 isDrawer=true;
-                //获取屏幕的宽高
+                // 获取屏幕的宽高
                 DisplayMetrics dm = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(dm);
-                //设置右面的布局位置  根据左面菜单的right作为右面布局的left   左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
+                // 设置右面的布局位置
+                // 根据左面菜单的right作为右面布局的left
+                // 左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
                 right.layout(left.getRight(), 0, left.getRight() + dm.widthPixels, dm.heightPixels);
             }
 
@@ -313,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarTitle.setText("消息");
 
 
-        Badge badge = new QBadgeView(this).bindTarget(findViewById(R.id.navigation_message));
+        badge = new QBadgeView(this).bindTarget(findViewById(R.id.navigation_message));
         badge.setBadgeGravity(Gravity.END | Gravity.TOP);
         badge.setBadgeTextSize(12, true);
         badge.setGravityOffset(15, 0, true); //设置外边距
@@ -327,21 +333,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        int unread = 0;
-        List<Friend> friends = myDAO.findAllFriend();
-        for (Friend friend : friends) {
-            unread += friend.getUnread();
-        }
-        List<Group> groups = myDAO.findAllGroup();
-        for (Group group : groups) {
-            unread += group.getUnread();
-        }
-        if (unread > 99) {
-            badge.setBadgeText("99+");
-        } else {
-            badge.setBadgeNumber(unread);
-        }
+        syncBadge();
 
+    }
+
+    private void syncBadge() {
+        refreshThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                    int unread = 0;
+                    List<Friend> friends = myDAO.findAllFriend();
+                    for (Friend friend : friends) {
+                        unread += friend.getUnread();
+                    }
+                    List<Group> groups = myDAO.findAllGroup();
+                    for (Group group : groups) {
+                        unread += group.getUnread();
+                    }
+                    if (unread > 99) {
+                        badge.setBadgeText("99+");
+                    } else {
+                        badge.setBadgeNumber(unread);
+                    }
+                }
+            }
+        });
+        refreshThread.start();
     }
 
     @Override
@@ -382,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshThread.interrupt();
         if (!myApplication.isTest()) {
             new Thread(new Runnable() {
                 @Override

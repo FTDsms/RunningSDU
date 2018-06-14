@@ -634,13 +634,16 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("friendmessage",
                 new String[]{"mid", "sid", "type", "content", "time"},
-                null, null, null, null, null);
+                "sid = ?",
+                new String[]{sid},
+                null, null, null);
         while (cursor.moveToNext()) {
             int mid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("mid")));
             int type = Integer.parseInt(cursor.getString(cursor.getColumnIndex("type")));
             String content = cursor.getString(cursor.getColumnIndex("content"));
             String time = cursor.getString(cursor.getColumnIndex("time"));
-            messages.add(new Message(mid, sid, type, content, time));
+            Message message = new Message(mid, sid, type, content, time);
+            messages.add(message);
         }
         cursor.close();
 //        db.close();
@@ -745,7 +748,9 @@ public class MyDAO {
         SQLiteDatabase db = this.databaseHelper.getReadableDatabase();
         Cursor cursor = db.query("groupmessage",
                 new String[]{"mid", "gid", "sid", "type", "content", "time"},
-                null, null, null, null, null);
+                "gid = ?",
+                new String[]{Integer.toString(gid)},
+                null, null, null);
         while (cursor.moveToNext()) {
             int mid = Integer.parseInt(cursor.getString(cursor.getColumnIndex("mid")));
             String sid = cursor.getString(cursor.getColumnIndex("sid"));

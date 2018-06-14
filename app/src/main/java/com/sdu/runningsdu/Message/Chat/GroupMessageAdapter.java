@@ -1,7 +1,9 @@
 package com.sdu.runningsdu.Message.Chat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,11 @@ import com.sdu.runningsdu.JavaBean.Message;
 import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyDAO;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,7 +45,7 @@ public class GroupMessageAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Message message = getItem(position);
+        final Message message = getItem(position);
         View view;
         GroupMessageAdapter.ViewHolder viewHolder;
         if(convertView == null) {

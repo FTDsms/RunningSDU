@@ -163,6 +163,10 @@ public class GroupChatActivity extends AppCompatActivity {
         if (!myApplication.isTest()) {
             refreshThread.interrupt();
         }
+        // 将未读消息数设为0
+        Group group = myDAO.findGroup(groupGid);
+        group.setUnread(0);
+        myDAO.updateGroupUnread(group);
     }
 
 

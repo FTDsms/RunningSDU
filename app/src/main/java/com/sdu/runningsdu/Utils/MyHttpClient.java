@@ -695,7 +695,7 @@ public class MyHttpClient {
      * 下载图片
      * @param url
      * @param imagePath 图片路径
-     * @return Bitmap
+     * @return byte[]
      * @throws IOException
      */
     public static byte[] downloadImage(String url, String imagePath) throws IOException {
@@ -704,10 +704,10 @@ public class MyHttpClient {
                 .url(url+"/show?fileName="+imagePath)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-//        InputStream is = response.body().byteStream();
-//        Bitmap bitmap = BitmapFactory.decodeStream(is);
+//            InputStream is = response.body().byteStream();
+//            Bitmap bitmap = BitmapFactory.decodeStream(is);
         byte[] bytes = response.body().bytes();
-//        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         return bytes;
     }
 
@@ -724,7 +724,7 @@ public class MyHttpClient {
         OkHttpClient okHttpClient = new OkHttpClient();
         Log.d("imagePath", imagePath);
         File file = new File(imagePath);
-        RequestBody image = RequestBody.create(PNG, file);
+        RequestBody image = RequestBody.create(MediaType.parse("image/png"), file);
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("sid", sid)

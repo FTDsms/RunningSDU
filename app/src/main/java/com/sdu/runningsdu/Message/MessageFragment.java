@@ -23,6 +23,7 @@ import com.sdu.runningsdu.Utils.MyApplication;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Message.Chat.ChatActivity;
 import com.sdu.runningsdu.Utils.MyDAO;
+import com.sdu.runningsdu.Utils.MyHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,22 +63,7 @@ public class MessageFragment extends Fragment {
         myDAO = new MyDAO(getContext(), user.getName());
 
         list = new ArrayList<>();
-        List<Group> groups = myDAO.findAllGroup();
-        for (Group group : groups) {
-            List<Message> messages = myDAO.findGroupMessage(group.getGid());
-            if (!messages.isEmpty()) {
-                list.add(messages.get(messages.size()-1));
-            }
-        }
-        List<Friend> friends = myDAO.findAllFriend();
-        if (friends != null) {
-            for(Friend friend : friends){
-                List<Message> messages = myDAO.findFriendMessage(friend.getSid());
-                if (!messages.isEmpty()) {
-                    list.add(messages.get(messages.size()-1));
-                }
-            }
-        }
+        syncList();
 
     }
 
@@ -98,12 +84,20 @@ public class MessageFragment extends Fragment {
                     // if is group, start GroupChatActivity
                     Intent intent = new Intent(getActivity(), GroupChatActivity.class);
                     int groupGid = list.get(position).getGroup();
+                    // 将未读消息数设为0
+                    Group group = myDAO.findGroup(groupGid);
+                    group.setUnread(0);
+                    myDAO.updateGroupUnread(group);
                     intent.putExtra("groupGid", groupGid);
                     startActivity(intent);
                 } else {
                     // if not group, start ChatActivity
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     String friendSid = list.get(position).getFriend();
+                    // 将未读消息数设为0
+                    Friend friend = myDAO.findFriend(friendSid);
+                    friend.setUnread(0);
+                    myDAO.updateFriendUnread(friend);
                     intent.putExtra("friendSid", friendSid);
                     startActivity(intent);
                 }
@@ -117,6 +111,27 @@ public class MessageFragment extends Fragment {
 
     }
 
+    private void syncList() {
+        // TODO: sort
+        list.clear();
+        List<Group> groups = myDAO.findAllGroup();
+        for (Group group : groups) {
+            List<Message> messages = myDAO.findGroupMessage(group.getGid());
+            if (!messages.isEmpty()) {
+                list.add(messages.get(messages.size()-1));
+            }
+        }
+        List<Friend> friends = myDAO.findAllFriend();
+        if (friends != null) {
+            for(Friend friend : friends){
+                List<Message> messages = myDAO.findFriendMessage(friend.getSid());
+                if (!messages.isEmpty()) {
+                    list.add(messages.get(messages.size()-1));
+                }
+            }
+        }
+    }
+
     private void refreshList() {
         refreshThread = new Thread((new Runnable() {
             @Override
@@ -128,6 +143,7 @@ public class MessageFragment extends Fragment {
                         e.printStackTrace();
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
+                    syncList();
                     // Refresh the list every second
                     getActivity().runOnUiThread(new Runnable(){
                         public void run(){

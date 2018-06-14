@@ -17,7 +17,7 @@ public class Friend extends SortModel{
     @Letter(isSortField = true)
     private String name;
 
-    private String imagePath; //TODO: head_image
+    private String imagePath;
 
     private Bitmap image;
 

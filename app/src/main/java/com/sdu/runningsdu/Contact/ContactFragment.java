@@ -150,6 +150,7 @@ public class ContactFragment extends Fragment {
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
                     DataSync.syncFriend(myApplication, myDAO);
+                    DataSync.syncFriendImage(myApplication, myDAO);
                     friends.clear();
                     friends.addAll(myDAO.findAllFriend());
                     getActivity().runOnUiThread(new Runnable() {
@@ -182,6 +183,7 @@ public class ContactFragment extends Fragment {
                 @Override
                 public void run() {
                     DataSync.syncFriend(myApplication, myDAO);
+                    DataSync.syncFriendImage(myApplication, myDAO);
                     friends.clear();
                     friends.addAll(myDAO.findAllFriend());
                     getActivity().runOnUiThread(new Runnable() {

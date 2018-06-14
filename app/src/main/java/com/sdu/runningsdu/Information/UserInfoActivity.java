@@ -25,6 +25,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.sdu.runningsdu.JavaBean.User;
 import com.sdu.runningsdu.R;
 import com.sdu.runningsdu.Utils.MyApplication;
+import com.sdu.runningsdu.Utils.MyDAO;
 import com.sdu.runningsdu.Utils.MyHttpClient;
 
 import org.json.JSONException;
@@ -62,6 +63,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private MyApplication myApplication;
 
+    private MyDAO myDAO;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         myApplication = (MyApplication) getApplication();
         User user = myApplication.getUser();
+        myDAO = new MyDAO(this, user.getName());
 
         toolbarBack = findViewById(R.id.user_info_toolbar_back);
         toolbarButton = findViewById(R.id.user_info_toolbar_button);
@@ -206,13 +210,22 @@ public class UserInfoActivity extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                try {
-                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                try {// 获取图片转成byte数组
+                                    final Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
+                                    // 写入数据库
+                                    myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);
+                                    // 上传头像
                                     String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
-                                    Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            head_image.setImageBitmap(bitmap);
+                                            Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 } catch (IOException | JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -226,15 +239,21 @@ public class UserInfoActivity extends AppCompatActivity {
                             public void run() {
                                 try {
                                     // 获取图片转成byte数组
-                                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                                    final Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                                     byte[] bytes = baos.toByteArray();
                                     // 写入数据库
-
+                                    myDAO.updateUserImage(myApplication.getUser().getSid(), bytes);
                                     // 上传头像
                                     String image = MyHttpClient.uploadImage(myApplication.getIp(), myApplication.getUser().getSid(), imagePath);
-                                    Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            head_image.setImageBitmap(bitmap);
+                                            Toast.makeText(UserInfoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 } catch (IOException | JSONException e) {
                                     e.printStackTrace();
                                 }

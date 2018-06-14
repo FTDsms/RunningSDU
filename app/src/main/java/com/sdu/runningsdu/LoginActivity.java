@@ -135,6 +135,9 @@ public class LoginActivity extends AppCompatActivity{
         DataSync.syncRequest(myApplication, myDAO);
         DataSync.syncFriendMessage(myApplication, myDAO);
         DataSync.syncGroupMessage(myApplication, myDAO);
+        DataSync.syncUserImage(myApplication, myDAO);
+        DataSync.syncFriendImage(myApplication, myDAO);
+        DataSync.syncGroupImage(myApplication, myDAO);
     }
 
     private void changeBackground() {

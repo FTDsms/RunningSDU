@@ -695,17 +695,17 @@ public class MyHttpClient {
      * @return Bitmap
      * @throws IOException
      */
-    public static Bitmap downloadImage(String url, String imagePath) throws IOException {
+    public static byte[] downloadImage(String url, String imagePath) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url+"/show?fileName="+imagePath)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        InputStream is = response.body().byteStream();
-        Bitmap bitmap = BitmapFactory.decodeStream(is);
-//        byte[] bytes = response.body().bytes();
+//        InputStream is = response.body().byteStream();
+//        Bitmap bitmap = BitmapFactory.decodeStream(is);
+        byte[] bytes = response.body().bytes();
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        return bitmap;
+        return bytes;
     }
 
     /**
@@ -732,8 +732,8 @@ public class MyHttpClient {
                 .post(requestBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        JSONObject jsonObject = new JSONObject(response.body().toString());
-        Log.d("response", response.body().toString());
+        JSONObject jsonObject = new JSONObject(response.body().string());
+        Log.e("image", jsonObject.optString("image"));
         return jsonObject.optString("image");
     }
 

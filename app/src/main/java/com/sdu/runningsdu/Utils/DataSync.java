@@ -178,27 +178,58 @@ public class DataSync {
         try {
             String imagePath = MyHttpClient.findUserBySid(ip, sid).getImagePath();
             if (!myDAO.equalsUserImagePath(sid, imagePath)) {
-
-//                myDAO.updateUserImage(sid, );
+                // if server path is not equals local path
+                // then download new image and update
+                byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                myDAO.updateUserImage(sid, bytes);
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      * 同步好友头像
      * */
     public static void syncFriendImage(MyApplication myApplication, MyDAO myDAO) {
-
+        String ip = myApplication.getIp();
+        List<Friend> friends = myDAO.findAllFriend();
+        try {
+            for (Friend friend : friends) {
+                String sid = friend.getSid();
+                String imagePath = MyHttpClient.findUserBySid(ip, sid).getImagePath();
+                if (!myDAO.equalsFriendImagePath(sid, imagePath)) {
+                    // if server path is not equals local path
+                    // then download new image and update
+                    byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                    myDAO.updateFriendImage(sid, bytes);
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 同步群组头像
      * */
     public static void syncGroupImage(MyApplication myApplication, MyDAO myDAO) {
-
+        String ip = myApplication.getIp();
+        List<Group> groups = myDAO.findAllGroup();
+        try {
+            for (Group group : groups) {
+                int gid = group.getGid();
+                String imagePath = MyHttpClient.findGroupByGid(ip, gid).getImagePath();
+                if (!myDAO.equalsGroupImagePath(gid, imagePath)) {
+                    // if server path is not equals local path
+                    // then download new image and update
+                    byte[] bytes = MyHttpClient.downloadImage(ip, imagePath);
+                    myDAO.updateGroupImage(gid, bytes);
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

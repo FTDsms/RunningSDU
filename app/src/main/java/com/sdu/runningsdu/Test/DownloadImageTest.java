@@ -69,7 +69,8 @@ public class DownloadImageTest extends AppCompatActivity {
                     public void run() {
                         try {
                             // 下载图片
-                            bitmap[0] = MyHttpClient.downloadImage(myApplication.getIp(), myApplication.getUser().getImagePath());
+                            byte[] bytes = MyHttpClient.downloadImage(myApplication.getIp(), myApplication.getUser().getImagePath());
+                            bitmap[0] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

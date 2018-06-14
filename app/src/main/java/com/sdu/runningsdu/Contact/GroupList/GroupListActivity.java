@@ -86,6 +86,7 @@ public class GroupListActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     DataSync.syncGroup(myApplication, myDAO);
+                    DataSync.syncGroupImage(myApplication, myDAO);
                     groups.clear();
                     groups.addAll(myDAO.findAllGroup());
                     runOnUiThread(new Runnable() {
@@ -119,6 +120,7 @@ public class GroupListActivity extends AppCompatActivity {
                         break; // 阻塞过程捕获中断异常来退出，执行break跳出循环
                     }
                     DataSync.syncGroup(myApplication, myDAO);
+                    DataSync.syncGroupImage(myApplication, myDAO);
                     groups.clear();
                     groups.addAll(myDAO.findAllGroup());
                     runOnUiThread(new Runnable() {

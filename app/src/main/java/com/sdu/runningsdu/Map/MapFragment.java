@@ -182,7 +182,8 @@ public class MapFragment extends Fragment {
         hashMap.put(0, new double[]{117.146500,36.674000});//三区
         hashMap.put(1, new double[]{117.147067,36.672689});//一号食堂
         hashMap.put(2, new double[]{117.144200,36.674773});//图书馆
-        missionLocation = new String[]{"三区","一号食堂","图书馆"};
+        hashMap.put(3, new double[]{117.1459800,36.672512});//行政楼
+        missionLocation = new String[]{"三区","一号食堂","图书馆","行政楼"};
         double mi = Math.random() * 3;
         didian = (int)mi;
         didian = 0;
@@ -553,24 +554,27 @@ public class MapFragment extends Fragment {
     //解析好友jsonarray
     public void getListPersonByArray(String jsonString,final MyLocationData locData) {
         try {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mBaiduMap.clear();
-                    mBaiduMap.setMyLocationData(locData);
+//            if (points.size() > 0) {
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mBaiduMap.clear();
+//                        mBaiduMap.setMyLocationData(locData);
+//
+//                        //起始点图层也会被清除，重新绘画
+//                        MarkerOptions oStart = new MarkerOptions();
+//                        oStart.position(points.get(0));
+//                        oStart.icon(startBD);
+//                        mBaiduMap.addOverlay(oStart);
+//
+//                        //将points集合中的点绘制轨迹线条图层，显示在地图上
+//                        OverlayOptions ooPolyline = new PolylineOptions().width(13).color(0xAAFF0000).points(points);
+//                        mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
+//
+//                    }
+//                });
+//            }
 
-                    //起始点图层也会被清除，重新绘画
-                    MarkerOptions oStart = new MarkerOptions();
-                    oStart.position(points.get(0));
-                    oStart.icon(startBD);
-                    mBaiduMap.addOverlay(oStart);
-
-                    //将points集合中的点绘制轨迹线条图层，显示在地图上
-                    OverlayOptions ooPolyline = new PolylineOptions().width(13).color(0xAAFF0000).points(points);
-                    mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
-
-                }
-            });
 
             //final List<OverlayOptions> options = new ArrayList<OverlayOptions>();//存好友marker数组
             JSONArray jsonArray=new JSONArray(jsonString);

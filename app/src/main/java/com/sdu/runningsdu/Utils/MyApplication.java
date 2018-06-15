@@ -12,8 +12,8 @@ public class MyApplication extends Application {
 
     private boolean isTest = false;
 
-//    private String ip = "http://121.250.223.122:8080";
-    private String ip = "http://192.168.0.113:8080";
+    private String ip = "http://121.250.223.122:8080";
+//    private String ip = "http://192.168.0.113:8080";
 
     private User user;
 

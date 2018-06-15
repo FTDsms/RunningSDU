@@ -25,6 +25,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by FTDsm on 2018/4/18.
@@ -49,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private MyDAO myDAO;
 
-    private Thread refreshThread;
+    private ScheduledThreadPoolExecutor executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +111,7 @@ public class ChatActivity extends AppCompatActivity {
         msgListView.setSelection(messages.size()); //将ListView定位到最后一行
 
         if (!myApplication.isTest()) {
-            refreshList();
+            initThreadPool();
         }
     }
 
@@ -134,36 +136,34 @@ public class ChatActivity extends AppCompatActivity {
         messages = myDAO.findFriendMessage(currentFriend.getSid());
     }
 
-    private void refreshList() {
-        refreshThread = new Thread(new Runnable() {
+    private void initThreadPool() {
+        Runnable refreshList = new Runnable() {
             @Override
             public void run() {
-                while (!Thread.interrupted()) {
-                    try {
-                        Thread.sleep(1000);
-                        DataSync.syncFriendMessage(myApplication, myDAO);
-                        messages.clear();
-                        messages.addAll(myDAO.findFriendMessage(friendSid));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                Log.e("runnable", "refreshList");
+                DataSync.syncFriendMessage(myApplication, myDAO);
+                messages.clear();
+                messages.addAll(myDAO.findFriendMessage(friendSid));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-                }
+                });
             }
-        });
-        refreshThread.start();
+        };
+        executor = new ScheduledThreadPoolExecutor(4);
+        executor.scheduleWithFixedDelay(refreshList, 1000, 1000, TimeUnit.MILLISECONDS);
+
     }
 
     @Override
     protected void onDestroy() {
+        Log.e("onDestroy", "finish");
         super.onDestroy();
+        // 被销毁时关闭线程池
         if (!myApplication.isTest()) {
-            refreshThread.interrupt();
+            executor.shutdown();
         }
         // 将未读消息数设为0
         Friend friend = myDAO.findFriend(friendSid);
